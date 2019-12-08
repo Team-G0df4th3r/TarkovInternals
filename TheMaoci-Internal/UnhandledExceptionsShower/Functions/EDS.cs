@@ -49,7 +49,7 @@ namespace UnhandledExceptionHandler.Functions
             }
             float yOffset = Mathf.Ceil(thickness / 2f);
             GUIUtility.RotateAroundPivot(pivot, lineStart);
-            GUI.DrawTexture(new Rect(lineStart.x, lineStart.y - (float)yOffset, (float)thickness, (float)thickness), _coloredLineTexture);
+            GUI.DrawTexture(new Rect(lineStart.x, lineStart.y - (float)yOffset, (float)Mathf.Abs(lineStart.x - lineEnd.x), (float)thickness), _coloredLineTexture);
             GUIUtility.RotateAroundPivot(-pivot, lineStart);
         }
         #endregion
@@ -67,5 +67,21 @@ namespace UnhandledExceptionHandler.Functions
 
             style = backupStyle;
         }
+        public static void Text(Rect rect, string content, Color txtColor)
+        {
+            GUIStyle style = new GUIStyle();
+            Vector2 direction = new Vector2(1f, 1f);
+            GUIStyle backupStyle = style;
+            style.normal.textColor = new Color(0f,0f,0f,1f);
+            rect.x += direction.x;
+            rect.y += direction.y;
+            GUI.Label(rect, content, style);
+            style.normal.textColor = txtColor;
+            rect.x -= direction.x;
+            rect.y -= direction.y;
+            GUI.Label(rect, content, style);
+            style = backupStyle;
+        }
+
     }
 }
