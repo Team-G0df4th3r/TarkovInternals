@@ -311,6 +311,25 @@ namespace Nncv2
         string localgroup;
 
 
+        private bool IsVisable(Vector3 toCheck)
+        {
+            RaycastHit hit;
+
+
+
+            if (Physics.Linecast(Camera.main.transform.position, toCheck, out hit))
+            {
+
+                if (hit.transform.name.Contains("NPC") || hit.transform.name.Contains("client")
+                    || hit.transform.name == Camera.main.name || hit.transform.name == Camera.main.gameObject.name
+                    || hit.transform.name == Camera.main.transform.name || hit.transform.tag.Contains("Player"))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private void DrawPlayers()
         {
             foreach (var player in _playerInfo)
@@ -331,7 +350,7 @@ namespace Nncv2
 
 
 
-                if (distanceToObject <= _viewdistance && playerBoundingVector.z > 0.01)
+                if (distanceToObject <= _viewdistance && playerBoundingVector.z > 0.01 && (localplayer != player))
                 {
 
                     var playerHeadVector = new Vector3(
@@ -350,6 +369,8 @@ namespace Nncv2
                     {
                         playerColor = Color.green;
                     }
+
+
 
                     var playerHealth = player.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Common).Current;
                     if (player.HealthController.IsAlive)
@@ -377,18 +398,6 @@ namespace Nncv2
                     {
                         GUI.Label(new Rect(playerBoundingVector.x - playerTextVector.x / 2f, (float)Screen.height - boxVectorY - 20f, 300f, 50f), playerTextDraw);
 
-                        if (_showLines)
-                        {
-                            Vector3 w2s = Camera.main.WorldToScreenPoint(player.PlayerBones.RootJoint.position);
-                            if (w2s.z < 0.01f)
-                            {
-                            }
-                            else
-                            {
-                                Utility.DrawLine(new Vector2((Screen.width / 2), Screen.height), new Vector2(w2s.x, Screen.height - w2s.y), playerColor);
-                            }
-
-                        }
 
                     }
                     else if (player.HealthController.IsAlive)
