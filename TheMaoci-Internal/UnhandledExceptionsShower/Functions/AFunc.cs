@@ -20,7 +20,7 @@ namespace UnhandledExceptionHandler.Functions
         { mouse_event(MOUSEEVENTF_MOVE, xDelta, yDelta, 0, 0); }
         //private struct POINT { public int X, Y; }
         #endregion
-        public static void DPI_Detection(IEnumerable<Player> _ply, Player _lP, int _AimSpeed, float _checkDistance = 200f, double _distance2d = 100)
+        public static void TargetLock(IEnumerable<Player> _ply, Player _lP, int _AimSpeed, float _checkDistance = 200f, double _distance2d = 100)
         {
             if (_ply != null && _lP != null)
             {
