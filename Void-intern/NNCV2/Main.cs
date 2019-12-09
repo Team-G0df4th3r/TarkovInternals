@@ -24,6 +24,8 @@ namespace Nncv2
 
         private bool _isInfoMenuActive;
         private bool _pInfor;
+        private bool _showLines;
+        private bool _showBodies;
         private bool _showExtractInfo;
         private bool _showItems;
         private bool _showContainers;
@@ -327,7 +329,7 @@ namespace Nncv2
 
                 }
 
-               
+
 
                 if (distanceToObject <= _viewdistance && playerBoundingVector.z > 0.01)
                 {
@@ -366,18 +368,58 @@ namespace Nncv2
                             playerColor = Color.white;
                         }
                     }
-                  //  var playerHealth = player.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Common).Current;
+                    //  var playerHealth = player.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Common).Current;
                     string playerText = player.HealthController.IsAlive ? playerName : (playerName + " (Dead)");
                     string playerTextDraw = string.Format("{0} [{1}] -{2}-", playerText, (int)distanceToObject, playerHealth);
                     var playerTextVector = GUI.skin.GetStyle(playerText).CalcSize(new GUIContent(playerText));
-                    GUI.Label(new Rect(playerBoundingVector.x - playerTextVector.x / 2f, (float)Screen.height - boxVectorY - 20f, 300f, 50f), playerTextDraw);
+
+                    if (_showBodies && !player.HealthController.IsAlive)
+                    {
+                        GUI.Label(new Rect(playerBoundingVector.x - playerTextVector.x / 2f, (float)Screen.height - boxVectorY - 20f, 300f, 50f), playerTextDraw);
+
+                        if (_showLines)
+                        {
+                            Vector3 w2s = Camera.main.WorldToScreenPoint(player.PlayerBones.RootJoint.position);
+                            if (w2s.z < 0.01f)
+                            {
+                            }
+                            else
+                            {
+                                Utility.DrawLine(new Vector2((Screen.width / 2), Screen.height), new Vector2(w2s.x, Screen.height - w2s.y), playerColor);
+                            }
+
+                        }
+
+                    }
+                    else if (player.HealthController.IsAlive)
+                    {
+
+                        if (_showLines)
+                        {
+                            Vector3 w2s = Camera.main.WorldToScreenPoint(player.PlayerBones.RootJoint.position);
+                            if (w2s.z < 0.01f)
+                            {
+                            }
+                            else
+                            {
+                                Utility.DrawLine(new Vector2((Screen.width / 2), Screen.height), new Vector2(w2s.x, Screen.height - w2s.y), playerColor);
+                            }
+
+                        }
+
+                        GUI.Label(new Rect(playerBoundingVector.x - playerTextVector.x / 2f, (float)Screen.height - boxVectorY - 20f, 300f, 50f), playerTextDraw);
+                    }
+                    /*
+                    else if (!_showBodies && !player.HealthController.IsAlive)
+                    {
+                        //chill;
+                    }
+                    **/
+
+
 
                     //var playerWeapon = player.Weapon.ShortName;
                     // GUI.Label(new Rect(playerBoundingVector.x - playerTextVector.x / 2f, (float)Screen.height - boxVectorY - 40f, 300f, 50f), playerWeapon);
-
-                   
-
-
 
 
                 }
@@ -385,7 +427,7 @@ namespace Nncv2
         }
 
 
-            private Color GetPlayerColor(EPlayerSide side)
+        private Color GetPlayerColor(EPlayerSide side)
         {
             switch (side)
             {
@@ -394,7 +436,7 @@ namespace Nncv2
                 case EPlayerSide.Usec:
                     return Color.blue;
                 case EPlayerSide.Savage:
-                    return Color.yellow;
+                    return Color.white;
                 default:
                     return Color.white;
                     /*
@@ -415,9 +457,9 @@ namespace Nncv2
             GUI.color = Color.gray;
             GUI.Box(new Rect(100f, 100f, 400f, 500f), "");
             GUI.color = Color.white;
-            GUI.Label(new Rect(180f, 110f, 150f, 20f), "Non-binary and trans rights are human rights");
+            GUI.Label(new Rect(180f, 110f, 150f, 20f), "Ethnic cleansing v2");
             _pInfor = GUI.Toggle(new Rect(110f, 140f, 120f, 20f), _pInfor, "Players ESP"); // Display player
-          //  _showExtractInfo = GUI.Toggle(new Rect(110f, 160f, 120f, 20f), _showExtractInfo, "Extract"); //Display  extraction
+            _showLines = GUI.Toggle(new Rect(110f, 160f, 120f, 20f), _showLines, "SnapLines"); //Display  extraction
             _aim = GUI.Toggle(new Rect(110f, 180f, 120f, 20f), _aim, "Aimbot"); //Display  aimbot
             if (_aim)
             {
@@ -446,6 +488,8 @@ namespace Nncv2
                 GUI.Label(new Rect(110f, 360f, 150f, 20f), "Containers Distance");
                 _ContainerDistance = GUI.HorizontalSlider(new Rect(210f, 360f, 120f, 20f), _ContainerDistance, 0.0F, 1500.0F);
             }
+
+            _showBodies = GUI.Toggle(new Rect(110f, 380f, 120f, 20f), _showBodies, "Show Bodies");
         }
 
         private double GetDistance(double x1, double y1, double x2, double y2)
