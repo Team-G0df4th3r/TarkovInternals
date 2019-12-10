@@ -24,6 +24,7 @@ namespace Nncv2
 
         private bool _isInfoMenuActive;
         private bool _pInfor;
+        private bool _fbright;
         private bool _showLines;
         private bool _showBodies;
         private bool _showExtractInfo;
@@ -83,7 +84,31 @@ namespace Nncv2
                 _aim = !_aim;
             }
 
+            if (_fbright)
+            {
+
+                Vector3 playerPos = new Vector3(
+                    localplayer.Transform.position.x,
+                    localplayer.Transform.position.y + 1,
+                    localplayer.Transform.position.z);
+                lightGameObject.transform.position = playerPos;
+                FullBrightLight.range = 1000;
+            }
+            else
+            {
+                GameObject.Destroy(FullBrightLight);
+                lightCalled = false;
+            }
+
         }
+
+
+        public GameObject lightGameObject;
+        public Light FullBrightLight;
+
+        public bool _LightEnabled = true;
+        public bool _LightCreated;
+        public bool lightCalled;
 
         private void OnGUI()
         {
@@ -105,6 +130,9 @@ namespace Nncv2
             {
                 DrawPlayers();
             }
+
+
+
 
 
             if (_showExtractInfo && Time.time >= _extNextUpdateTime)
@@ -137,8 +165,24 @@ namespace Nncv2
                 }
                 ShowItemESP();
             }
+
+
+            if (_fbright)
+            {
+                Fullbright();
+            }
         }
 
+        private void Fullbright()
+        {
+            if (!lightCalled)
+            {
+                lightGameObject = new GameObject("Fullbright");
+                FullBrightLight = lightGameObject.AddComponent<Light>();
+                FullBrightLight.color = Color.white;
+                lightCalled = true;
+            }
+        }
 
         private void Aimbot()
         {
@@ -296,7 +340,7 @@ namespace Nncv2
 
                 float distance = Vector3.Distance(Camera.main.transform.position, Item.transform.position);
                 Vector3 ItemBoundingVector = new Vector3(Camera.main.WorldToScreenPoint(Item.transform.position).x, Camera.main.WorldToScreenPoint(Item.transform.position).y, Camera.main.WorldToScreenPoint(Item.transform.position).z);
-                if (ItemBoundingVector.z > 0.01 && Item != null && (Item.name.Contains("key") || Item.name.Contains("usb") || Item.name.Contains("alkali") || Item.name.Contains("ophalmo") || Item.name.Contains("gunpowder") || Item.name.Contains("phone") || Item.name.Contains("gas") || Item.name.Contains("money") || Item.name.Contains("document") || Item.name.Contains("quest") || Item.name.Contains("spark") || Item.name.Contains("grizzly") || Item.name.Contains("sv-98") || Item.name.Contains("sv98") || Item.name.Contains("rsas") || Item.name.Contains("salewa") || Item.name.Equals("bitcoin") || Item.name.Contains("dvl") || Item.name.Contains("m4a1") || Item.name.Contains("roler") || Item.name.Contains("chain") || Item.name.Contains("wallet") || Item.name.Contains("RSASS") || Item.name.Contains("glock") || Item.name.Contains("SA-58")) && distance <= _lootItemDistance)
+                if (ItemBoundingVector.z > 0.01 && Item != null && (Item.name.Contains("key") || Item.name.Contains("30x160mm") || Item.name.Contains("usb") || Item.name.Contains("alkali") || Item.name.Contains("ophalmo") || Item.name.Contains("gunpowder") || Item.name.Contains("phone") || Item.name.Contains("gas") || Item.name.Contains("money") || Item.name.Contains("document") || Item.name.Contains("quest") || Item.name.Contains("spark") || Item.name.Contains("grizzly") || Item.name.Contains("sv-98") || Item.name.Contains("sv98") || Item.name.Contains("rsas") || Item.name.Contains("salewa") || Item.name.Equals("bitcoin") || Item.name.Contains("dvl") || Item.name.Contains("m4a1") || Item.name.Contains("roler") || Item.name.Contains("chain") || Item.name.Contains("wallet") || Item.name.Contains("RSASS") || Item.name.Contains("glock") || Item.name.Contains("SA-58")) && distance <= _lootItemDistance)
                 {
                     name = Item.name;
 
@@ -370,6 +414,16 @@ namespace Nncv2
                         playerColor = Color.green;
                     }
 
+                    var playerName = player.IsAI ? "AI" : player.Profile.Info.Nickname;
+
+                    if (player.Profile.Info.RegistrationDate <= 0)
+                    {
+                        if (player.Side == EPlayerSide.Savage)
+                        {
+                            playerColor = Color.white;
+                        }
+                    }
+
 
 
                     var playerHealth = player.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Common).Current;
@@ -379,16 +433,7 @@ namespace Nncv2
                         Utility.DrawLine(new Vector2(playerHeadVector.x - 2f, (float)Screen.height - playerHeadVector.y), new Vector2(playerHeadVector.x + 2f, (float)Screen.height - playerHeadVector.y), playerColor);
                         Utility.DrawLine(new Vector2(playerHeadVector.x, (float)Screen.height - playerHeadVector.y - 2f), new Vector2(playerHeadVector.x, (float)Screen.height - playerHeadVector.y + 2f), playerColor);
                     }
-                    var playerName = player.IsAI ? "AI" : player.Profile.Info.Nickname;
 
-                    if (player.Profile.Info.RegistrationDate <= 0)
-                    {
-                        playerName = "AI";
-                        if (player.Side == EPlayerSide.Savage)
-                        {
-                            playerColor = Color.white;
-                        }
-                    }
                     //  var playerHealth = player.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Common).Current;
                     string playerText = player.HealthController.IsAlive ? playerName : (playerName + " (Dead)");
                     string playerTextDraw = string.Format("{0} [{1}] -{2}-", playerText, (int)distanceToObject, playerHealth);
@@ -445,7 +490,7 @@ namespace Nncv2
                 case EPlayerSide.Usec:
                     return Color.blue;
                 case EPlayerSide.Savage:
-                    return Color.white;
+                    return Color.yellow;
                 default:
                     return Color.white;
                     /*
@@ -499,6 +544,8 @@ namespace Nncv2
             }
 
             _showBodies = GUI.Toggle(new Rect(110f, 380f, 120f, 20f), _showBodies, "Show Bodies");
+
+            _fbright = GUI.Toggle(new Rect(110f, 400f, 120f, 20f), _fbright, "Fullbright mode");
         }
 
         private double GetDistance(double x1, double y1, double x2, double y2)
