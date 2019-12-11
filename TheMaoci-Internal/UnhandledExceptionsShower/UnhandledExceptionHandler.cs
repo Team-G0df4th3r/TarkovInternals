@@ -119,6 +119,9 @@ namespace UnhandledExceptionHandler
                 {
                     Recoil_Reducer = !Recoil_Reducer;
                 }
+                if (Input.GetKeyDown(KeyCode.Keypad9)) {
+                    FullBright_Enabled = !FullBright_Enabled;
+                }
             #endregion
 
             #region Draw non sensitive data
@@ -278,6 +281,8 @@ namespace UnhandledExceptionHandler
         #region Update
         private void Update()
         {
+            this.m_Scen = SceneManager.GetActiveScene();
+            this.m_Scen_name = m_Scen.name;
             Hotkeys();
             //update diffrent then ongui - so be carefull
             /*if (PrintScreened)
@@ -411,8 +416,6 @@ namespace UnhandledExceptionHandler
         private void OnGUI()
         {
             //Updates Each Frame
-            this.m_Scen = SceneManager.GetActiveScene();
-            this.m_Scen_name = m_Scen.name;
             GUI.color = Color.white;
             if (inMatch())
             {
