@@ -9,19 +9,8 @@ namespace UnhandledExceptionHandler.Functions
 
     class Drawing_Data
     {
-        #region - Drawing COLORS -
-            private static Color[] C_player     = new Color[2] { new Color(1.0f, 0f, 0f, 1.0f), new Color(1.0f, 0f, 1.0f, 1.0f) };
-            private static Color C_bots         = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-            private static Color C_group        = new Color(0f, 0.8f, 1.0f, 1.0f);
-            private static Color C_scav         = new Color(1f, 0.75f, 0.0f, 1.0f);
-            private static Color C_napesy       = new Color(0f, 1.0f, 0f, 1.0f);
-            private static Color C_corps        = new Color(0.9f, 0.9f, 0.9f, 1.0f);
-            private static Color C_items        = new Color(1f, 1f, 1f, .7f);
-            private static Color C_overlay      = new Color(0f, 0f, 0f, 1f);
-        #endregion
-
         #region - CORPSES -
-        public static void DrawLI(List<LootItem> _lContainer, float _displayDistance = 300f)
+        public static void DrawPDB(List<LootItem> _lContainer, float _displayDistance = 300f)
         {
             if (_lContainer == null)
                 return;
@@ -47,15 +36,14 @@ namespace UnhandledExceptionHandler.Functions
                                 FMath.DistSizer(distance, ref FontSize, ref deltaDistance, ref devLabel);
                                 LabelSize.fontSize = FontSize;
                                 LabelSize.normal.textColor = new Color(.7f, .7f, .7f, .8f);
-                                string distanceText = $"{(int)distance}m - {item.Name.Localized()}";
+                                string distanceText = $"{(int)distance}m";
                                 Vector2 sizeOfText = GUI.skin.GetStyle(distanceText).CalcSize(new GUIContent(distanceText));
-                                GUI.color = new Color(.7f, .7f, .7f, .8f);
                                 EDS.P(
                                     new Vector2(
                                         itemPosition.x - boxSize[1],
                                         (float)(Screen.height - itemPosition.y) - boxSize[1]
                                         ),
-                                    C_corps,
+                                    Statics.Colors.ESP.bodies,
                                     boxSize[0]
                                 );
                                 EDS.DrawShadow(
@@ -67,8 +55,8 @@ namespace UnhandledExceptionHandler.Functions
                                         ),
                                     new GUIContent(distanceText),
                                     LabelSize,
-                                    C_corps,
-                                    C_overlay,
+                                    Statics.Colors.ESP.bodies,
+                                    Statics.Colors.Black,
                                     new Vector2(1f, 1f)
                                 );
                             }
@@ -77,14 +65,14 @@ namespace UnhandledExceptionHandler.Functions
                 }
                 catch (NullReferenceException ex)
                 {
-                    ErrorHandler.Catch("LoogItems", ex);
+                    ErrorHandler.Catch("Corpses", ex);
                 }
             }
         }
         #endregion
 
         #region - LOOT -
-        public static void DrawLogs(List<LootItem> _lContainer, float _displayDistance = 300f) {
+        public static void DrawDLI(List<LootItem> _lContainer, float _displayDistance = 300f) {
             if (_lContainer == null)
                 return;
             var e = _lContainer.GetEnumerator();
@@ -105,12 +93,13 @@ namespace UnhandledExceptionHandler.Functions
                             float distance = FMath.FD(Camera.main.transform.position, item.transform.position);
                             if (distance < _displayDistance)
                             {
+                                
                                 Vector3 itemPosition = Camera.main.WorldToScreenPoint(item.transform.position);
                                 float[] boxSize = new float[2] { 3f, 1.5f };
                                 int FontSize = 12;
                                 FMath.DistSizer(distance, ref FontSize, ref deltaDistance, ref devLabel);
                                 LabelSize.fontSize = FontSize;
-                                LabelSize.normal.textColor = new Color(.7f, .7f, .7f, .8f);
+                                LabelSize.normal.textColor = Statics.Colors.ESP.items;
                                 //item.TemplateId == "5909e4b686f7747f5b744fa4"; // dead Scav Body
                                 string distanceText = $"{(int)distance}m";
                                 string DebugText = "";
@@ -120,13 +109,13 @@ namespace UnhandledExceptionHandler.Functions
                                 }
                                 catch (Exception exp) { DebugText = ""; }
                                 Vector2 sizeOfText = GUI.skin.GetStyle(distanceText).CalcSize(new GUIContent(distanceText));
-                                GUI.color = C_items;
+                                GUI.color = Statics.Colors.ESP.items;
                                 EDS.P(
                                     new Vector2(
                                         itemPosition.x - boxSize[1],
                                         (float)(Screen.height - itemPosition.y) - boxSize[1]
                                         ),
-                                    C_items,
+                                    Statics.Colors.ESP.items,
                                     boxSize[0]
                                 );
                                 GUI.Label(
@@ -155,7 +144,7 @@ namespace UnhandledExceptionHandler.Functions
                 }
                 catch (NullReferenceException ex)
                 {
-                    ErrorHandler.Catch("LoogItems", ex);
+                    ErrorHandler.Catch("LootItems", ex);
                 }
             }
         }
@@ -163,7 +152,7 @@ namespace UnhandledExceptionHandler.Functions
 
         #region - Grenade ESP -
         private static float[] grenadeSize = new float[2] { 3f, 1.5f };
-        public static void DrawBombs(List<Throwable> _g, Player _localP, float _displayDistance = 100f) {
+        public static void DrawDTG(List<Throwable> _g, Player _localP, float _displayDistance = 100f) {
             // 100m for grenades is more then enough
             if (_g == null || _localP == null)
                 return;
@@ -186,16 +175,16 @@ namespace UnhandledExceptionHandler.Functions
                             int FontSize = 10;
                             FMath.DistSizer(dTO, ref FontSize, ref deltaDistance, ref devLabel);
                             LabelSize.fontSize = FontSize;
-                            LabelSize.normal.textColor = C_napesy;
+                            LabelSize.normal.textColor = Statics.Colors.ESP.grenades;
                             string distanceText = $"{(int)dTO}m";
                             Vector2 sizeOfText = GUI.skin.GetStyle(distanceText).CalcSize(new GUIContent(distanceText));
-                            GUI.color = C_napesy;
+                            GUI.color = Statics.Colors.ESP.grenades;
                             EDS.P(
                                 new Vector2(
                                     pGrenadePosition.x - grenadeSize[1],
                                     (float)(Screen.height - pGrenadePosition.y) - grenadeSize[1]
                                     ),
-                                C_napesy,
+                                Statics.Colors.ESP.grenades,
                                 grenadeSize[0]
                             );
                             EDS.DrawShadow(
@@ -207,8 +196,8 @@ namespace UnhandledExceptionHandler.Functions
                                     ),
                                 new GUIContent(distanceText),
                                 LabelSize,
-                                C_napesy,
-                                C_overlay,
+                                Statics.Colors.ESP.grenades,
+                                Statics.Colors.Black,
                                 new Vector2(1f, 1f)
                             );
                         }
@@ -231,7 +220,7 @@ namespace UnhandledExceptionHandler.Functions
             float devLabel = 1f;
             string Status = "";
             var LabelSize = new GUIStyle { fontSize = 12 };
-            Color playerColor = C_bots;
+            Color playerColor = Statics.Colors.ESP.npc;
             foreach (Player player in _PlayersList)
             {
                 if (player.HealthController.IsAlive)
@@ -250,48 +239,66 @@ namespace UnhandledExceptionHandler.Functions
                         int FontSize = 12;
                         FMath.DistSizer(dTO, ref FontSize, ref deltaDistance, ref devLabel);
                         LabelSize.fontSize = FontSize;
-                        deltaDistance = deltaDistance + 20f;
                         //create 3 size table of distances for texts (name, status, weapon)
                         float[] distancesAxisY = new float[3] {
-                            deltaDistance,
-                            deltaDistance - (FontSize + 1),
-                            deltaDistance - (FontSize + FontSize + 2) };
+                            deltaDistance + 20f,
+                            deltaDistance + (FontSize + 1) + 20f,
+                            deltaDistance + (FontSize + FontSize + 2) + 20f };
 
-                        int health = (int)(player.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Common).Current);
-                        Status = health.ToString() + " HP"; // Health here 
+                        Status = ((int)(player.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Common).Current)).ToString() + " hp"; // Health here 
+                        #region BONE ESP
+                        if (dTO < 100f)
+                        {
+                            var pRPVect = Camera.main.WorldToScreenPoint(player.PlayerBones.RightPalm.position);
+                            var PLPVect = Camera.main.WorldToScreenPoint(player.PlayerBones.LeftPalm.position);
+                            var PLShVect = Camera.main.WorldToScreenPoint(player.PlayerBones.LeftShoulder.position);
+                            var PLRShVect = Camera.main.WorldToScreenPoint(player.PlayerBones.RightShoulder.position);
+                            var PLNeckVect = Camera.main.WorldToScreenPoint(player.PlayerBones.Neck.position);
+                            var PLCentrVect = Camera.main.WorldToScreenPoint(player.PlayerBones.Pelvis.position);
+                            var PLRTighVect = Camera.main.WorldToScreenPoint(player.PlayerBones.RightThigh2.position);
+                            var PLLTighVect = Camera.main.WorldToScreenPoint(player.PlayerBones.LeftThigh2.position);
+                            var PLRFootVect = Camera.main.WorldToScreenPoint(player.PlayerBones.KickingFoot.position);
+                            var PLLFootVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 18));
+                            var PLLBowVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 91));
+                            var PLRBowVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 112));
+                            var PLLKneeVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 17));
+                            var PLRKneeVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 22));
+                            EDS.L(new Vector2(PLNeckVect.x, (float)Screen.height - PLNeckVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), playerColor, 1f);
+                            EDS.L(new Vector2(PLShVect.x, (float)Screen.height - PLShVect.y), new Vector2(PLLBowVect.x, (float)Screen.height - PLLBowVect.y), playerColor, 1f);
+                            EDS.L(new Vector2(PLRShVect.x, (float)Screen.height - PLRShVect.y), new Vector2(PLRBowVect.x, (float)Screen.height - PLRBowVect.y), playerColor, 1f);
+                            EDS.L(new Vector2(PLLBowVect.x, (float)Screen.height - PLLBowVect.y), new Vector2(PLPVect.x, (float)Screen.height - PLPVect.y), playerColor, 1f);
+                            EDS.L(new Vector2(PLRBowVect.x, (float)Screen.height - PLRBowVect.y), new Vector2(pRPVect.x, (float)Screen.height - pRPVect.y), playerColor, 1f);
+                            EDS.L(new Vector2(PLRShVect.x, (float)Screen.height - PLRShVect.y), new Vector2(PLShVect.x, (float)Screen.height - PLShVect.y), playerColor, 1f);
+                            EDS.L(new Vector2(PLLKneeVect.x, (float)Screen.height - PLLKneeVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), playerColor, 1f);
+                            EDS.L(new Vector2(PLRKneeVect.x, (float)Screen.height - PLRKneeVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), playerColor, 1f);
+                            EDS.L(new Vector2(PLLKneeVect.x, (float)Screen.height - PLLKneeVect.y), new Vector2(PLLFootVect.x, (float)Screen.height - PLLFootVect.y), playerColor, 1f);
+                            EDS.L(new Vector2(PLRKneeVect.x, (float)Screen.height - PLRKneeVect.y), new Vector2(PLRFootVect.x, (float)Screen.height - PLRFootVect.y), playerColor, 1f);
+                        }
+                        #endregion
                         #region Set: PlayerName / Color / Head Pixel
                         if (player.Profile.Info.RegistrationDate <= 0)
                         {
                             playerDisplayName = "";
-                            playerColor = C_bots;
-                            GUI.color = Color.white;
-                            EDS.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Color.red, find_sizebox);
+                            playerColor = Statics.Colors.ESP.npc;
+                            EDS.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Statics.Colors.Red, find_sizebox);
                         }
                         else if (LocalPlayer.Profile.Info.GroupId == player.Profile.Info.GroupId && LocalPlayer.Profile.Info.GroupId != "0" && LocalPlayer.Profile.Info.GroupId != "" && LocalPlayer.Profile.Info.GroupId != null)
                         {
                             playerDisplayName = player.Profile.Info.Nickname;
-                            playerColor = C_group;
+                            playerColor = Statics.Colors.ESP.group;
                         }
                         else if (player.Profile.Info.Side == EPlayerSide.Savage)
                         {
                             playerDisplayName = "";
-                            playerColor = C_scav;
+                            playerColor = Statics.Colors.ESP.scav_player;
                             GUI.color = Color.red;
-                            EDS.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Color.red, find_sizebox);
+                            EDS.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Statics.Colors.Red, find_sizebox);
                         }
                         else
                         {
                             playerDisplayName = player.Profile.Info.Nickname;
-                            if (switch_colors)
-                            {
-                                playerColor = C_player[0];
-                            }
-                            else
-                            {
-                                playerColor = C_player[1];
-                            }
-                            GUI.color = Color.red;
-                            EDS.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Color.red, find_sizebox);
+                            playerColor = Statics.Colors.ESP.player[0];
+                            EDS.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Statics.Colors.Red, find_sizebox);
                         }
                         #endregion
                         #region Prepare Main Texts
@@ -309,7 +316,7 @@ namespace UnhandledExceptionHandler.Functions
                             UnhandledExceptionHandler.ErrorHandler.Catch("WeaponNames", e);
                         }
                         #endregion
-
+                        
                         // set colors now
                         LabelSize.normal.textColor = playerColor;
                         GUI.color = playerColor;
@@ -329,7 +336,7 @@ namespace UnhandledExceptionHandler.Functions
                                 new GUIContent(nameNickname),
                                 LabelSize,
                                 playerColor,
-                                C_overlay,
+                                Statics.Colors.Black,
                                 new Vector2(1f, 1f)
                             );
                         }
@@ -348,8 +355,8 @@ namespace UnhandledExceptionHandler.Functions
                                 ), 
                             content, 
                             LabelSize, 
-                            playerColor, 
-                            C_overlay, 
+                            playerColor,
+                            Statics.Colors.Black, 
                             new Vector2(1f, 1f)
                         );
                         #endregion
@@ -368,52 +375,14 @@ namespace UnhandledExceptionHandler.Functions
                                     ),
                                 new GUIContent(WeaponName), 
                                 LabelSize, 
-                                playerColor, 
-                                C_overlay, 
+                                playerColor,
+                                Statics.Colors.Black, 
                                 new Vector2(1f, 1f)
                             );
                         }
                         #endregion
                     }
                 }
-                /*else
-                {
-                    #region Set Corpse Color
-                    if (player.Profile.Info.RegistrationDate <= 0)
-                    {
-                        playerColor = C_botsRip;
-                    }
-                    else if (LocalPlayer.Profile.Info.GroupId == player.Profile.Info.GroupId && LocalPlayer.Profile.Info.GroupId != "0" && LocalPlayer.Profile.Info.GroupId != "" && LocalPlayer.Profile.Info.GroupId != null)
-                    {
-                        playerColor = C_groupRip;
-                    }
-                    else if (player.Profile.Info.Side == EPlayerSide.Savage)
-                    {
-                        playerColor = C_scavRip;
-                    }
-                    else
-                    {
-                        if (switch_colors)
-                        {
-                            playerColor = C_playerRip[0];
-                        }
-                        else
-                        {
-                            playerColor = C_playerRip[1];
-                        }
-                    }
-                    LabelSize.normal.textColor = playerColor;
-                    GUI.color = playerColor;
-                    #endregion
-                    #region Draw Corpse
-                    float dTO = FMath.FD(Camera.main.transform.position, player.Transform.position);
-                    string playerStatus = $"{(int)dTO}m";
-                    Vector3 pHeadVector = Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position);
-                    Vector2 vector_playerStatus = GUI.skin.GetStyle(playerStatus).CalcSize(new GUIContent(playerStatus));
-                    float player_TextWidth = (devLabel == 1f) ? vector_playerStatus.x : (vector_playerStatus.x / devLabel);
-                    GUI.Label(new Rect(pHeadVector.x - player_TextWidth / 2f, (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y, player_TextWidth, vector_playerStatus.y), playerStatus, LabelSize);
-                    #endregion
-                }*/
             }
         }
         #endregion

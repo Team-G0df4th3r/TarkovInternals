@@ -35,6 +35,7 @@ namespace UnhandledExceptionHandler.Functions
                         var p = enumerator.Current;
                         if (p != null)
                         {
+                            if (_lP.Profile.Info.GroupId == p.Profile.Info.GroupId && _lP.Profile.Info.GroupId != "0" && _lP.Profile.Info.GroupId != "" && _lP.Profile.Info.GroupId != null) continue;
                             if (!p.IsVisible) continue;
                             float distanceToObject = FMath.FD(Camera.main.transform.position, p.Transform.position);
                             if (distanceToObject < _checkDistance)

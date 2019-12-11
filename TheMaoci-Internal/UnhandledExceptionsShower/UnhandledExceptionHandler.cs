@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 using EFT;
@@ -7,45 +6,13 @@ using EFT.Interactive;
 using UnityEngine.SceneManagement;
 using UnhandledExceptionHandler.Functions;
 
-
 namespace UnhandledExceptionHandler
 {
-
     class Logger
     {
         public static void Init()
         {
             new UnhandledException().Load();
-        }
-    }
-    public class Cons {
-        public static Vector2 InitialHealthBox = new Vector2(19f,32f);
-        public static float[,] HealthPosition = new float[,] {
-            { 49f, 0f },   // Head
-            { 40f, 38f },  // Chest
-            { 87f, 55f },  // Right Arm
-            { 0f, 55f },   // Left Arm
-            { 64f, 134f }, // Right Leg
-            { 22f, 121f }, // Left leg
-            { 36f, 71f }   // Stomach
-        };
-        public static float[] RenderDistances = new float[5] { 1000f, 750f, 500f, 250f, 100f };
-        public static float[] UpdateIntervals = new float[6] { 1f, 2f, 5f, 10f, 25f, 50f };
-        public static float[] boxSize = new float[21] { 0f, 10f, 20f, 30f, 40f, 50f, 60f, 70f, 80f, 90f, 100f, 110f, 120f, 130f, 140f, 150f, 160f, 170f, 180f, 190f, 200f };
-        public static int ScreenWidth = Screen.width;
-        public static int ScreenHeight = Screen.height;
-        public static string MyDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        public static float CalcSizeW(float size){ return ScreenWidth * size / 1920; }
-        public static float CalcSizeH(float size){ return ScreenHeight * size / 1080; }
-        public static string Health(Player LocalPlayer, EFT.HealthSystem.EBodyPart bodypart)
-        {
-            int health_curr = (int)LocalPlayer.HealthController.GetBodyPartHealth(bodypart).Current;
-            int health_max = (int)LocalPlayer.HealthController.GetBodyPartHealth(bodypart).Maximum;
-            if (health_curr > 0)
-            {
-                return health_curr.ToString() + "/" + health_max.ToString();
-            }
-            return "[OFF]";
         }
     }
     public class UnhandledException : MonoBehaviour
@@ -62,8 +29,8 @@ namespace UnhandledExceptionHandler
             Type corpses_offline = new Corpse().GetType();
             Type LootItems_online = new ObservedLootItem().GetType();
             Type LootItems_offline = new LootItem().GetType();
-            Color WhiteText = new Color(1f, 1f, 1f, 1f);
             float timestamp = 0;
+            float prtscrn_timestamp = 0;
             private Scene m_Scen;
             private string m_Scen_name;
             private GameObject GameObjectHolder;
@@ -76,11 +43,20 @@ namespace UnhandledExceptionHandler
                 DisplayHelpInfo = false,
                 DisplayCorpses = false,
                 Switch_Colors = false,
-                DisplayDebugData = false;
-            private int AliveObject_count;
+                DisplayDebugData = false,
+                PrintScreened = false,
+                FullBright_Enabled = false;
+        #region Full bright
+        public GameObject lightGameObject;
+        public Light FullBrightLight;
+        public bool _LightEnabled = true;
+        public bool _LightCreated;
+        public bool lightCalled;
+        #endregion
+
+        private bool[] saved_onGui = new bool[4] { false, false, false, false };
             private bool Recoil_Reducer = false;
             private int[] Players_Alive = new int[3];
-            private float[,] HealthPosition = Cons.HealthPosition; // i dotn know if i can change Cons variables in runtime ...
         #endregion
 
         #region Awake
@@ -88,14 +64,6 @@ namespace UnhandledExceptionHandler
         {
             UnityEngine.Debug.unityLogger.logEnabled = false;
             // recalculate HealthPositions for diffrent ecreen sizes
-            if (Cons.ScreenWidth != 1920 && Cons.ScreenHeight != 1080)
-            {
-                for (int x = 0; x < HealthPosition.Length; x++)
-                {
-                    HealthPosition[x, 0] = Cons.CalcSizeW(HealthPosition[x, 0]);
-                    HealthPosition[x, 1] = Cons.CalcSizeH(HealthPosition[x, 1]);
-                }
-            }
             m_Scen = new Scene(); // inicializate this shit cause or random error spams
         }
         #endregion
@@ -168,6 +136,16 @@ namespace UnhandledExceptionHandler
                 }
             #endregion
 
+            /*if (Input.GetKeyDown(KeyCode.Print)) {
+                saved_onGui = new bool[4] { ongui_draw_esp, ongui_draw_grenades, ongui_draw_lootitem, ongui_draw_corpses };
+                ongui_draw_esp = false;
+                ongui_draw_grenades = false;
+                ongui_draw_lootitem = false;
+                ongui_draw_corpses = false;
+                PrintScreened = true;
+                prtscrn_timestamp = Time.time + 2f;
+            }*/
+ 
             /* unused yet
 
             if (Input.GetKeyDown(KeyCode.Keypad9))
@@ -216,7 +194,7 @@ namespace UnhandledExceptionHandler
                             Cons.boxSize[2]
                             ),
                         text[i],
-                        WhiteText
+                        Statics.Colors.White
                         );
                 }
             }
@@ -231,7 +209,7 @@ namespace UnhandledExceptionHandler
                 {
                     GUI.color = new Color(1f,1f,1f,.8f);
                     #region Alive Number Display
-                    DF.DrawAlive(Players_Alive, new Vector2(1f, 185f));
+                        DF.DrawAlive(Players_Alive, new Vector2(1f, 185f));
                     #endregion
                     #region Player Health
                         DF.DrawRecoil(_localPlayer);
@@ -267,11 +245,52 @@ namespace UnhandledExceptionHandler
         }
         #endregion
 
+        private void setFullBright_update()
+        {
+            if (_localPlayer != null)
+            {
+                if (FullBright_Enabled)
+                {
+                    Vector3 playerPos = _localPlayer.Transform.position;
+                    playerPos.y += 1f;
+
+                    lightGameObject.transform.position = playerPos;
+                    FullBrightLight.range = 1000;
+                }
+                else
+                {
+                    GameObject.Destroy(FullBrightLight);
+                    lightCalled = false;
+                }
+            }
+        }
+        private void setFullBright_onGui()
+        {
+            if (!lightCalled)
+            {
+                lightGameObject = new GameObject("Fullbright");
+                FullBrightLight = lightGameObject.AddComponent<Light>();
+                FullBrightLight.color = Color.white;
+                lightCalled = true;
+            }
+        }
+
         #region Update
         private void Update()
         {
             Hotkeys();
             //update diffrent then ongui - so be carefull
+            /*if (PrintScreened)
+            {
+                if (prtscrn_timestamp < Time.time)
+                {
+                    ongui_draw_esp = saved_onGui[0];
+                    ongui_draw_grenades = saved_onGui[1];
+                    ongui_draw_lootitem = saved_onGui[2];
+                    ongui_draw_corpses = saved_onGui[3];
+                    PrintScreened = false;
+                }
+            }*/
             if (inMatch())
             {
                 if (timestamp == 0f)
@@ -337,7 +356,7 @@ namespace UnhandledExceptionHandler
                                     //"EFT.Interactive.ObservedCorpse" as online corpse
                                     //"EFT.Interactive.Corpse" as offline corpse
                                 LootItem temp = temporalCorpsesEnum.Current;
-                                if (temp.GetType() == corpses_online || temp.GetType() == corpses_offline)
+                                if (temp.GetType() == Types.Corpse || temp.GetType() == Types.ObserverCorpse)
                                     tCorpses.Add(temp);
                             } _corpses = tCorpses;
                         }
@@ -352,7 +371,7 @@ namespace UnhandledExceptionHandler
                                     //"EFT.Interactive.ObservedLootItem" as online LootItem
                                     //"EFT.Interactive.LootItem" as offline LootItem
                                 LootItem temp = temporalItemsEnum.Current;
-                                if (temp.GetType() == LootItems_online || temp.GetType() == LootItems_offline)
+                                if (temp.GetType() == Types.LootItem || temp.GetType() == Types.LootItem)
                                     tItems.Add(temp);
                             } _lootItems = tItems;
                         }
@@ -370,6 +389,7 @@ namespace UnhandledExceptionHandler
                          }
                          */
                         RecoilReducer();
+                        setFullBright_update();
                     }
                 }
             }
@@ -382,7 +402,6 @@ namespace UnhandledExceptionHandler
                 _grenades = null;
                 _corpses = null;
                 _lootItems = null;
-                
             }
 
         }
@@ -407,30 +426,32 @@ namespace UnhandledExceptionHandler
                 if (ongui_draw_grenades)
                 {
                     enabled = enabled + "G";
-                    Drawing_Data.DrawBombs(_grenades, _localPlayer, Cons.RenderDistances[4]);
+                    Drawing_Data.DrawDTG(_grenades, _localPlayer, Cons.RenderDistances[4]);
                 }
                 if (ongui_draw_lootitem)
                 {
                     enabled = enabled + "L";
-                    Drawing_Data.DrawLogs(_lootItems, Cons.RenderDistances[3]);
+                    Drawing_Data.DrawDLI(_lootItems, Cons.RenderDistances[3]);
                 }
                 if (ongui_draw_corpses)
                 {
                     enabled = enabled + "C";
-                    Drawing_Data.DrawLI(_corpses, Cons.RenderDistances[3]);
+                    Drawing_Data.DrawPDB(_corpses, Cons.RenderDistances[3]);
                 }
                 if (DisplayDebugData)
                 {
-                    GUI.Label(
+                    EDS.Text(
                         new Rect(
                             Cons.CalcSizeW(1f),
                             Cons.CalcSizeH(300f),
                             Cons.boxSize[20],
                             Cons.boxSize[2]
                             ),
-                        enabled
+                        enabled,
+                        Statics.Colors.White
                     );
                 }
+                setFullBright_onGui();
             }
             else
             {
@@ -444,20 +465,10 @@ namespace UnhandledExceptionHandler
             DisplayMenu();
             HelpMenu();
             #region hide me nygga
-            EDS.L(new Vector2(Cons.CalcSizeW(194f), Cons.CalcSizeH(1065f)), new Vector2(Cons.CalcSizeW(285f), Cons.CalcSizeH(1065f)), Color.black, 20f);
+                EDS.L(new Vector2(Cons.CalcSizeW(184f), Cons.CalcSizeH(1065f)), new Vector2(Cons.CalcSizeW(245f), Cons.CalcSizeH(1065f)), Color.black, 20f);
             #endregion
 
         }
         #endregion
-    }
-    class ErrorHandler
-    {
-        public static void Catch(string Func_Name, Exception exception)
-        {
-            string LocalStorage = Cons.MyDocuments + "\\_Maoci_Logs\\";
-            if (!Directory.Exists(LocalStorage))
-                Directory.CreateDirectory(LocalStorage);
-            File.WriteAllText(LocalStorage + Func_Name + ".log", "ErrorStart >>>>>>>>>>>>>" + Environment.NewLine + exception.Message + "|" + Environment.NewLine + exception.Source + "|" + Environment.NewLine + exception.StackTrace + Environment.NewLine + "ErrorEnds <<<<<<<<<<<<<" + Environment.NewLine);
-        }
     }
 }

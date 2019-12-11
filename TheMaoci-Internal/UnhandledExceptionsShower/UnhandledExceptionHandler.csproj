@@ -72,10 +72,14 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Cons.cs" />
+    <Compile Include="ErrorHandler.cs" />
     <Compile Include="Functions\AFunc.cs" />
     <Compile Include="Functions\EFunc.cs" />
     <Compile Include="Functions\FMath.cs" />
-    <Compile Include="Functions\LPBFunc.cs" />
+    <Compile Include="Functions\Functions.cs" />
+    <Compile Include="Statics.cs" />
+    <Compile Include="Types.cs" />
     <Compile Include="UnhandledExceptionHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Functions\EDS.cs" />

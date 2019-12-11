@@ -9,6 +9,7 @@ namespace UnhandledExceptionHandler.Functions
         #region DrawPixel
         public static void P(Vector2 Position, Color color, float thickness)
         {
+            GUI.color = color;
             if (_coloredLineTexture == null || _coloredLineColor != color)
             {
                 _coloredLineColor = color;
@@ -53,6 +54,7 @@ namespace UnhandledExceptionHandler.Functions
             GUIUtility.RotateAroundPivot(-pivot, lineStart);
         }
         #endregion
+        #region Drawing Shadowed Text
         public static void DrawShadow(Rect rect, GUIContent content, GUIStyle style, Color txtColor, Color shadowColor, Vector2 direction)
         {
             GUIStyle backupStyle = style;
@@ -67,6 +69,8 @@ namespace UnhandledExceptionHandler.Functions
 
             style = backupStyle;
         }
+        #endregion
+        #region Easy Text Draw with small shadow
         public static void Text(Rect rect, string content, Color txtColor)
         {
             GUIStyle style = new GUIStyle();
@@ -82,6 +86,6 @@ namespace UnhandledExceptionHandler.Functions
             GUI.Label(rect, content, style);
             style = backupStyle;
         }
-
+        #endregion
     }
 }
