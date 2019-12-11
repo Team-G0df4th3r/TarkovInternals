@@ -215,8 +215,7 @@ namespace UnhandledExceptionHandler
                 {
                     GUI.color = new Color(1f,1f,1f,.8f);
                     #region Alive Number Display
-                    //
-                   // DF.DrawAlive(Players_Alive_all, Players_Alive_hun, Players_Alive_ht2, new Vector2(1f, 185f));
+                        DF.DrawAlive(Players_Alive_all, Players_Alive_hun, Players_Alive_ht2, new Vector2(1f, 185f));
                     #endregion
                     #region Player Health
                         DF.DrawRecoil(_localPlayer);
