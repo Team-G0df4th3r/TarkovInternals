@@ -6,14 +6,14 @@ namespace UnhandledExceptionHandler
 {
     class DF
     {
-        public static void DrawAlive(int[] Players_Alive, Vector2 InitialPosition)
+        public static void DrawAlive(int Players_Alive_all, int Players_Alive_hun, int Players_Alive_ht2, Vector2 InitialPosition)
         {
-            if (Players_Alive[0] != 0)
-                EDS.Text(new Rect(InitialPosition.x, Cons.CalcSizeH(InitialPosition.y), Cons.boxSize[20], Cons.boxSize[2]), "Alive: " + (Players_Alive[0]).ToString(), Statics.Colors.White);
-            if (Players_Alive[1] != 0)
-                EDS.Text(new Rect(InitialPosition.x, Cons.CalcSizeH(InitialPosition.y + 20f), Cons.boxSize[20], Cons.boxSize[2]), "<100m:" + (Players_Alive[1]).ToString(), Statics.Colors.White);
-            if (Players_Alive[2] != 0)
-                EDS.Text(new Rect(InitialPosition.x, Cons.CalcSizeH(InitialPosition.y + 40f), Cons.boxSize[20], Cons.boxSize[2]), "100m - 250m:" + (Players_Alive[2] - Players_Alive[1]).ToString(), Statics.Colors.White);
+            if (Players_Alive_all != 0)
+                EDS.Text(new Rect(InitialPosition.x, Cons.CalcSizeH(InitialPosition.y), Cons.boxSize[20], Cons.boxSize[2]), "Alive: " + (Players_Alive_all).ToString(), Statics.Colors.White);
+            if (Players_Alive_hun != 0)
+                EDS.Text(new Rect(InitialPosition.x, Cons.CalcSizeH(InitialPosition.y + 20f), Cons.boxSize[20], Cons.boxSize[2]), "<100m:" + (Players_Alive_hun).ToString(), Statics.Colors.White);
+            if (Players_Alive_ht2 != 0)
+                EDS.Text(new Rect(InitialPosition.x, Cons.CalcSizeH(InitialPosition.y + 40f), Cons.boxSize[20], Cons.boxSize[2]), "100m - 250m:" + (Players_Alive_ht2).ToString(), Statics.Colors.White);
         }
         public static void DrawRecoil(Player _localPlayer) {
             if (_localPlayer.ProceduralWeaponAnimation.Shootingg.Intensity != 1f)

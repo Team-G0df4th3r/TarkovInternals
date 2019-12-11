@@ -45,7 +45,8 @@ namespace UnhandledExceptionHandler
                 Switch_Colors = false,
                 DisplayDebugData = false,
                 PrintScreened = false,
-                FullBright_Enabled = false;
+                FullBright_Enabled = false,
+                AimingAtNikita = false;
         #region Full bright
         public GameObject lightGameObject;
         public Light FullBrightLight;
@@ -56,7 +57,9 @@ namespace UnhandledExceptionHandler
 
         private bool[] saved_onGui = new bool[4] { false, false, false, false };
             private bool Recoil_Reducer = false;
-            private int[] Players_Alive = new int[3];
+        private int Players_Alive_all = 0;
+        private int Players_Alive_hun = 0;
+        private int Players_Alive_ht2 = 0;
         #endregion
 
         #region Awake
@@ -212,7 +215,8 @@ namespace UnhandledExceptionHandler
                 {
                     GUI.color = new Color(1f,1f,1f,.8f);
                     #region Alive Number Display
-                        DF.DrawAlive(Players_Alive, new Vector2(1f, 185f));
+                    //
+                   // DF.DrawAlive(Players_Alive_all, Players_Alive_hun, Players_Alive_ht2, new Vector2(1f, 185f));
                     #endregion
                     #region Player Health
                         DF.DrawRecoil(_localPlayer);
@@ -281,196 +285,227 @@ namespace UnhandledExceptionHandler
         #region Update
         private void Update()
         {
-            this.m_Scen = SceneManager.GetActiveScene();
-            this.m_Scen_name = m_Scen.name;
-            Hotkeys();
-            //update diffrent then ongui - so be carefull
-            /*if (PrintScreened)
+            try
             {
-                if (prtscrn_timestamp < Time.time)
+                this.m_Scen = SceneManager.GetActiveScene();
+                this.m_Scen_name = m_Scen.name;
+                Hotkeys();
+
+                if (Input.GetKeyDown(KeyCode.Mouse3)) // You can change it or create a GUI for change it in game
                 {
-                    ongui_draw_esp = saved_onGui[0];
-                    ongui_draw_grenades = saved_onGui[1];
-                    ongui_draw_lootitem = saved_onGui[2];
-                    ongui_draw_corpses = saved_onGui[3];
-                    PrintScreened = false;
+                    AimingAtNikita = !AimingAtNikita;
                 }
-            }*/
-            if (inMatch())
-            {
-                if (timestamp == 0f)
-                    timestamp = Time.time + 20f;
-                if (Time.time > timestamp)
+                //update diffrent then ongui - so be carefull
+                /*if (PrintScreened)
                 {
-                    if (_GameWorld == null)
+                    if (prtscrn_timestamp < Time.time)
                     {
-                        _GameWorld = FindObjectOfType<GameWorld>();
+                        ongui_draw_esp = saved_onGui[0];
+                        ongui_draw_grenades = saved_onGui[1];
+                        ongui_draw_lootitem = saved_onGui[2];
+                        ongui_draw_corpses = saved_onGui[3];
+                        PrintScreened = false;
                     }
-                    else
+                }*/
+                if (inMatch())
+                {
+                    if (timestamp == 0f)
+                        timestamp = Time.time + 20f;
+                    if (Time.time > timestamp)
                     {
-                        // thanks for LiquidAce for explaining this mess with GameWorld !!!
-                        Players_Alive = new int[3] { 0, 0, 0 };
-                        #region Players
-                        if (ongui_draw_esp)
+                        if (_GameWorld == null)
                         {
-                            List<Player> tPlayer = new List<Player>();
-                            foreach (Player p in _GameWorld.RegisteredPlayers)
+                            _GameWorld = FindObjectOfType<GameWorld>();
+                        }
+                        else
+                        {
+                            // thanks for LiquidAce for explaining this mess with GameWorld !!!
+                            Players_Alive_all = 0;
+                            Players_Alive_hun = 0;
+                            Players_Alive_ht2 = 0;
+                            #region Players
+                            if (ongui_draw_esp)
                             {
-                                if (p.PointOfView == EPointOfView.FirstPerson)
+                                List<Player> tPlayer = new List<Player>();
+                                foreach (Player p in _GameWorld.RegisteredPlayers)
                                 {
-                                    _localPlayer = p;
-                                }
-                                else
-                                {
-                                    if (p.HealthController.IsAlive)
+                                    if (p.PointOfView == EPointOfView.FirstPerson)
                                     {
-                                        Players_Alive[0]++;
-                                        float distance = FMath.FD(Camera.main.transform.position, p.Transform.position);
-                                        if (distance <= 100f)
+                                        _localPlayer = p;
+                                    }
+                                    else
+                                    {
+                                        if (p.HealthController.IsAlive)
                                         {
-                                            Players_Alive[1]++;
-                                        }
-                                        if (distance <= 250f)
-                                        {
-                                            Players_Alive[2]++;
+                                            
+                                            Players_Alive_all++;
+                                            float distance = FMath.FD(Camera.main.transform.position, p.Transform.position);
+                                            if (distance <= 100f)
+                                            {
+                                                Players_Alive_hun++;
+                                            }
+                                            if (distance > 100f && distance <= 250f)
+                                            {
+                                                Players_Alive_ht2++;
+                                            }
+                                            if (distance > 1f && distance <= Cons.RenderDistances[0] && Camera.main.WorldToScreenPoint(p.Transform.position).z > 0.01f)
+                                            {
+                                                tPlayer.Add(p);
+                                            }
                                         }
                                     }
-                                    tPlayer.Add(p);
                                 }
-                            } _players = tPlayer;
-                        }
-                        #endregion
-                        #region Grenades
-                        if (ongui_draw_grenades)
-                        {
-                            List<Throwable> tGrenades = new List<Throwable>();
-                            List<Throwable>.Enumerator grenades = _GameWorld.Grenades.GetValuesEnumerator().GetEnumerator();
-                            while (grenades.MoveNext())
+                                _players = tPlayer;
+                            }
+                            #endregion
+                            #region Grenades
+                            if (ongui_draw_grenades)
                             {
-                                tGrenades.Add(grenades.Current);
-                            } _grenades = tGrenades;
-                        }
-                        #endregion
-                        #region Corpses
-                        if (ongui_draw_corpses)
-                        {
-                            List<LootItem> tCorpses = new List<LootItem>();
-                            List<LootItem>.Enumerator temporalCorpsesEnum = _GameWorld.LootItems.GetValuesEnumerator().GetEnumerator();
-                            while (temporalCorpsesEnum.MoveNext())
+                                List<Throwable> tGrenades = new List<Throwable>();
+                                List<Throwable>.Enumerator grenades = _GameWorld.Grenades.GetValuesEnumerator().GetEnumerator();
+                                while (grenades.MoveNext())
+                                {
+                                    tGrenades.Add(grenades.Current);
+                                }
+                                _grenades = tGrenades;
+                            }
+                            #endregion
+                            #region Corpses
+                            if (ongui_draw_corpses)
                             {
+                                List<LootItem> tCorpses = new List<LootItem>();
+                                List<LootItem>.Enumerator temporalCorpsesEnum = _GameWorld.LootItems.GetValuesEnumerator().GetEnumerator();
+                                while (temporalCorpsesEnum.MoveNext())
+                                {
                                     //"EFT.Interactive.ObservedCorpse" as online corpse
                                     //"EFT.Interactive.Corpse" as offline corpse
-                                LootItem temp = temporalCorpsesEnum.Current;
-                                if (temp.GetType() == Types.Corpse || temp.GetType() == Types.ObserverCorpse)
-                                    tCorpses.Add(temp);
-                            } _corpses = tCorpses;
-                        }
-                        #endregion
-                        #region AllLoot
-                        if (ongui_draw_lootitem)
-                        {
-                            List<LootItem> tItems = new List<LootItem>();
-                            List<LootItem>.Enumerator temporalItemsEnum = _GameWorld.LootItems.GetValuesEnumerator().GetEnumerator();
-                            while (temporalItemsEnum.MoveNext())
+                                    LootItem temp = temporalCorpsesEnum.Current;
+                                    if (temp.GetType() == Types.Corpse || temp.GetType() == Types.ObserverCorpse)
+                                        tCorpses.Add(temp);
+                                }
+                                _corpses = tCorpses;
+                            }
+                            #endregion
+                            #region AllLoot
+                            if (ongui_draw_lootitem)
                             {
+                                List<LootItem> tItems = new List<LootItem>();
+                                List<LootItem>.Enumerator temporalItemsEnum = _GameWorld.LootItems.GetValuesEnumerator().GetEnumerator();
+                                while (temporalItemsEnum.MoveNext())
+                                {
                                     //"EFT.Interactive.ObservedLootItem" as online LootItem
                                     //"EFT.Interactive.LootItem" as offline LootItem
-                                LootItem temp = temporalItemsEnum.Current;
-                                if (temp.GetType() == Types.LootItem || temp.GetType() == Types.LootItem)
-                                    tItems.Add(temp);
-                            } _lootItems = tItems;
-                        }
-                        #endregion
-                        /*
-                         - Items Patterns located on maps -
-                         if (ongui_draw_lootitem)
-                         {
-                             List<GClass711> tItems = new List<GClass711>();
-                             foreach (GClass711 li in _GameWorld.AllLoot)
+                                    LootItem temp = temporalItemsEnum.Current;
+                                    if (temp.GetType() == Types.LootItem || temp.GetType() == Types.LootItem)
+                                        tItems.Add(temp);
+                                }
+                                _lootItems = tItems;
+                            }
+                            #endregion
+                            /*
+                             - Items Patterns located on maps -
+                             if (ongui_draw_lootitem)
                              {
-                                 tItems.Add(li);
+                                 List<GClass711> tItems = new List<GClass711>();
+                                 foreach (GClass711 li in _GameWorld.AllLoot)
+                                 {
+                                     tItems.Add(li);
+                                 }
+                                 _lootItems = tItems;
                              }
-                             _lootItems = tItems;
-                         }
-                         */
-                        RecoilReducer();
-                        setFullBright_update();
+                             */
+                            RecoilReducer();
+                            setFullBright_update();
+                        }
                     }
                 }
+                else
+                {
+                    Players_Alive_all = 0;
+                    Players_Alive_hun = 0;
+                    Players_Alive_ht2 = 0;
+                    timestamp = 0f;
+                    _GameWorld = null;
+                    _players = null;
+                    _grenades = null;
+                    _corpses = null;
+                    _lootItems = null;
+                }
             }
-            else
-            {
-                Players_Alive = new int[3] { 0, 0, 0 };
-                timestamp = 0f;
-                _GameWorld = null;
-                _players = null;
-                _grenades = null;
-                _corpses = null;
-                _lootItems = null;
+            catch (Exception e) {
+                ErrorHandler.Catch("MainLoopUpdate", e);
             }
-
         }
         #endregion
 
         #region OnGui
         private void OnGUI()
         {
-            //Updates Each Frame
-            GUI.color = Color.white;
-            if (inMatch())
-            {
-                EDS.P(new Vector2(1f, 1f), Color.red, 1f);
-                string enabled = "";
-                if (ongui_draw_esp)
-                {
-                    enabled = enabled + "P";
-                    Drawing_Data.DrawPlayers(_players, _localPlayer, Cons.RenderDistances[0], Switch_Colors, DisplayCorpses);
-                }
-                if (ongui_draw_grenades)
-                {
-                    enabled = enabled + "G";
-                    Drawing_Data.DrawDTG(_grenades, _localPlayer, Cons.RenderDistances[4]);
-                }
-                if (ongui_draw_lootitem)
-                {
-                    enabled = enabled + "L";
-                    Drawing_Data.DrawDLI(_lootItems, Cons.RenderDistances[3]);
-                }
-                if (ongui_draw_corpses)
-                {
-                    enabled = enabled + "C";
-                    Drawing_Data.DrawPDB(_corpses, Cons.RenderDistances[3]);
-                }
-                if (DisplayDebugData)
-                {
-                    EDS.Text(
-                        new Rect(
-                            Cons.CalcSizeW(1f),
-                            Cons.CalcSizeH(300f),
-                            Cons.boxSize[20],
-                            Cons.boxSize[2]
-                            ),
-                        enabled,
-                        Statics.Colors.White
-                    );
-                }
-                setFullBright_onGui();
-            }
-            else
-            {
-                ongui_draw_esp = false;
-                ongui_draw_grenades = false;
-                ongui_draw_lootitem = false;
-                ongui_draw_corpses = false;
+            try {
+                //Updates Each Frame
                 GUI.color = Color.white;
-                EDS.P(new Vector2(1f, 1f), Color.white, 1f);
+                if (inMatch())
+                {
+                    EDS.P(new Vector2(1f, 1f), Color.red, 1f);
+                    string enabled = "";
+                    if (ongui_draw_esp)
+                    {
+                        enabled = enabled + "P";
+                        Drawing_Data.DrawPlayers(_players, _localPlayer, Cons.RenderDistances[0], Switch_Colors, DisplayCorpses);
+                    }
+                    if (ongui_draw_grenades)
+                    {
+                        enabled = enabled + "G";
+                        Drawing_Data.DrawDTG(_grenades, _localPlayer, Cons.RenderDistances[4]);
+                    }
+                    if (ongui_draw_lootitem)
+                    {
+                        enabled = enabled + "L";
+                        Drawing_Data.DrawDLI(_lootItems, Cons.RenderDistances[3]);
+                    }
+                    if (ongui_draw_corpses)
+                    {
+                        enabled = enabled + "C";
+                        Drawing_Data.DrawPDB(_corpses, Cons.RenderDistances[3]);
+                    }
+                    if (AimingAtNikita) {
+                        enabled = enabled + "A";
+                        AFunc.TargetLock(_players, _localPlayer, 2, 200f, 100);
+                    }
+                    if (DisplayDebugData)
+                    {
+                        EDS.Text(
+                            new Rect(
+                                Cons.CalcSizeW(1f),
+                                Cons.CalcSizeH(300f),
+                                Cons.boxSize[20],
+                                Cons.boxSize[2]
+                                ),
+                            enabled,
+                            Statics.Colors.White
+                        );
+                    }
+                    setFullBright_onGui();
+                }
+                else
+                {
+                    ongui_draw_esp = false;
+                    ongui_draw_grenades = false;
+                    ongui_draw_lootitem = false;
+                    ongui_draw_corpses = false;
+                    GUI.color = Color.white;
+                    EDS.P(new Vector2(1f, 1f), Color.white, 1f);
+                }
+                DisplayMenu();
+                HelpMenu();
+                #region hide me nygga
+                    EDS.L(new Vector2(Cons.CalcSizeW(184f), Cons.CalcSizeH(1065f)), new Vector2(Cons.CalcSizeW(245f), Cons.CalcSizeH(1065f)), Color.black, 20f);
+                    #endregion
             }
-            DisplayMenu();
-            HelpMenu();
-            #region hide me nygga
-                EDS.L(new Vector2(Cons.CalcSizeW(184f), Cons.CalcSizeH(1065f)), new Vector2(Cons.CalcSizeW(245f), Cons.CalcSizeH(1065f)), Color.black, 20f);
-            #endregion
-
+            catch (Exception e)
+            {
+                ErrorHandler.Catch("MainLoopUpdate", e);
+            }
         }
         #endregion
     }

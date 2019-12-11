@@ -223,166 +223,160 @@ namespace UnhandledExceptionHandler.Functions
             Color playerColor = Statics.Colors.ESP.npc;
             foreach (Player player in _PlayersList)
             {
-                if (player.HealthController.IsAlive)
-                {
-                    float dTO = FMath.FD(Camera.main.transform.position, player.Transform.position);
-                    if (dTO > 1f && dTO <= _viewdistance && Camera.main.WorldToScreenPoint(player.Transform.position).z > 0.01f)
-                    {
-                        // main head vector 3d (x,y,z)
-                        Vector3 pHeadVector = Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position);
-                        // setting head size comparing head position and neck position and multiplying by 1.5 (actually its head size)
-                        float find_sizebox = Math.Abs(pHeadVector.y - Camera.main.WorldToScreenPoint(player.PlayerBones.Neck.position).y) * 1.5f; // size of the head - its not good but its scaling without much maths
-                        // making sure head will not be too big
-                        find_sizebox = (find_sizebox > 30f) ? 30f : find_sizebox;
-                        float half_sizebox = (find_sizebox > 30f) ? 15f : find_sizebox / 2f;
-                        // size of fonts depending on distance
-                        int FontSize = 12;
-                        FMath.DistSizer(dTO, ref FontSize, ref deltaDistance, ref devLabel);
-                        LabelSize.fontSize = FontSize;
-                        //create 3 size table of distances for texts (name, status, weapon)
-                        float[] distancesAxisY = new float[3] {
-                            deltaDistance + 20f,
-                            deltaDistance + (FontSize + 1) + 20f,
-                            deltaDistance + (FontSize + FontSize + 2) + 20f };
+                float dTO = FMath.FD(Camera.main.transform.position, player.Transform.position);
+                    // main head vector 3d (x,y,z)
+                    Vector3 pHeadVector = Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position);
+                    // setting head size comparing head position and neck position and multiplying by 1.5 (actually its head size)
+                    float find_sizebox = Math.Abs(pHeadVector.y - Camera.main.WorldToScreenPoint(player.PlayerBones.Neck.position).y) * 1.5f; // size of the head - its not good but its scaling without much maths
+                    // making sure head will not be too big
+                    find_sizebox = (find_sizebox > 30f) ? 30f : find_sizebox;
+                    float half_sizebox = (find_sizebox > 30f) ? 15f : find_sizebox / 2f;
+                    // size of fonts depending on distance
+                    int FontSize = 12;
+                    FMath.DistSizer(dTO, ref FontSize, ref deltaDistance, ref devLabel);
+                    LabelSize.fontSize = FontSize;
+                    //create 3 size table of distances for texts (name, status, weapon)
+                    float[] distancesAxisY = new float[3] {
+                        deltaDistance + 20f,
+                        deltaDistance + (FontSize + 1) + 20f,
+                        deltaDistance + (FontSize + FontSize + 2) + 20f };
 
-                        Status = ((int)(player.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Common).Current)).ToString() + " hp"; // Health here 
-                        #region BONE ESP
-                        if (dTO < 100f)
-                        {
-                            var pRPVect = Camera.main.WorldToScreenPoint(player.PlayerBones.RightPalm.position);
-                            var PLPVect = Camera.main.WorldToScreenPoint(player.PlayerBones.LeftPalm.position);
-                            var PLShVect = Camera.main.WorldToScreenPoint(player.PlayerBones.LeftShoulder.position);
-                            var PLRShVect = Camera.main.WorldToScreenPoint(player.PlayerBones.RightShoulder.position);
-                            var PLNeckVect = Camera.main.WorldToScreenPoint(player.PlayerBones.Neck.position);
-                            var PLCentrVect = Camera.main.WorldToScreenPoint(player.PlayerBones.Pelvis.position);
-                            var PLRTighVect = Camera.main.WorldToScreenPoint(player.PlayerBones.RightThigh2.position);
-                            var PLLTighVect = Camera.main.WorldToScreenPoint(player.PlayerBones.LeftThigh2.position);
-                            var PLRFootVect = Camera.main.WorldToScreenPoint(player.PlayerBones.KickingFoot.position);
-                            var PLLFootVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 18));
-                            var PLLBowVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 91));
-                            var PLRBowVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 112));
-                            var PLLKneeVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 17));
-                            var PLRKneeVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 22));
-                            EDS.L(new Vector2(PLNeckVect.x, (float)Screen.height - PLNeckVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), playerColor, 1f);
-                            EDS.L(new Vector2(PLShVect.x, (float)Screen.height - PLShVect.y), new Vector2(PLLBowVect.x, (float)Screen.height - PLLBowVect.y), playerColor, 1f);
-                            EDS.L(new Vector2(PLRShVect.x, (float)Screen.height - PLRShVect.y), new Vector2(PLRBowVect.x, (float)Screen.height - PLRBowVect.y), playerColor, 1f);
-                            EDS.L(new Vector2(PLLBowVect.x, (float)Screen.height - PLLBowVect.y), new Vector2(PLPVect.x, (float)Screen.height - PLPVect.y), playerColor, 1f);
-                            EDS.L(new Vector2(PLRBowVect.x, (float)Screen.height - PLRBowVect.y), new Vector2(pRPVect.x, (float)Screen.height - pRPVect.y), playerColor, 1f);
-                            EDS.L(new Vector2(PLRShVect.x, (float)Screen.height - PLRShVect.y), new Vector2(PLShVect.x, (float)Screen.height - PLShVect.y), playerColor, 1f);
-                            EDS.L(new Vector2(PLLKneeVect.x, (float)Screen.height - PLLKneeVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), playerColor, 1f);
-                            EDS.L(new Vector2(PLRKneeVect.x, (float)Screen.height - PLRKneeVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), playerColor, 1f);
-                            EDS.L(new Vector2(PLLKneeVect.x, (float)Screen.height - PLLKneeVect.y), new Vector2(PLLFootVect.x, (float)Screen.height - PLLFootVect.y), playerColor, 1f);
-                            EDS.L(new Vector2(PLRKneeVect.x, (float)Screen.height - PLRKneeVect.y), new Vector2(PLRFootVect.x, (float)Screen.height - PLRFootVect.y), playerColor, 1f);
-                        }
-                        #endregion
-                        #region Set: PlayerName / Color / Head Pixel
-                        if (player.Profile.Info.RegistrationDate <= 0)
-                        {
-                            playerDisplayName = "";
-                            playerColor = Statics.Colors.ESP.npc;
-                            EDS.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Statics.Colors.Red, find_sizebox);
-                        }
-                        else if (LocalPlayer.Profile.Info.GroupId == player.Profile.Info.GroupId && LocalPlayer.Profile.Info.GroupId != "0" && LocalPlayer.Profile.Info.GroupId != "" && LocalPlayer.Profile.Info.GroupId != null)
-                        {
-                            playerDisplayName = player.Profile.Info.Nickname;
-                            playerColor = Statics.Colors.ESP.group;
-                        }
-                        else if (player.Profile.Info.Side == EPlayerSide.Savage)
-                        {
-                            playerDisplayName = "";
-                            playerColor = Statics.Colors.ESP.scav_player;
-                            GUI.color = Color.red;
-                            EDS.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Statics.Colors.Red, find_sizebox);
-                        }
-                        else
-                        {
-                            playerDisplayName = player.Profile.Info.Nickname;
-                            playerColor = Statics.Colors.ESP.player[0];
-                            EDS.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Statics.Colors.Red, find_sizebox);
-                        }
-                        #endregion
-                        #region Prepare Main Texts
-                        string nameNickname = $"{playerDisplayName}";
-                        string playerStatus = $"[{(int)dTO}m] {Status}";
-                        string WeaponName = "";
-                        #endregion
-                        #region Try to decode weapon name
-                        try
-                        {
-                            WeaponName = player.Weapon.ShortName.Localized();
-                        }
-                        catch (Exception e)
-                        {
-                            UnhandledExceptionHandler.ErrorHandler.Catch("WeaponNames", e);
-                        }
-                        #endregion
+                    Status = ((int)(player.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Common).Current)).ToString() + " hp"; // Health here 
+                    #region BONE ESP
+                    if (dTO < 100f)
+                    {
+                        var pRPVect = Camera.main.WorldToScreenPoint(player.PlayerBones.RightPalm.position);
+                        var PLPVect = Camera.main.WorldToScreenPoint(player.PlayerBones.LeftPalm.position);
+                        var PLShVect = Camera.main.WorldToScreenPoint(player.PlayerBones.LeftShoulder.position);
+                        var PLRShVect = Camera.main.WorldToScreenPoint(player.PlayerBones.RightShoulder.position);
+                        var PLNeckVect = Camera.main.WorldToScreenPoint(player.PlayerBones.Neck.position);
+                        var PLCentrVect = Camera.main.WorldToScreenPoint(player.PlayerBones.Pelvis.position);
+                        var PLRTighVect = Camera.main.WorldToScreenPoint(player.PlayerBones.RightThigh2.position);
+                        var PLLTighVect = Camera.main.WorldToScreenPoint(player.PlayerBones.LeftThigh2.position);
+                        var PLRFootVect = Camera.main.WorldToScreenPoint(player.PlayerBones.KickingFoot.position);
+                        var PLLFootVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 18));
+                        var PLLBowVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 91));
+                        var PLRBowVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 112));
+                        var PLLKneeVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 17));
+                        var PLRKneeVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 22));
+                        EDS.DrawLine(new Vector2(PLNeckVect.x, (float)Screen.height - PLNeckVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), playerColor, 1);
+                        EDS.DrawLine(new Vector2(PLShVect.x, (float)Screen.height - PLShVect.y), new Vector2(PLLBowVect.x, (float)Screen.height - PLLBowVect.y), playerColor, 1);
+                        EDS.DrawLine(new Vector2(PLRShVect.x, (float)Screen.height - PLRShVect.y), new Vector2(PLRBowVect.x, (float)Screen.height - PLRBowVect.y), playerColor, 1);
+                        EDS.DrawLine(new Vector2(PLLBowVect.x, (float)Screen.height - PLLBowVect.y), new Vector2(PLPVect.x, (float)Screen.height - PLPVect.y), playerColor, 1);
+                        EDS.DrawLine(new Vector2(PLRBowVect.x, (float)Screen.height - PLRBowVect.y), new Vector2(pRPVect.x, (float)Screen.height - pRPVect.y), playerColor, 1);
+                        EDS.DrawLine(new Vector2(PLRShVect.x, (float)Screen.height - PLRShVect.y), new Vector2(PLShVect.x, (float)Screen.height - PLShVect.y), playerColor, 1);
+                        EDS.DrawLine(new Vector2(PLLKneeVect.x, (float)Screen.height - PLLKneeVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), playerColor, 1);
+                        EDS.DrawLine(new Vector2(PLRKneeVect.x, (float)Screen.height - PLRKneeVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), playerColor, 1);
+                        EDS.DrawLine(new Vector2(PLLKneeVect.x, (float)Screen.height - PLLKneeVect.y), new Vector2(PLLFootVect.x, (float)Screen.height - PLLFootVect.y), playerColor, 1);
+                        EDS.DrawLine(new Vector2(PLRKneeVect.x, (float)Screen.height - PLRKneeVect.y), new Vector2(PLRFootVect.x, (float)Screen.height - PLRFootVect.y), playerColor, 1);
+                    }
+                    #endregion
+                    #region Set: PlayerName / Color / Head Pixel
+                    if (player.Profile.Info.RegistrationDate <= 0)
+                    {
+                        playerDisplayName = "";
+                        playerColor = Statics.Colors.ESP.npc;
+                        EDS.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Statics.Colors.Red, find_sizebox);
+                    }
+                    else if (LocalPlayer.Profile.Info.GroupId == player.Profile.Info.GroupId && LocalPlayer.Profile.Info.GroupId != "0" && LocalPlayer.Profile.Info.GroupId != "" && LocalPlayer.Profile.Info.GroupId != null)
+                    {
+                        playerDisplayName = player.Profile.Info.Nickname;
+                        playerColor = Statics.Colors.ESP.group;
+                    }
+                    else if (player.Profile.Info.Side == EPlayerSide.Savage)
+                    {
+                        playerDisplayName = "";
+                        playerColor = Statics.Colors.ESP.scav_player;
+                        GUI.color = Color.red;
+                        EDS.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Statics.Colors.Red, find_sizebox);
+                    }
+                    else
+                    {
+                        playerDisplayName = player.Profile.Info.Nickname;
+                        playerColor = Statics.Colors.ESP.player[0];
+                        EDS.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Statics.Colors.Red, find_sizebox);
+                    }
+                    #endregion
+                    #region Prepare Main Texts
+                    string nameNickname = $"{playerDisplayName}";
+                    string playerStatus = $"[{(int)dTO}m] {Status}";
+                    string WeaponName = "";
+                    #endregion
+                    #region Try to decode weapon name
+                    try
+                    {
+                        WeaponName = player.Weapon.ShortName.Localized();
+                    }
+                    catch (Exception e)
+                    {
+                        UnhandledExceptionHandler.ErrorHandler.Catch("WeaponNames", e);
+                    }
+                    #endregion
                         
-                        // set colors now
-                        LabelSize.normal.textColor = playerColor;
-                        GUI.color = playerColor;
-                        #region Slot 0 - Player Name (vector, size, drawing)
-                        if (nameNickname != "")
-                        {
-                            Vector2 vector_playerName = GUI.skin.GetStyle(nameNickname).CalcSize(new GUIContent(nameNickname));
-                            float player_NameText = (devLabel == 1f) ? vector_playerName.x : (vector_playerName.x / devLabel);
-                            //GUI.Label(new Rect(pHeadVector.x - player_NameText / 2f, (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY[0], player_NameText, vector_playerName.y), nameNickname, LabelSize);
-                            EDS.DrawShadow(
-                                new Rect(
-                                    pHeadVector.x - player_NameText / 2f,
-                                    (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY[0],
-                                    player_NameText,
-                                    vector_playerName.y
-                                    ),
-                                new GUIContent(nameNickname),
-                                LabelSize,
-                                playerColor,
-                                Statics.Colors.Black,
-                                new Vector2(1f, 1f)
-                            );
-                        }
-                        #endregion
-                        #region Slot 1 - Status (distance, health)
-                        Vector2 vector_playerStatus = GUI.skin.GetStyle(playerStatus).CalcSize(new GUIContent(playerStatus));
-                        float player_TextWidth = (devLabel == 1f) ? vector_playerStatus.x : (vector_playerStatus.x / devLabel);
-                        //GUI.Label(new Rect(pHeadVector.x - player_TextWidth / 2f, (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY[1], player_TextWidth, vector_playerStatus.y), playerStatus, LabelSize);
-                        GUIContent content = new GUIContent(playerStatus);
+                    // set colors now
+                    LabelSize.normal.textColor = playerColor;
+                    GUI.color = playerColor;
+                    #region Slot 0 - Player Name (vector, size, drawing)
+                    if (nameNickname != "")
+                    {
+                        Vector2 vector_playerName = GUI.skin.GetStyle(nameNickname).CalcSize(new GUIContent(nameNickname));
+                        float player_NameText = (devLabel == 1f) ? vector_playerName.x : (vector_playerName.x / devLabel);
+                        //GUI.Label(new Rect(pHeadVector.x - player_NameText / 2f, (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY[0], player_NameText, vector_playerName.y), nameNickname, LabelSize);
                         EDS.DrawShadow(
                             new Rect(
-                                pHeadVector.x - player_TextWidth / 2f, 
-                                (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY[1], 
-                                player_TextWidth, 
-                                vector_playerStatus.y
-                                ), 
-                            content, 
+                                pHeadVector.x - player_NameText / 2f,
+                                (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY[0],
+                                player_NameText,
+                                vector_playerName.y
+                                ),
+                            new GUIContent(nameNickname),
+                            LabelSize,
+                            playerColor,
+                            Statics.Colors.Black,
+                            new Vector2(1f, 1f)
+                        );
+                    }
+                    #endregion
+                    #region Slot 1 - Status (distance, health)
+                    Vector2 vector_playerStatus = GUI.skin.GetStyle(playerStatus).CalcSize(new GUIContent(playerStatus));
+                    float player_TextWidth = (devLabel == 1f) ? vector_playerStatus.x : (vector_playerStatus.x / devLabel);
+                    //GUI.Label(new Rect(pHeadVector.x - player_TextWidth / 2f, (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY[1], player_TextWidth, vector_playerStatus.y), playerStatus, LabelSize);
+                    GUIContent content = new GUIContent(playerStatus);
+                    EDS.DrawShadow(
+                        new Rect(
+                            pHeadVector.x - player_TextWidth / 2f, 
+                            (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY[1], 
+                            player_TextWidth, 
+                            vector_playerStatus.y
+                            ), 
+                        content, 
+                        LabelSize, 
+                        playerColor,
+                        Statics.Colors.Black, 
+                        new Vector2(1f, 1f)
+                    );
+                    #endregion
+                    #region Slot 2 - Weapon Name (vector, size, drawing) - if not empty
+                    if (WeaponName != "")
+                    {
+                        Vector2 vector_WeaponName = GUI.skin.GetStyle(WeaponName).CalcSize(new GUIContent(WeaponName));
+                        float player_WeaponName = (devLabel == 1f) ? vector_WeaponName.x : (vector_WeaponName.x / devLabel);
+                        //GUI.Label(new Rect(pHeadVector.x - player_WeaponName / 2f, (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY[2] - 20f, player_WeaponName, vector_WeaponName.y), WeaponName, LabelSize);
+                        EDS.DrawShadow(
+                            new Rect(
+                                pHeadVector.x - player_WeaponName / 2f, 
+                                (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY[2], 
+                                player_WeaponName, 
+                                vector_WeaponName.y
+                                ),
+                            new GUIContent(WeaponName), 
                             LabelSize, 
                             playerColor,
                             Statics.Colors.Black, 
                             new Vector2(1f, 1f)
                         );
-                        #endregion
-                        #region Slot 2 - Weapon Name (vector, size, drawing) - if not empty
-                        if (WeaponName != "")
-                        {
-                            Vector2 vector_WeaponName = GUI.skin.GetStyle(WeaponName).CalcSize(new GUIContent(WeaponName));
-                            float player_WeaponName = (devLabel == 1f) ? vector_WeaponName.x : (vector_WeaponName.x / devLabel);
-                            //GUI.Label(new Rect(pHeadVector.x - player_WeaponName / 2f, (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY[2] - 20f, player_WeaponName, vector_WeaponName.y), WeaponName, LabelSize);
-                            EDS.DrawShadow(
-                                new Rect(
-                                    pHeadVector.x - player_WeaponName / 2f, 
-                                    (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY[2], 
-                                    player_WeaponName, 
-                                    vector_WeaponName.y
-                                    ),
-                                new GUIContent(WeaponName), 
-                                LabelSize, 
-                                playerColor,
-                                Statics.Colors.Black, 
-                                new Vector2(1f, 1f)
-                            );
-                        }
-                        #endregion
                     }
-                }
+                    #endregion
             }
         }
         #endregion

@@ -37,7 +37,6 @@ namespace UnhandledExceptionHandler.Functions
                 _coloredLineTexture.wrapMode = 0;
                 _coloredLineTexture.Apply();
             }
-
             var vector = lineEnd - lineStart;
             float pivot = 57.29578f * Mathf.Atan(vector.y / vector.x);
             if (vector.x < 0f)
@@ -51,6 +50,41 @@ namespace UnhandledExceptionHandler.Functions
             float yOffset = Mathf.Ceil(thickness / 2f);
             GUIUtility.RotateAroundPivot(pivot, lineStart);
             GUI.DrawTexture(new Rect(lineStart.x, lineStart.y - (float)yOffset, (float)Mathf.Abs(lineStart.x - lineEnd.x), (float)thickness), _coloredLineTexture);
+            GUIUtility.RotateAroundPivot(-pivot, lineStart);
+        }
+
+        public static void DrawLine(Vector2 lineStart, Vector2 lineEnd, Color color, int thickness)
+        {
+            if (_coloredLineTexture == null || _coloredLineColor != color)
+            {
+                _coloredLineColor = color;
+                _coloredLineTexture = new Texture2D(1, 1);
+                _coloredLineTexture.SetPixel(0, 0, _coloredLineColor);
+                _coloredLineTexture.wrapMode = 0;
+                _coloredLineTexture.Apply();
+            }
+
+            DrawLineStretched(lineStart, lineEnd, _coloredLineTexture, thickness);
+        }
+
+        public static void DrawLineStretched(Vector2 lineStart, Vector2 lineEnd, Texture2D texture, int thickness)
+        {
+            var vector = lineEnd - lineStart;
+            float pivot = 57.29578f * Mathf.Atan(vector.y / vector.x);
+            if (vector.x < 0f)
+            {
+                pivot += 180f;
+            }
+
+            if (thickness < 1)
+            {
+                thickness = 1;
+            }
+
+            int yOffset = (int)Mathf.Ceil((float)(thickness / 2));
+
+            GUIUtility.RotateAroundPivot(pivot, lineStart);
+            GUI.DrawTexture(new Rect(lineStart.x, lineStart.y - (float)yOffset, vector.magnitude, (float)thickness), texture);
             GUIUtility.RotateAroundPivot(-pivot, lineStart);
         }
         #endregion
