@@ -359,23 +359,10 @@ namespace Nncv2
         string localgroup;
 
 
-        private bool IsVisable( Vector3 toCheck)
+        private bool IsVisible(GameObject obj, Vector3 Position)
         {
-            RaycastHit hit;
-
-
-           
-            if (Physics.Linecast(Camera.main.transform.position, toCheck, out hit))
-            {
-
-                if (hit.transform.name.Contains("NPC") || hit.transform.name.Contains("client")
-                    || hit.transform.name == Camera.main.name || hit.transform.name == Camera.main.gameObject.name
-                    || hit.transform.name == Camera.main.transform.name || hit.transform.tag.Contains("Player"))
-                {
-                    return true;
-                }
-            }
-            return false;
+            RaycastHit raycastHit;
+            return Physics.Linecast(GetShootPos(), Position, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject;
         }
 
 
