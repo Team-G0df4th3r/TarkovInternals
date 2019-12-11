@@ -213,7 +213,7 @@ namespace UnhandledExceptionHandler.Functions
         #endregion
 
         #region - Player ESP -
-        public static void DrawPlayers(List<Player> _PlayersList, Player LocalPlayer, float _viewdistance, bool switch_colors, bool displayCorpses)
+        public static void DrawPlayers(List<Player> _PlayersList, Player LocalPlayer, float _viewdistance, bool switch_colors)
         {
             float deltaDistance = 25f;
             string playerDisplayName = "";
