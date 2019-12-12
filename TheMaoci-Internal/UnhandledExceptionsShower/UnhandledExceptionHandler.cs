@@ -5,6 +5,7 @@ using EFT;
 using EFT.Interactive;
 using UnityEngine.SceneManagement;
 using UnhandledExceptionHandler.Functions;
+using System.Reflection;
 
 namespace UnhandledExceptionHandler
 {
@@ -26,41 +27,83 @@ namespace UnhandledExceptionHandler
         public static List<Throwable> tGrenades;
         public static List<LootItem> tCorpses;
         public static List<LootItem> tItems;
+        public static void Clear() {
+            _players = null;
+            _grenades = null;
+            _corpses = null;
+            _lootItems = null;
+            _localPlayer = null;
+            tPlayer = null;
+            tGrenades = null;
+            tCorpses = null;
+            tItems = null;
+        }
+    }
+    public class Switches
+    {
+        public static bool Draw_ESP = false;
+        public static bool Draw_Corpses = false;
+        public static bool Draw_Grenades = false;
+        public static bool Draw_Loot = false;
+        public static bool Draw_Crosshair = false;
+        public static bool Display_HelpInfo = false;
+        public static bool Switch_Colors = false;
+        public static bool DisplayDebugData = false;
+        public static bool Spawn_FullBright = false;
+        public static bool LOD_Controll = false;
+        public static bool AimingAtNikita = false;
+        public static bool Display_HUDGui = false;
+        public static bool Recoil_Reducer = false;
+
+        public static void SetToOff() {
+            Draw_ESP = false;
+            Draw_Corpses = false;
+            Draw_Grenades = false;
+            Draw_Loot = false;
+            Draw_Crosshair = false;
+            Display_HelpInfo = false;
+            Switch_Colors = false;
+            DisplayDebugData = false;
+            Spawn_FullBright = false;
+            LOD_Controll = false;
+            AimingAtNikita = false;
+            Display_HUDGui = false;
+            Recoil_Reducer = false;
+        }
+    }
+    public class FullBright {
+        public static GameObject lightGameObject;
+        public static Light FullBrightLight;
+        public static bool _LightEnabled = true;
+        public static bool _LightCreated;
+        public static bool lightCalled;
+    }
+    public class AliveCount { 
+        public static int All = 0;
+        public static int dist_0_25 = 0;
+        public static int dist_25_50 = 0;
+        public static int dist_0_100 = 0;
+        public static int dist_100_250 = 0;
+        public static int dist_250_1000 = 0;
+        public static void Reset() {
+            All = 0;
+            dist_0_25 = 0;
+            dist_25_50 = 0;
+            dist_0_100 = 0;
+            dist_100_250 = 0;
+            dist_250_1000 = 0;
+        }
     }
     public class UnhandledException : MonoBehaviour
     {
         public UnhandledException() { }
+
         #region All Variables
-            float timestamp = 0;
+        float timestamp = 0;
             private Scene m_Scen;
             private string m_Scen_name;
             private GameObject GameObjectHolder;
             private GameWorld _GameWorld = null;
-            private bool Draw_ESP = false,
-                Draw_Corpses = false,
-                Draw_Grenades = false,
-                Draw_Loot = false,
-                Draw_Crosshair = false,
-                Display_HelpInfo = false,
-                Switch_Colors = false,
-                DisplayDebugData = false,
-                Spawn_FullBright = false,
-                LOD_Controll = false,
-                AimingAtNikita = false,
-                Display_HUDGui = false;
-        #region Full bright
-            public GameObject lightGameObject;
-            public Light FullBrightLight;
-            public bool _LightEnabled = true;
-            public bool _LightCreated;
-            public bool lightCalled;
-        #endregion
-
-        private bool[] saved_onGui = new bool[4] { false, false, false, false };
-        private bool Recoil_Reducer = false;
-        private int Players_Alive_all = 0;
-        private int Players_Alive_hun = 0;
-        private int Players_Alive_ht2 = 0;
         #endregion
 
         #region Awake
@@ -104,47 +147,47 @@ namespace UnhandledExceptionHandler
         private void Hotkeys() {
 
             #region Draw sensitive data - no errors allowed here
-                if (Input.GetKeyUp(KeyCode.Keypad0))
-                {
-                    Draw_ESP = !Draw_ESP;
-                }
-                if (Input.GetKeyUp(KeyCode.Keypad1))
-                {
-                    Draw_Corpses = !Draw_Corpses;
-                }
-                if (Input.GetKeyUp(KeyCode.Keypad7))
-                {
-                    Draw_Loot = !Draw_Loot;
-                }
-                if (Input.GetKeyUp(KeyCode.Keypad4))
-                {
-                    Draw_Grenades = !Draw_Grenades;
-                }
-                if (Input.GetKeyDown(KeyCode.Keypad3))
-                {
-                    Recoil_Reducer = !Recoil_Reducer;
-                }
-                if (Input.GetKeyDown(KeyCode.Keypad9)) {
-                    Spawn_FullBright = !Spawn_FullBright;
-                }
+            if (Input.GetKeyUp(KeyCode.Keypad0))
+            {
+                Switches.Draw_ESP = !Switches.Draw_ESP;
+            }
+            if (Input.GetKeyUp(KeyCode.Keypad1))
+            {
+                Switches.Draw_Corpses = !Switches.Draw_Corpses;
+            }
+            if (Input.GetKeyUp(KeyCode.Keypad7))
+            {
+                Switches.Draw_Loot = !Switches.Draw_Loot;
+            }
+            if (Input.GetKeyUp(KeyCode.Keypad4))
+            {
+                Switches.Draw_Grenades = !Switches.Draw_Grenades;
+            }
+            if (Input.GetKeyDown(KeyCode.Keypad3))
+            {
+                Switches.Recoil_Reducer = !Switches.Recoil_Reducer;
+            }
+            if (Input.GetKeyDown(KeyCode.Keypad9)) {
+                Switches.Spawn_FullBright = !Switches.Spawn_FullBright;
+            }
             #endregion
 
             #region Draw non sensitive data
-                if (Input.GetKeyUp(KeyCode.Keypad5))
-                {
-                    Draw_Crosshair = !Draw_Crosshair;
-                }
-                if (Input.GetKeyUp(KeyCode.Keypad2))
-                {
-                    DisplayDebugData = !DisplayDebugData;
-                }
-                if (Input.GetKeyUp(KeyCode.Home))
-                {
-                    Display_HelpInfo = !Display_HelpInfo;
-                }
-                if (Input.GetKeyDown(KeyCode.Insert)) {
-                    Display_HUDGui = !Display_HUDGui;
-                }
+            if (Input.GetKeyUp(KeyCode.Keypad5))
+            {
+                Switches.Draw_Crosshair = !Switches.Draw_Crosshair;
+            }
+            if (Input.GetKeyUp(KeyCode.Keypad2))
+            {
+                Switches.DisplayDebugData = !Switches.DisplayDebugData;
+            }
+            if (Input.GetKeyUp(KeyCode.Home))
+            {
+                Switches.Display_HelpInfo = !Switches.Display_HelpInfo;
+            }
+            if (Input.GetKeyDown(KeyCode.Insert)) {
+                Switches.Display_HUDGui = !Switches.Display_HUDGui;
+            }
             #endregion
 
             /* unused yet
@@ -159,7 +202,7 @@ namespace UnhandledExceptionHandler
         #region Recoil Reducer
         private void RecoilReducer() {
             if(Main._localPlayer != null)
-                if (Recoil_Reducer)
+                if (Switches.Recoil_Reducer)
                 {
                     if(Main._localPlayer.ProceduralWeaponAnimation.Shootingg.Intensity != 0.5f)
                         Main._localPlayer.ProceduralWeaponAnimation.Shootingg.Intensity = 0.5f;
@@ -173,7 +216,7 @@ namespace UnhandledExceptionHandler
 
         #region - Help Menu -
         private void HelpMenu() {
-            if (Display_HelpInfo) {
+            if (Switches.Display_HelpInfo) {
                 string[] text = new string[10] {
                     "Help Menu: (Turn off/on 'Home' key)",
                     "'Num 0' - E.S.P - Players",
@@ -205,13 +248,13 @@ namespace UnhandledExceptionHandler
 
         #region Displaying Usefull data (left, top corner)
         private void DisplayMenu() {
-            if (DisplayDebugData)
+            if (Switches.DisplayDebugData)
             {
                 if (Main._localPlayer != null)
                 {
                     GUI.color = new Color(1f,1f,1f,.8f);
                     #region Alive Number Display
-                        DF.DrawAlive(Players_Alive_all, Players_Alive_hun, Players_Alive_ht2, new Vector2(1f, 185f));
+                        DF.DrawAlive();
                     #endregion
                     #region Player Health
                         DF.DrawRecoil(Main._localPlayer);
@@ -227,7 +270,7 @@ namespace UnhandledExceptionHandler
                 #endregion
             }
             #region draw crosshair
-            if (Draw_Crosshair)
+            if (Switches.Draw_Crosshair)
             {
                 if (!Main._localPlayer.ProceduralWeaponAnimation.IsAiming)
                 {
@@ -266,29 +309,29 @@ namespace UnhandledExceptionHandler
         {
             if (Main._localPlayer != null)
             {
-                if (Spawn_FullBright)
+                if (Switches.Spawn_FullBright)
                 {
                     Vector3 playerPos = Main._localPlayer.Transform.position;
                     playerPos.y += 1f;
 
-                    lightGameObject.transform.position = playerPos;
-                    FullBrightLight.range = 1000;
+                    FullBright.lightGameObject.transform.position = playerPos;
+                    FullBright.FullBrightLight.range = 1000;
                 }
                 else
                 {
-                    GameObject.Destroy(FullBrightLight);
-                    lightCalled = false;
+                    GameObject.Destroy(FullBright.FullBrightLight);
+                    FullBright.lightCalled = false;
                 }
             }
         }
         private void setFullBright_onGui()
         {
-            if (!lightCalled)
+            if (!FullBright.lightCalled)
             {
-                lightGameObject = new GameObject("Fullbright");
-                FullBrightLight = lightGameObject.AddComponent<Light>();
-                FullBrightLight.color = Color.white;
-                lightCalled = true;
+                FullBright.lightGameObject = new GameObject("Fullbright");
+                FullBright.FullBrightLight = FullBright.lightGameObject.AddComponent<Light>();
+                FullBright.FullBrightLight.color = Color.white;
+                FullBright.lightCalled = true;
             }
         }
         #endregion
@@ -304,7 +347,7 @@ namespace UnhandledExceptionHandler
 
                 if (Input.GetKeyDown(KeyCode.Mouse3)) // You can change it or create a GUI for change it in game
                 {
-                    AimingAtNikita = !AimingAtNikita;
+                    Switches.AimingAtNikita = !Switches.AimingAtNikita;
                 }
 
                 if (inMatch())
@@ -320,12 +363,11 @@ namespace UnhandledExceptionHandler
                         else
                         {
                             // thanks for LiquidAce for explaining this mess with GameWorld !!!
-                            Players_Alive_all = 0;
-                            Players_Alive_hun = 0;
-                            Players_Alive_ht2 = 0;
+                            
                             #region Players
-                            if (Draw_ESP)
+                            if (Switches.Draw_ESP)
                             {
+                                AliveCount.Reset();
                                 Main.tPlayer = new List<Player>();
                                 foreach (Player p in _GameWorld.RegisteredPlayers)
                                 {
@@ -338,15 +380,15 @@ namespace UnhandledExceptionHandler
                                         if (p.HealthController.IsAlive)
                                         {
                                             
-                                            Players_Alive_all++;
+                                            AliveCount.All++;
                                             float distance = FMath.FD(Camera.main.transform.position, p.Transform.position);
                                             if (distance <= 100f)
                                             {
-                                                Players_Alive_hun++;
+                                                AliveCount.dist_0_100++;
                                             }
                                             if (distance > 100f && distance <= 250f)
                                             {
-                                                Players_Alive_ht2++;
+                                                AliveCount.dist_100_250++;
                                             }
                                             if (distance > 1f && distance <= Cons.RenderDistance.d_1000 && Camera.main.WorldToScreenPoint(p.Transform.position).z > 0.01f)
                                             {
@@ -359,7 +401,7 @@ namespace UnhandledExceptionHandler
                             }
                             #endregion
                             #region Grenades
-                            if (Draw_Grenades)
+                            if (Switches.Draw_Grenades)
                             {
                                 Main.tGrenades = new List<Throwable>();
                                 List<Throwable>.Enumerator grenades = _GameWorld.Grenades.GetValuesEnumerator().GetEnumerator();
@@ -372,7 +414,7 @@ namespace UnhandledExceptionHandler
                             }
                             #endregion
                             #region Corpses
-                            if (Draw_Corpses)
+                            if (Switches.Draw_Corpses)
                             {
                                 Main.tCorpses = new List<LootItem>();
                                 List<LootItem>.Enumerator temporalCorpsesEnum = _GameWorld.LootItems.GetValuesEnumerator().GetEnumerator();
@@ -389,7 +431,7 @@ namespace UnhandledExceptionHandler
                             }
                             #endregion
                             #region AllLoot
-                            if (Draw_Loot)
+                            if (Switches.Draw_Loot)
                             {
                                 Main.tItems = new List<LootItem>();
                                 List<LootItem>.Enumerator temporalItemsEnum = _GameWorld.LootItems.GetValuesEnumerator().GetEnumerator();
@@ -426,15 +468,10 @@ namespace UnhandledExceptionHandler
                 }
                 else
                 {
-                    Players_Alive_all = 0;
-                    Players_Alive_hun = 0;
-                    Players_Alive_ht2 = 0;
+                    AliveCount.Reset();
+                    Main.Clear();
                     timestamp = 0f;
                     _GameWorld = null;
-                    Main._players = null;
-                    Main._grenades = null;
-                    Main._corpses = null;
-                    Main._lootItems = null;
                 }
             }
             catch (Exception e) {
@@ -450,14 +487,14 @@ namespace UnhandledExceptionHandler
             GUI.Box(new Rect(10f, 10f, 150f, 200f), "Unknown.Exception.Handler");
             GUI.color = Color.white;
             Vector2 initial = new Vector2(15f, 20f);
-            Draw_ESP = GUI.Toggle(new Rect(initial.x, initial.y * 2, Cons.boxSize.box_100, Cons.boxSize.box_20), Draw_ESP, "E.S.P");
-            Draw_Grenades = GUI.Toggle(new Rect(initial.x, initial.y * 3, Cons.boxSize.box_100, Cons.boxSize.box_20), Draw_Grenades, "Grenade");
-            Draw_Corpses = GUI.Toggle(new Rect(initial.x, initial.y * 4, Cons.boxSize.box_100, Cons.boxSize.box_20), Draw_Corpses, "Dead Bodies");
-            Draw_Loot = GUI.Toggle(new Rect(initial.x, initial.y * 5, Cons.boxSize.box_100, Cons.boxSize.box_20), Draw_Loot, "Map Loot");
-            Draw_Crosshair = GUI.Toggle(new Rect(initial.x, initial.y * 6, Cons.boxSize.box_100, Cons.boxSize.box_20), Draw_Crosshair, "Crosshair");
-            Spawn_FullBright = GUI.Toggle(new Rect(initial.x, initial.y * 7, Cons.boxSize.box_100, Cons.boxSize.box_20), Spawn_FullBright, "FullBright");
-            LOD_Controll = GUI.Toggle(new Rect(initial.x, initial.y * 7, Cons.boxSize.box_100, Cons.boxSize.box_20), LOD_Controll, "LOD Control");
-            DisplayDebugData = GUI.Toggle(new Rect(initial.x, initial.y * 8, Cons.boxSize.box_100, Cons.boxSize.box_20), DisplayDebugData, "Player Data");
+            Switches.Draw_ESP = GUI.Toggle(new Rect(initial.x, initial.y * 2, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.Draw_ESP, "E.S.P");
+            Switches.Draw_Grenades = GUI.Toggle(new Rect(initial.x, initial.y * 3, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.Draw_Grenades, "Grenade");
+            Switches.Draw_Corpses = GUI.Toggle(new Rect(initial.x, initial.y * 4, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.Draw_Corpses, "Dead Bodies");
+            Switches.Draw_Loot = GUI.Toggle(new Rect(initial.x, initial.y * 5, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.Draw_Loot, "Map Loot");
+            Switches.Draw_Crosshair = GUI.Toggle(new Rect(initial.x, initial.y * 6, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.Draw_Crosshair, "Crosshair");
+            Switches.Spawn_FullBright = GUI.Toggle(new Rect(initial.x, initial.y * 7, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.Spawn_FullBright, "FullBright");
+            Switches.LOD_Controll = GUI.Toggle(new Rect(initial.x, initial.y * 7, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.LOD_Controll, "LOD Control");
+            Switches.DisplayDebugData = GUI.Toggle(new Rect(initial.x, initial.y * 8, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.DisplayDebugData, "Player Data");
 
             //FINSHED
             GUI.color = guiBackup;
@@ -473,31 +510,31 @@ namespace UnhandledExceptionHandler
                 {
                     EDS.P(new Vector2(1f, 1f), Color.red, 1f);
                     string enabled = "";
-                    if (Draw_ESP)
+                    if (Switches.Draw_ESP)
                     {
                         enabled = enabled + "P";
-                        Drawing_Data.DrawPlayers(Main._players, Main._localPlayer, Cons.RenderDistance.d_1000, Switch_Colors);
+                        Drawing_Data.DrawPlayers(Main._players, Main._localPlayer, Cons.RenderDistance.d_1000, Switches.Switch_Colors);
                     }
-                    if (Draw_Grenades)
+                    if (Switches.Draw_Grenades)
                     {
                         enabled = enabled + "G";
                         Drawing_Data.DrawDTG(Main._grenades, Main._localPlayer, Cons.RenderDistance.d_100);
                     }
-                    if (Draw_Loot)
+                    if (Switches.Draw_Loot)
                     {
                         enabled = enabled + "L";
                         Drawing_Data.DrawDLI(Main._lootItems, Cons.RenderDistance.d_250);
                     }
-                    if (Draw_Corpses)
+                    if (Switches.Draw_Corpses)
                     {
                         enabled = enabled + "C";
                         Drawing_Data.DrawPDB(Main._corpses, Cons.RenderDistance.d_250);
                     }
-                    if (AimingAtNikita) {
+                    if (Switches.AimingAtNikita) {
                         enabled = enabled + "A";
                         AFunc.TargetLock(Main._players, Main._localPlayer, 5, Cons.RenderDistance.d_250, 100);
                     }
-                    if (DisplayDebugData)
+                    if (Switches.DisplayDebugData)
                     {
                         EDS.Text(
                             new Rect(
@@ -515,10 +552,8 @@ namespace UnhandledExceptionHandler
                 }
                 else
                 {
-                    Draw_ESP = false;
-                    Draw_Grenades = false;
-                    Draw_Loot = false;
-                    Draw_Corpses = false;
+
+                    Switches.SetToOff();
                     GUI.color = Color.white;
                     EDS.P(new Vector2(1f, 1f), Color.white, 1f);
                 }

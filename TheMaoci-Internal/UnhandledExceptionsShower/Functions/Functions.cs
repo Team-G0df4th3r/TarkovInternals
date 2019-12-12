@@ -6,14 +6,14 @@ namespace UnhandledExceptionHandler
 {
     class DF
     {
-        public static void DrawAlive(int Players_Alive_all, int Players_Alive_hun, int Players_Alive_ht2, Vector2 InitialPosition)
+        public static void DrawAlive()
         {
-            if (Players_Alive_all != 0)
-                EDS.Text(new Rect(Cons.Alive.All.x, Cons.Alive.All.y, Cons.boxSize.box_200, Cons.boxSize.box_20), "Alive: " + (Players_Alive_all).ToString(), Statics.Colors.White);
-            if (Players_Alive_hun != 0)
-                EDS.Text(new Rect(Cons.Alive.zero_to_hundred.x, Cons.Alive.zero_to_hundred.y, Cons.boxSize.box_200, Cons.boxSize.box_20), "<100m:" + (Players_Alive_hun).ToString(), Statics.Colors.White);
-            if (Players_Alive_ht2 != 0)
-                EDS.Text(new Rect(Cons.Alive.hundred_to_2fifty.x, Cons.Alive.hundred_to_2fifty.y, Cons.boxSize.box_200, Cons.boxSize.box_20), "100m - 250m:" + (Players_Alive_ht2).ToString(), Statics.Colors.White);
+            if (AliveCount.All != 0)
+                EDS.Text(new Rect(Cons.Alive.All.x, Cons.Alive.All.y, Cons.boxSize.box_200, Cons.boxSize.box_20), "Alive: " + (AliveCount.All).ToString(), Statics.Colors.White);
+            if (AliveCount.dist_0_100 != 0)
+                EDS.Text(new Rect(Cons.Alive.zero_to_hundred.x, Cons.Alive.zero_to_hundred.y, Cons.boxSize.box_200, Cons.boxSize.box_20), "<100m:" + (AliveCount.dist_0_100).ToString(), Statics.Colors.White);
+            if (AliveCount.dist_100_250 != 0)
+                EDS.Text(new Rect(Cons.Alive.hundred_to_2fifty.x, Cons.Alive.hundred_to_2fifty.y, Cons.boxSize.box_200, Cons.boxSize.box_20), "100m - 250m:" + (AliveCount.dist_100_250).ToString(), Statics.Colors.White);
         }
         
         public static void DrawRecoil(Player _localPlayer) {
