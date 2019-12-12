@@ -293,7 +293,7 @@ namespace UnhandledExceptionHandler
         #region LOD Controller // TODO for testing only
         public LODGroup group;  
         private void SetLODToLow() {
-            if (LOD_Controll)
+            if (Switches.LOD_Controll)
             {
                 group.ForceLOD(6);
             }
