@@ -46,7 +46,8 @@ namespace UnhandledExceptionHandler
                 DisplayDebugData = false,
                 Spawn_FullBright = false,
                 LOD_Controll = false,
-                AimingAtNikita = false;
+                AimingAtNikita = false,
+                Display_HUDGui = false;
         #region Full bright
             public GameObject lightGameObject;
             public Light FullBrightLight;
@@ -141,6 +142,9 @@ namespace UnhandledExceptionHandler
                 {
                     Display_HelpInfo = !Display_HelpInfo;
                 }
+                if (Input.GetKeyDown(KeyCode.Insert)) {
+                    Display_HUDGui = !Display_HUDGui;
+                }
             #endregion
 
             /* unused yet
@@ -152,17 +156,20 @@ namespace UnhandledExceptionHandler
         }
         #endregion
 
+        #region Recoil Reducer
         private void RecoilReducer() {
             if(Main._localPlayer != null)
                 if (Recoil_Reducer)
                 {
-                    Main._localPlayer.ProceduralWeaponAnimation.Shootingg.Intensity = 0.5f;
+                    if(Main._localPlayer.ProceduralWeaponAnimation.Shootingg.Intensity != 0.5f)
+                        Main._localPlayer.ProceduralWeaponAnimation.Shootingg.Intensity = 0.5f;
                 }
                 else if(Main._localPlayer.ProceduralWeaponAnimation.Shootingg.Intensity != 1.0f)
                 {
                     Main._localPlayer.ProceduralWeaponAnimation.Shootingg.Intensity = 1.0f;
                 }
         }
+        #endregion
 
         #region - Help Menu -
         private void HelpMenu() {
@@ -436,12 +443,32 @@ namespace UnhandledExceptionHandler
         }
         #endregion
 
+        #region -- DRAW GUI WINDOW --
+        private void DrawHUDMenu() {
+            Color guiBackup = GUI.color;
+            GUI.color = Color.black;
+            GUI.Box(new Rect(10f, 10f, 150f, 200f), "Unknown.Exception.Handler");
+            GUI.color = Color.white;
+            Vector2 initial = new Vector2(15f, 20f);
+            Draw_ESP = GUI.Toggle(new Rect(initial.x, initial.y * 2, Cons.boxSize.box_100, Cons.boxSize.box_20), Draw_ESP, "E.S.P");
+            Draw_Grenades = GUI.Toggle(new Rect(initial.x, initial.y * 3, Cons.boxSize.box_100, Cons.boxSize.box_20), Draw_Grenades, "Grenade");
+            Draw_Corpses = GUI.Toggle(new Rect(initial.x, initial.y * 4, Cons.boxSize.box_100, Cons.boxSize.box_20), Draw_Corpses, "Dead Bodies");
+            Draw_Loot = GUI.Toggle(new Rect(initial.x, initial.y * 5, Cons.boxSize.box_100, Cons.boxSize.box_20), Draw_Loot, "Map Loot");
+            Draw_Crosshair = GUI.Toggle(new Rect(initial.x, initial.y * 6, Cons.boxSize.box_100, Cons.boxSize.box_20), Draw_Crosshair, "Crosshair");
+            Spawn_FullBright = GUI.Toggle(new Rect(initial.x, initial.y * 7, Cons.boxSize.box_100, Cons.boxSize.box_20), Spawn_FullBright, "FullBright");
+            LOD_Controll = GUI.Toggle(new Rect(initial.x, initial.y * 7, Cons.boxSize.box_100, Cons.boxSize.box_20), LOD_Controll, "LOD Control");
+            DisplayDebugData = GUI.Toggle(new Rect(initial.x, initial.y * 8, Cons.boxSize.box_100, Cons.boxSize.box_20), DisplayDebugData, "Player Data");
+
+            //FINSHED
+            GUI.color = guiBackup;
+        }
+        #endregion
+
         #region OnGui
         private void OnGUI()
         {
             try {
                 //Updates Each Frame
-                GUI.color = Color.white;
                 if (inMatch())
                 {
                     EDS.P(new Vector2(1f, 1f), Color.red, 1f);
@@ -497,7 +524,8 @@ namespace UnhandledExceptionHandler
                 }
                 DisplayMenu();
                 HelpMenu();
-                #region hide me nygga
+                DrawHUDMenu();
+                #region hide me nygga - DISABLED CAUSE SHIT
                     //EDS.L(new Vector2(184f, 1065f), new Vector2(245f, 1065f), Color.black, 20f);
                 #endregion
             }

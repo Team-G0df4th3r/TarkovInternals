@@ -4,91 +4,31 @@ namespace UnhandledExceptionHandler.Functions
 {
     public static class EDS
     {
-        private static Texture2D _coloredLineTexture;
-        private static Color _coloredLineColor;
+        public static Texture2D lineTex;
         #region DrawPixel
         public static void P(Vector2 Position, Color color, float thickness)
         {
+            // Generate a single pixel texture if it doesn't exist
+            if (!lineTex) { lineTex = new Texture2D(1, 1); }
+
+            float yOffset = Mathf.Ceil(thickness / 2f);
+            // Store current GUI color, so we can switch it back later,
+            // and set the GUI color to the color parameter
+            Color savedColor = GUI.color;
             GUI.color = color;
-            if (_coloredLineTexture == null || _coloredLineColor != color)
-            {
-                _coloredLineColor = color;
-                _coloredLineTexture = new Texture2D(1, 1);
-                _coloredLineTexture.SetPixel(0, 0, _coloredLineColor);
-                _coloredLineTexture.wrapMode = 0;
-                _coloredLineTexture.Apply();
-            }
-            if (thickness < 1)
-            {
-                thickness = 1;
-            }
-            float yOffset = Mathf.Ceil(thickness / 2f);
-            GUI.DrawTexture(new Rect(Position.x, Position.y - (float)yOffset, (float)thickness, (float)thickness), _coloredLineTexture);
+
+            GUI.DrawTexture(new Rect(Position.x, Position.y - (float)yOffset, thickness, thickness), lineTex);
+
+            // We're done.  Restore the GUI color to whatever they were before.
+            GUI.color = savedColor;
         }
         #endregion
-        #region DrawLine
-        public static void L(Vector2 lineStart, Vector2 lineEnd, Color color, float thickness)
-        {
-            if (_coloredLineTexture == null || _coloredLineColor != color)
-            {
-                _coloredLineColor = color;
-                _coloredLineTexture = new Texture2D(1, 1);
-                _coloredLineTexture.SetPixel(0, 0, _coloredLineColor);
-                _coloredLineTexture.wrapMode = 0;
-                _coloredLineTexture.Apply();
-            }
-            var vector = lineEnd - lineStart;
-            float pivot = 57.29578f * Mathf.Atan(vector.y / vector.x);
-            if (vector.x < 0f)
-            {
-                pivot += 180f;
-            }
-            if (thickness < 1)
-            {
-                thickness = 1;
-            }
-            float yOffset = Mathf.Ceil(thickness / 2f);
-            GUIUtility.RotateAroundPivot(pivot, lineStart);
-            GUI.DrawTexture(new Rect(lineStart.x, lineStart.y - (float)yOffset, (float)Mathf.Abs(lineStart.x - lineEnd.x), (float)thickness), _coloredLineTexture);
-            GUIUtility.RotateAroundPivot(-pivot, lineStart);
-        }
 
-        public static void DrawLine(Vector2 lineStart, Vector2 lineEnd, Color color, int thickness)
-        {
-            if (_coloredLineTexture == null || _coloredLineColor != color)
-            {
-                _coloredLineColor = color;
-                _coloredLineTexture = new Texture2D(1, 1);
-                _coloredLineTexture.SetPixel(0, 0, _coloredLineColor);
-                _coloredLineTexture.wrapMode = 0;
-                _coloredLineTexture.Apply();
-            }
-
-            DrawLineStretched(lineStart, lineEnd, _coloredLineTexture, thickness);
-        }
-
-        public static void DrawLineStretched(Vector2 lineStart, Vector2 lineEnd, Texture2D texture, int thickness)
-        {
-            var vector = lineEnd - lineStart;
-            float pivot = 57.29578f * Mathf.Atan(vector.y / vector.x);
-            if (vector.x < 0f)
-            {
-                pivot += 180f;
-            }
-
-            if (thickness < 1)
-            {
-                thickness = 1;
-            }
-
-            int yOffset = (int)Mathf.Ceil((float)(thickness / 2));
-
-            GUIUtility.RotateAroundPivot(pivot, lineStart);
-            GUI.DrawTexture(new Rect(lineStart.x, lineStart.y - (float)yOffset, vector.magnitude, (float)thickness), texture);
-            GUIUtility.RotateAroundPivot(-pivot, lineStart);
-        }
-        #endregion
         #region Drawing Shadowed Text
+        public static void Text(Rect rect, string content, Color txtColor)
+        {
+            DrawShadow(rect, new GUIContent(content), new GUIStyle(), txtColor, new Color(0f, 0f, 0f, 1f), new Vector2(1f, 1f));
+        }
         public static void DrawShadow(Rect rect, GUIContent content, GUIStyle style, Color txtColor, Color shadowColor, Vector2 direction)
         {
             GUIStyle backupStyle = style;
@@ -100,25 +40,60 @@ namespace UnhandledExceptionHandler.Functions
             rect.x -= direction.x;
             rect.y -= direction.y;
             GUI.Label(rect, content, style);
-
             style = backupStyle;
         }
+
         #endregion
-        #region Easy Text Draw with small shadow
-        public static void Text(Rect rect, string content, Color txtColor)
+
+        #region DrawLine - new with overloads
+
+        public static void DrawLine(Rect rect) { DrawLine(rect, GUI.contentColor, 1.0f); }
+        public static void DrawLine(Rect rect, Color color) { DrawLine(rect, color, 1.0f); }
+        public static void DrawLine(Rect rect, float width) { DrawLine(rect, GUI.contentColor, width); }
+        public static void DrawLine(Rect rect, Color color, float width) { DrawLine(new Vector2(rect.x, rect.y), new Vector2(rect.x + rect.width, rect.y + rect.height), color, width); }
+        public static void DrawLine(Vector2 pointA, Vector2 pointB) { DrawLine(pointA, pointB, GUI.contentColor, 1.0f); }
+        public static void DrawLine(Vector2 pointA, Vector2 pointB, Color color) { DrawLine(pointA, pointB, color, 1.0f); }
+        public static void DrawLine(Vector2 pointA, Vector2 pointB, float width) { DrawLine(pointA, pointB, GUI.contentColor, width); }
+        public static void DrawLine(Vector2 pointA, Vector2 pointB, Color color, float width)
         {
-            GUIStyle style = new GUIStyle();
-            Vector2 direction = new Vector2(1f, 1f);
-            GUIStyle backupStyle = style;
-            style.normal.textColor = new Color(0f,0f,0f,1f);
-            rect.x += direction.x;
-            rect.y += direction.y;
-            GUI.Label(rect, content, style);
-            style.normal.textColor = txtColor;
-            rect.x -= direction.x;
-            rect.y -= direction.y;
-            GUI.Label(rect, content, style);
-            style = backupStyle;
+            // Save the current GUI matrix, since we're going to make changes to it.
+            Matrix4x4 matrix = GUI.matrix;
+
+            // Generate a single pixel texture if it doesn't exist
+            if (!lineTex) { lineTex = new Texture2D(1, 1); }
+
+            // Store current GUI color, so we can switch it back later,
+            // and set the GUI color to the color parameter
+            Color savedColor = GUI.color;
+            GUI.color = color;
+
+            // Determine the angle of the line.
+            float angle = Vector3.Angle(pointB - pointA, Vector2.right);
+
+            // Vector3.Angle always returns a positive number.
+            // If pointB is above pointA, then angle needs to be negative.
+            if (pointA.y > pointB.y) { angle = -angle; }
+
+            // Use ScaleAroundPivot to adjust the size of the line.
+            // We could do this when we draw the texture, but by scaling it here we can use
+            //  non-integer values for the width and length (such as sub 1 pixel widths).
+            // Note that the pivot point is at +.5 from pointA.y, this is so that the width of the line
+            //  is centered on the origin at pointA.
+            GUIUtility.ScaleAroundPivot(new Vector2((pointB - pointA).magnitude, width), new Vector2(pointA.x, pointA.y + 0.5f));
+
+            // Set the rotation for the line.
+            //  The angle was calculated with pointA as the origin.
+            GUIUtility.RotateAroundPivot(angle, pointA);
+
+            // Finally, draw the actual line.
+            // We're really only drawing a 1x1 texture from pointA.
+            // The matrix operations done with ScaleAroundPivot and RotateAroundPivot will make this
+            //  render with the proper width, length, and angle.
+            GUI.DrawTexture(new Rect(pointA.x, pointA.y, 1, 1), lineTex);
+
+            // We're done.  Restore the GUI matrix and GUI color to whatever they were before.
+            GUI.matrix = matrix;
+            GUI.color = savedColor;
         }
         #endregion
     }
