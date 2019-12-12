@@ -86,23 +86,23 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>bin\libraries\Assembly-CSharp.dll</HintPath>
+      <HintPath>bin\library\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\libraries\UnityEngine.dll</HintPath>
+      <HintPath>bin\library\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>bin\libraries\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>bin\library\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>bin\libraries\UnityEngine.IMGUIModule.dll</HintPath>
+      <HintPath>bin\library\UnityEngine.IMGUIModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>bin\libraries\UnityEngine.PhysicsModule.dll</HintPath>
+      <HintPath>bin\library\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>bin\libraries\UnityEngine.UI.dll</HintPath>
+      <HintPath>bin\library\UnityEngine.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

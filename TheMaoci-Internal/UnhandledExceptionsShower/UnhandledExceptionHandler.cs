@@ -31,16 +31,6 @@ namespace UnhandledExceptionHandler
     {
         public UnhandledException() { }
         #region All Variables
-            /*List<Player> _players;
-            List<Throwable> _grenades;
-            List<LootItem> _corpses;
-            List<LootItem> _lootItems;
-            Player _localPlayer;
-            List<Player> tPlayer;
-            List<Throwable> tGrenades;
-            List<LootItem> tCorpses;
-            List<LootItem> tItems;*/
-
             float timestamp = 0;
             private Scene m_Scen;
             private string m_Scen_name;
@@ -55,6 +45,7 @@ namespace UnhandledExceptionHandler
                 Switch_Colors = false,
                 DisplayDebugData = false,
                 Spawn_FullBright = false,
+                LOD_Controll = false,
                 AimingAtNikita = false;
         #region Full bright
             public GameObject lightGameObject;
@@ -246,6 +237,20 @@ namespace UnhandledExceptionHandler
         {
             // checking if you are not in main menu and all other endraid menu scenes
             return m_Scen_name != "EnvironmentUIScene" && m_Scen_name != "MenuUIScene" && m_Scen_name != "CommonUIScene" && m_Scen_name != "MainScene";
+        }
+        #endregion
+
+        #region LOD Controller // TODO for testing only
+        public LODGroup group;  
+        private void SetLODToLow() {
+            if (LOD_Controll)
+            {
+                group.ForceLOD(6);
+            }
+            else 
+            {
+                group.ForceLOD(0);
+            }
         }
         #endregion
 
@@ -478,6 +483,7 @@ namespace UnhandledExceptionHandler
                             Statics.Colors.White
                         );
                     }
+                    SetLODToLow(); // TODO for testing only
                     setFullBright_onGui();
                 }
                 else
