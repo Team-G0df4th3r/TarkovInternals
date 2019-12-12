@@ -86,14 +86,13 @@ namespace UnhandledExceptionHandler.Functions
                     var item = e.Current;
                     if (item != null)
                     {
-                        //if (!item.isActiveAndEnabled && !item.IsVisibilityEnabled) // check if item stil exists ??
+                        //if (!item.isActiveAndEnabled && !item.IsVisibilityEnabled) // this is some BSG bullshit
                             //continue;
                         if (Camera.main.WorldToScreenPoint(item.transform.position).z > 0.01f)
                         { // do not display out of bounds items
                             float distance = FMath.FD(Camera.main.transform.position, item.transform.position);
                             if (distance < _displayDistance)
                             {
-                                
                                 Vector3 itemPosition = Camera.main.WorldToScreenPoint(item.transform.position);
                                 float[] boxSize = new float[2] { 3f, 1.5f };
                                 int FontSize = 12;
@@ -107,7 +106,9 @@ namespace UnhandledExceptionHandler.Functions
                                 {
                                     DebugText = item.Item.ShortName.Localized();
                                 }
-                                catch (Exception exp) { DebugText = ""; }
+                                catch (Exception exp) {
+                                    ErrorHandler.Catch("LootTranslation", exp, item.Item.ShortName);
+                                    DebugText = ""; }
                                 Vector2 sizeOfText = GUI.skin.GetStyle(distanceText).CalcSize(new GUIContent(distanceText));
                                 GUI.color = Statics.Colors.ESP.items;
                                 EDS.P(
@@ -151,7 +152,6 @@ namespace UnhandledExceptionHandler.Functions
         #endregion
 
         #region - Grenade ESP -
-        private static float[] grenadeSize = new float[2] { 3f, 1.5f };
         public static void DrawDTG(List<Throwable> _g, Player _localP, float _displayDistance = 100f) {
             // 100m for grenades is more then enough
             if (_g == null || _localP == null)
@@ -181,11 +181,11 @@ namespace UnhandledExceptionHandler.Functions
                             GUI.color = Statics.Colors.ESP.grenades;
                             EDS.P(
                                 new Vector2(
-                                    pGrenadePosition.x - grenadeSize[1],
-                                    (float)(Screen.height - pGrenadePosition.y) - grenadeSize[1]
+                                    pGrenadePosition.x - 1.5f,
+                                    (float)(Screen.height - pGrenadePosition.y) - 1.5f
                                     ),
                                 Statics.Colors.ESP.grenades,
-                                grenadeSize[0]
+                                3f
                             );
                             EDS.DrawShadow(
                                 new Rect(
@@ -221,6 +221,9 @@ namespace UnhandledExceptionHandler.Functions
             string Status = "";
             var LabelSize = new GUIStyle { fontSize = 12 };
             Color playerColor = Statics.Colors.ESP.npc;
+            float distancesAxisY_0 = 0;
+            float distancesAxisY_1 = 0;
+            float distancesAxisY_2 = 0;
             foreach (Player player in _PlayersList)
             {
                 float dTO = FMath.FD(Camera.main.transform.position, player.Transform.position);
@@ -236,10 +239,9 @@ namespace UnhandledExceptionHandler.Functions
                     FMath.DistSizer(dTO, ref FontSize, ref deltaDistance, ref devLabel);
                     LabelSize.fontSize = FontSize;
                     //create 3 size table of distances for texts (name, status, weapon)
-                    float[] distancesAxisY = new float[3] {
-                        deltaDistance + 20f,
-                        deltaDistance + (FontSize + 1) + 20f,
-                        deltaDistance + (FontSize + FontSize + 2) + 20f };
+                    distancesAxisY_0 = deltaDistance + 10f;
+                    distancesAxisY_1 = distancesAxisY_0 + FontSize + 1;
+                    distancesAxisY_2 = distancesAxisY_1 + FontSize + 1;
 
                     Status = ((int)(player.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Common).Current)).ToString() + " hp"; // Health here 
                     #region BONE ESP
@@ -292,7 +294,7 @@ namespace UnhandledExceptionHandler.Functions
                     }
                     else
                     {
-                        playerDisplayName = player.Profile.Info.Nickname;
+                        playerDisplayName = player.Profile.Info.Nickname + " [" + player.Profile.Info.Level.ToString() + "]";
                         playerColor = Statics.Colors.ESP.player[0];
                         EDS.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Statics.Colors.Red, find_sizebox);
                     }
@@ -309,13 +311,13 @@ namespace UnhandledExceptionHandler.Functions
                     }
                     catch (Exception e)
                     {
-                        UnhandledExceptionHandler.ErrorHandler.Catch("WeaponNames", e);
+                        UnhandledExceptionHandler.ErrorHandler.Catch("WeaponNames", e, player.Weapon.ShortName);
+                        WeaponName = ".";
                     }
                     #endregion
                         
                     // set colors now
                     LabelSize.normal.textColor = playerColor;
-                    GUI.color = playerColor;
                     #region Slot 0 - Player Name (vector, size, drawing)
                     if (nameNickname != "")
                     {
@@ -325,7 +327,7 @@ namespace UnhandledExceptionHandler.Functions
                         EDS.DrawShadow(
                             new Rect(
                                 pHeadVector.x - player_NameText / 2f,
-                                (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY[0],
+                                (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY_0,
                                 player_NameText,
                                 vector_playerName.y
                                 ),
@@ -345,7 +347,7 @@ namespace UnhandledExceptionHandler.Functions
                     EDS.DrawShadow(
                         new Rect(
                             pHeadVector.x - player_TextWidth / 2f, 
-                            (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY[1], 
+                            (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY_1, 
                             player_TextWidth, 
                             vector_playerStatus.y
                             ), 
@@ -361,12 +363,11 @@ namespace UnhandledExceptionHandler.Functions
                     {
                         Vector2 vector_WeaponName = GUI.skin.GetStyle(WeaponName).CalcSize(new GUIContent(WeaponName));
                         float player_WeaponName = (devLabel == 1f) ? vector_WeaponName.x : (vector_WeaponName.x / devLabel);
-                        //GUI.Label(new Rect(pHeadVector.x - player_WeaponName / 2f, (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY[2] - 20f, player_WeaponName, vector_WeaponName.y), WeaponName, LabelSize);
                         EDS.DrawShadow(
                             new Rect(
-                                pHeadVector.x - player_WeaponName / 2f, 
-                                (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY[2], 
-                                player_WeaponName, 
+                                pHeadVector.x - player_WeaponName / 2f,
+                                (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY_2,
+                                player_WeaponName,
                                 vector_WeaponName.y
                                 ),
                             new GUIContent(WeaponName), 

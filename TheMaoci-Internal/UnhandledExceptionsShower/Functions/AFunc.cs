@@ -11,14 +11,20 @@ namespace UnhandledExceptionHandler.Functions
     class AFunc
     {
         #region DLLImporting + mouse events
-        //[DllImport("user32.dll")]
-        //static extern bool GetCursorPos(out POINT lpPoint);
+        [DllImport("user32.dll")]
+        static extern bool GetCursorPos(out POINT lpPoint);
         [DllImport("user32.dll")]
         static extern void mouse_event(int dwFlags, int dx, int dy, int dwData, int dwExtraInfo);
         private const int MOUSEEVENTF_MOVE = 0x0001;
-        private static void Move(int xDelta, int yDelta)
-        { mouse_event(MOUSEEVENTF_MOVE, xDelta, yDelta, 0, 0); }
-        //private struct POINT { public int X, Y; }
+        public static void Move(int xDelta, int yDelta)
+        {
+            mouse_event(MOUSEEVENTF_MOVE, xDelta, yDelta, 0, 0);
+        }
+        public struct POINT
+        {
+            public int X;
+            public int Y;
+        }
         #endregion
         public static void TargetLock(IEnumerable<Player> _ply, Player _lP, int _AimSpeed, float _checkDistance = 200f, double _distance2d = 100)
         {
@@ -79,7 +85,7 @@ namespace UnhandledExceptionHandler.Functions
             float TargetX = 0;
             float TargetY = 0;
             if (Math.Abs(ScreenCenterX - x) < 50 || Math.Abs(ScreenCenterY - y) < 50)
-                _AimSpeed = 2;
+                _AimSpeed = 5;
             if (x != 0 && x != ScreenCenterX)
             {
                 if (x > ScreenCenterX)
@@ -109,6 +115,13 @@ namespace UnhandledExceptionHandler.Functions
                     if (TargetY + ScreenCenterY < 0) TargetY = 0;
                 }
             }
+            #region Smoothing
+            if (!Switches.Aim_Smoothing)
+            {
+                Move((int)TargetX, (int)TargetY);
+                return;
+            }
+            #endregion
             TargetX /= (int)_AimSpeed;
             TargetY /= (int)_AimSpeed;
             if (Math.Abs(TargetX) < 1)

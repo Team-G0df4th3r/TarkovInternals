@@ -54,6 +54,7 @@ namespace UnhandledExceptionHandler
         public static bool AimingAtNikita = false;
         public static bool Display_HUDGui = false;
         public static bool Recoil_Reducer = false;
+        public static bool Aim_Smoothing = true;
 
         public static void SetToOff() {
             Draw_ESP = false;
@@ -257,8 +258,8 @@ namespace UnhandledExceptionHandler
                         DF.DrawAlive();
                     #endregion
                     #region Player Health
-                        DF.DrawRecoil(Main._localPlayer);
-                        //DF.HealthInfo(_localPlayer);
+                        DF.DrawRecoil();
+                        DF.HealthInfo();
                     #endregion
                 }
                 #region Error Logs Enabled Display Message
@@ -293,14 +294,14 @@ namespace UnhandledExceptionHandler
         #region LOD Controller // TODO for testing only
         public LODGroup group;  
         private void SetLODToLow() {
-            if (Switches.LOD_Controll)
+            /*if (Switches.LOD_Controll)
             {
                 group.ForceLOD(6);
             }
             else 
             {
                 group.ForceLOD(0);
-            }
+            }*/
         }
         #endregion
 
@@ -484,7 +485,7 @@ namespace UnhandledExceptionHandler
         private void DrawHUDMenu() {
             Color guiBackup = GUI.color;
             GUI.color = Color.black;
-            GUI.Box(new Rect(10f, 10f, 150f, 200f), "Unknown.Exception.Handler");
+            GUI.Box(new Rect(10f, 10f, 220f, 200f), "Unknown.Exception.Handler");
             GUI.color = Color.white;
             Vector2 initial = new Vector2(15f, 20f);
             Switches.Draw_ESP = GUI.Toggle(new Rect(initial.x, initial.y * 2, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.Draw_ESP, "E.S.P");
@@ -493,9 +494,11 @@ namespace UnhandledExceptionHandler
             Switches.Draw_Loot = GUI.Toggle(new Rect(initial.x, initial.y * 5, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.Draw_Loot, "Map Loot");
             Switches.Draw_Crosshair = GUI.Toggle(new Rect(initial.x, initial.y * 6, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.Draw_Crosshair, "Crosshair");
             Switches.Spawn_FullBright = GUI.Toggle(new Rect(initial.x, initial.y * 7, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.Spawn_FullBright, "FullBright");
-            Switches.LOD_Controll = GUI.Toggle(new Rect(initial.x, initial.y * 7, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.LOD_Controll, "LOD Control");
-            Switches.DisplayDebugData = GUI.Toggle(new Rect(initial.x, initial.y * 8, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.DisplayDebugData, "Player Data");
+            Switches.LOD_Controll = GUI.Toggle(new Rect(initial.x, initial.y * 8, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.LOD_Controll, "LOD Control");
+            Switches.DisplayDebugData = GUI.Toggle(new Rect(initial.x, initial.y * 9, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.DisplayDebugData, "Player Data");
 
+            Switches.AimingAtNikita = GUI.Toggle(new Rect(initial.x + Cons.boxSize.box_100, initial.y * 2, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.AimingAtNikita, "Aim");
+            Switches.Aim_Smoothing = GUI.Toggle(new Rect(initial.x + Cons.boxSize.box_100, initial.y * 3, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.DisplayDebugData, "Smoothing");
             //FINSHED
             GUI.color = guiBackup;
         }
@@ -532,7 +535,7 @@ namespace UnhandledExceptionHandler
                     }
                     if (Switches.AimingAtNikita) {
                         enabled = enabled + "A";
-                        AFunc.TargetLock(Main._players, Main._localPlayer, 5, Cons.RenderDistance.d_250, 100);
+                        AFunc.TargetLock(Main._players, Main._localPlayer, 3, Cons.RenderDistance.d_250, 100);
                     }
                     if (Switches.DisplayDebugData)
                     {
@@ -547,19 +550,19 @@ namespace UnhandledExceptionHandler
                             Statics.Colors.White
                         );
                     }
-                    SetLODToLow(); // TODO for testing only
+                    //SetLODToLow(); // TODO for testing only
                     setFullBright_onGui();
                 }
                 else
                 {
-
                     Switches.SetToOff();
                     GUI.color = Color.white;
                     EDS.P(new Vector2(1f, 1f), Color.white, 1f);
                 }
                 DisplayMenu();
                 HelpMenu();
-                DrawHUDMenu();
+                if(Switches.Display_HUDGui)
+                    DrawHUDMenu();
                 #region hide me nygga - DISABLED CAUSE SHIT
                     //EDS.L(new Vector2(184f, 1065f), new Vector2(245f, 1065f), Color.black, 20f);
                 #endregion
