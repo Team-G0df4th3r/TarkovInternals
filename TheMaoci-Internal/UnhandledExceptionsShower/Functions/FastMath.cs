@@ -1,9 +1,9 @@
 ﻿using System.Runtime.InteropServices;
 using UnityEngine;
 
-namespace UnhandledExceptionHandler.Functions
+namespace UnhandledException
 {
-    class FMath
+    class FastMath
     {
         #region distance resizing font/box/position - DistSizer
         public static void DistSizer(float distance, ref int FontSize, ref float deltaDistance, ref float devLabel)

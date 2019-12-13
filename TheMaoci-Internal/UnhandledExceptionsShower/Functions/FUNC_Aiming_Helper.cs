@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using EFT;
-using System.IO;
-using UnhandledExceptionHandler.Functions;
 
-namespace UnhandledExceptionHandler.Functions
+namespace UnhandledException
 {
-    class AFunc
+    class FUNC_Aiming_Helper
     {
         #region DLLImporting + mouse events
         [DllImport("user32.dll")]
@@ -43,14 +41,14 @@ namespace UnhandledExceptionHandler.Functions
                         {
                             if (_lP.Profile.Info.GroupId == p.Profile.Info.GroupId && _lP.Profile.Info.GroupId != "0" && _lP.Profile.Info.GroupId != "" && _lP.Profile.Info.GroupId != null) continue;
                             if (!p.IsVisible) continue;
-                            float distanceToObject = FMath.FD(Camera.main.transform.position, p.Transform.position);
+                            float distanceToObject = FastMath.FD(Camera.main.transform.position, p.Transform.position);
                             if (distanceToObject < _checkDistance)
                             {
                                 if (p.HealthController.IsAlive && p.IsVisible && EPointOfView.FirstPerson != p.PointOfView)
                                 {
 
                                     Vector3 playerHeadVector = Camera.main.WorldToScreenPoint(p.PlayerBones.Head.position);
-                                    double screenDist = FMath.FDv2(new Vector2(Screen.width, Screen.height) / 2, new Vector2(playerHeadVector.x, playerHeadVector.y));
+                                    double screenDist = FastMath.FDv2(new Vector2(Screen.width, Screen.height) / 2, new Vector2(playerHeadVector.x, playerHeadVector.y));
                                     if (screenDist < _distance2d)
                                     {
                                         velocity = p.Velocity;

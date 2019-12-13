@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace UnhandledExceptionHandler
+namespace UnhandledException
 {
     public class Statics
     {

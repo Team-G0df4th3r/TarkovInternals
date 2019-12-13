@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace UnhandledExceptionHandler.Functions
+namespace UnhandledException
 {
-    public static class EDS
+    public static class Drawing
     {
         public static Texture2D lineTex;
         #region DrawPixel

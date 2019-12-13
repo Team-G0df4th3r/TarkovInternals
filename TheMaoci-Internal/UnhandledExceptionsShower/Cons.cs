@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 
-namespace UnhandledExceptionHandler
+namespace UnhandledException
 {
     public class Cons
     {

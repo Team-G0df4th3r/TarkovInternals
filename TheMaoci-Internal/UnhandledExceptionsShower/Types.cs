@@ -2,7 +2,7 @@
 using EFT.Interactive;
 using System;
 
-namespace UnhandledExceptionHandler
+namespace UnhandledException
 {
     public class Types
     {
