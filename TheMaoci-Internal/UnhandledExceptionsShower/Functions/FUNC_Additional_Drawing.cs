@@ -35,39 +35,24 @@ namespace UnhandledException
 
         public static void HelpMenu()
         {
-            if (Switches.Display_HelpInfo)
+            for (int i = 0; i < Cons.HelpMenuTexts.Length; i++)
             {
-                string[] text = new string[10] {
-                    "Help Menu: (Turn off/on 'Home' key)",
-                    "'Num 0' - E.S.P - Players",
-                    "'Num 1' - E.S.P - Corpses",
-                    "'Num 2' - PlayerInfo - Health, Alive Objects, etc.",
-                    "'Num 3' - Recoil 50%/100%",
-                    "'Num 4' - E.S.P - Grenades",
-                    "'Num 5' - Crosshair",
-                    "'Num 7' - E.S.P - Loot (very laggy)",
-                    "* make sure to not use it all the time",
-                    ""
-                };
-                for (int i = 0; i < text.Length; i++)
-                {
-                    Drawing.Text(
-                        new Rect(
-                            500f,
-                            200f + (20f * i),
-                            Cons.boxSize.box_200,
-                            Cons.boxSize.box_20
-                            ),
-                        text[i],
-                        Statics.Colors.White
-                        );
-                }
+                Drawing.Text(
+                    new Rect(
+                        500f,
+                        200f + (20f * i),
+                        Cons.boxSize.box_200,
+                        Cons.boxSize.box_20
+                        ),
+                    Cons.HelpMenuTexts[i],
+                    Statics.Colors.White
+                    );
             }
         }
 
         public static void DisplayMenu()
         {
-            if (Switches.DisplayDebugData)
+            if (Switches.DisplayHelpPlayerInfo)
             {
                 if (Main._localPlayer != null)
                 {
@@ -117,10 +102,10 @@ namespace UnhandledException
             Switches.Draw_Crosshair = GUI.Toggle(new Rect(initial.x, initial.y * 6, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.Draw_Crosshair, "Crosshair");
             Switches.Spawn_FullBright = GUI.Toggle(new Rect(initial.x, initial.y * 7, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.Spawn_FullBright, "Full.Bright");
             Switches.LOD_Controll = GUI.Toggle(new Rect(initial.x, initial.y * 8, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.LOD_Controll, "LOD.Control");
-            Switches.DisplayDebugData = GUI.Toggle(new Rect(initial.x, initial.y * 9, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.DisplayDebugData, "Player.Data");
+            Switches.DisplayHelpPlayerInfo = GUI.Toggle(new Rect(initial.x, initial.y * 9, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.DisplayHelpPlayerInfo, "Player.Data");
 
             Switches.AimingAtNikita = GUI.Toggle(new Rect(initial.x + Cons.boxSize.box_100, initial.y * 2, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.AimingAtNikita, "Aim");
-            Switches.Aim_Smoothing = GUI.Toggle(new Rect(initial.x + Cons.boxSize.box_100, initial.y * 3, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.DisplayDebugData, "Smoothing");
+            Switches.Aim_Smoothing = GUI.Toggle(new Rect(initial.x + Cons.boxSize.box_100, initial.y * 3, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.DisplayHelpPlayerInfo, "Smoothing");
             //FINSHED
             GUI.color = guiBackup;
         }

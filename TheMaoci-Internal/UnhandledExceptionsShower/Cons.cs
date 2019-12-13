@@ -62,8 +62,18 @@ namespace UnhandledException
         public static int ScreenWidth = Screen.width;
         public static int ScreenHeight = Screen.height;
         public static string MyDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        private static float CalcSizeW(float size) { return ScreenWidth * size / 1920; }
-        private static float CalcSizeH(float size) { return ScreenHeight * size / 1080; }
+        public static string[] HelpMenuTexts = new string[10] {
+                "Help Menu: (Turn off/on 'Home' key)",
+                "'Num 0' - E.S.P - Players",
+                "'Num 1' - E.S.P - Corpses",
+                "'Num 2' - PlayerInfo - Health, Alive Objects, etc.",
+                "'Num 3' - Recoil 50%/100%",
+                "'Num 4' - E.S.P - Grenades",
+                "'Num 5' - Crosshair",
+                "'Num 7' - E.S.P - Loot (kinda laggy) * dont use it all the time",
+                "'Num 9' - Full Bright",
+                "'Insert' - GUI Menu"
+            };
 
         public static void RedalculateDistances() {
             if (ScreenWidth != 1920 && ScreenHeight != 1080)
@@ -108,7 +118,7 @@ namespace UnhandledException
             {
                 return health_curr.ToString() + "/" + ((int)LocalPlayer.HealthController.GetBodyPartHealth(bodypart).Maximum).ToString();
             }
-            return "[OFF]";
+            return "n/a";
         }
         public static Vector3 SkeletonBonePos(Diz.Skinning.Skeleton sko, int id)
         {
@@ -128,5 +138,8 @@ namespace UnhandledException
             }
             return result;
         }
+        private static float CalcSizeW(float size) { return ScreenWidth * size / 1920; }
+        private static float CalcSizeH(float size) { return ScreenHeight * size / 1080; }
+
     }
 }

@@ -42,6 +42,20 @@ namespace UnhandledException
                         Main._localPlayer.ProceduralWeaponAnimation.Shootingg.Intensity = 1.0f;
                     }
             }
+            #region [FUNCTION] - LOD Controller // TODO Not working - need to find work around
+            public LODGroup group;
+            private void SetLODToLow()
+            {
+                /*if (Switches.LOD_Controll)
+                {
+                    group.ForceLOD(6);
+                }
+                else 
+                {
+                    group.ForceLOD(0);
+                }*/
+            }
+            #endregion
         }
         public class OnGUI {
             public static void FullBright()

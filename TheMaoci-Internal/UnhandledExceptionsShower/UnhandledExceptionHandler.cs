@@ -14,8 +14,6 @@ namespace UnhandledException
 
         #region Vital Variables
             float timestamp = 0;
-            private Scene m_Scen;
-            private string m_Scen_name;
             private GameObject GameObjectHolder;
             private GameWorld _GameWorld = null;
         #endregion
@@ -26,7 +24,7 @@ namespace UnhandledException
             UnityEngine.Debug.unityLogger.logEnabled = false;
             // recalculate shit for diffrent screen sizes
             Cons.RedalculateDistances();
-            m_Scen = new Scene(); // inicializate this shit cause or random error spams
+            Main.G_Scene.Game_Scene = new Scene(); // inicializate this shit cause or random error spams
         }
         #endregion
 
@@ -101,7 +99,7 @@ namespace UnhandledException
             }
             if (Input.GetKeyUp(KeyCode.Keypad2))
             {
-                Switches.DisplayDebugData = !Switches.DisplayDebugData;
+                Switches.DisplayHelpPlayerInfo = !Switches.DisplayHelpPlayerInfo;
             }
             if (Input.GetKeyUp(KeyCode.Home))
             {
@@ -121,47 +119,20 @@ namespace UnhandledException
         }
         #endregion
 
-        #region [FUNCTION] - Recoil Reducer
 
-        #endregion
-
-        #region [FUNCTION] - isMatch()
-        private bool inMatch()
-        {
-            // checking if you are not in main menu and all other endraid menu scenes
-            return m_Scen_name != "EnvironmentUIScene" && m_Scen_name != "MenuUIScene" && m_Scen_name != "CommonUIScene" && m_Scen_name != "MainScene";
-        }
-        #endregion
-
-        #region [FUNCTION] - LOD Controller // TODO for testing only
-        public LODGroup group;  
-        private void SetLODToLow() {
-            /*if (Switches.LOD_Controll)
-            {
-                group.ForceLOD(6);
-            }
-            else 
-            {
-                group.ForceLOD(0);
-            }*/
-        }
-        #endregion
-
-        #region [FUNCTION] - FullBright
-
-        #endregion
 
         #region [MAIN] - Update
         private void Update()
         {
             try
             {
-                this.m_Scen = SceneManager.GetActiveScene();
-                this.m_Scen_name = m_Scen.name;
+                Main.G_Scene.SaveScene();
                 Hotkeys();
-                if (inMatch())
+                // make sure scene is map scene and is loaded and ready
+                if (Main.G_Scene.isInMatch() && Main.G_Scene.isActiveAndLoaded())
                 {
                     // delay start of script for 20 seconds on start of match cause match is starting way before deploy is displaying - it will cause less errors displaying
+                    // lower time from 20f if its holdup too long
                     if (timestamp == 0f)
                         timestamp = Time.time + 20f;
                     if (Time.time > timestamp)
@@ -309,7 +280,7 @@ namespace UnhandledException
         {
             try {
                 //Updates Each Frame
-                if (inMatch())
+                if (Main.G_Scene.isInMatch() && Main.G_Scene.isActiveAndLoaded())
                 {
                     Drawing.P(new Vector2(1f, 1f), Color.red, 1f);
                     string enabled = "";
@@ -337,7 +308,7 @@ namespace UnhandledException
                         enabled = enabled + "A";
                         FUNC_Aiming_Helper.TargetLock(Main._players, Main._localPlayer, 3, Cons.RenderDistance.d_250, 100);
                     }
-                    if (Switches.DisplayDebugData)
+                    if (Switches.Draw_ESP || Switches.Draw_Grenades || Switches.Draw_Loot || Switches.Draw_Corpses || Switches.AimingAtNikita)
                     {
                         Drawing.Text(
                             new Rect(
@@ -359,7 +330,10 @@ namespace UnhandledException
                     Drawing.P(new Vector2(1f, 1f), Color.white, 1f);
                 }
                 FUNC_Additional_Drawing.DisplayMenu();
-                FUNC_Additional_Drawing.HelpMenu();
+                if (Switches.Display_HelpInfo)
+                {
+                    FUNC_Additional_Drawing.HelpMenu();
+                }
                 if(Switches.Display_HUDGui)
                     FUNC_Additional_Drawing.DrawHUDMenu();
                 #region Help Me... Nygga - DISABLED CAUSE SHIT
@@ -382,6 +356,26 @@ namespace UnhandledException
     }
     public class Main
     {
+        public class G_Scene
+        {
+            public static Scene Game_Scene;
+            private static string GetSceneName() {
+                return Game_Scene.name;
+            }
+            public static bool isActiveAndLoaded() {
+                return Game_Scene.isLoaded;
+            }
+            public static bool isInMatch() {
+                return  GetSceneName() != "EnvironmentUIScene" && 
+                        GetSceneName() != "MenuUIScene" && 
+                        GetSceneName() != "CommonUIScene" && 
+                        GetSceneName() != "MainScene" && 
+                        GetSceneName() != "";
+            }
+            public static void SaveScene() {
+                Game_Scene = SceneManager.GetActiveScene();
+            }
+        }
         public static List<Player> _players;
         public static List<Throwable> _grenades;
         public static List<LootItem> _corpses;
@@ -413,7 +407,7 @@ namespace UnhandledException
         public static bool Draw_Crosshair = false;
         public static bool Display_HelpInfo = false;
         public static bool Switch_Colors = false;
-        public static bool DisplayDebugData = false;
+        public static bool DisplayHelpPlayerInfo = false;
         public static bool Spawn_FullBright = false;
         public static bool LOD_Controll = false;
         public static bool AimingAtNikita = false;
@@ -430,7 +424,7 @@ namespace UnhandledException
             Draw_Crosshair = false;
             Display_HelpInfo = false;
             Switch_Colors = false;
-            DisplayDebugData = false;
+            DisplayHelpPlayerInfo = false;
             Spawn_FullBright = false;
             LOD_Controll = false;
             AimingAtNikita = false;
