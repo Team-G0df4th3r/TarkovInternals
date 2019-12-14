@@ -325,22 +325,19 @@ namespace UnhandledException
                 if (Switches.StreamerMode)
                     nameNickname = "";
                 string playerStatus = $"[{(int)dTO}m] {Status}";
-                string WeaponName = "no weapon";
+                string WeaponName = "";
                 #endregion
                 #region Try to decode weapon name
-                if(player.Weapon != null)
-                    if (player.Weapon.ShortName.Length > 0)
+                    try
                     {
-                        try
-                        {
-                            WeaponName = player.Weapon.ShortName.Localized();
-                        }
-                        catch (Exception e)
-                        {
-                        }
+                        WeaponName = player.Weapon.ShortName.Localized();
+                    }
+                    catch (Exception e)
+                    {
+                        WeaponName = "none";
                     }
                 #endregion
-                        
+
                 // set colors now
                 LabelSize.normal.textColor = playerColor;
                 #region Slot 0 - Player Name (vector, size, drawing)
