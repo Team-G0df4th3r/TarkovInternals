@@ -6,10 +6,9 @@ using EFT;
 
 namespace UnhandledException
 {
-    class FUNC_Aiming_Helper
+    class FUNC_AimHelper
     {
         #region vangle_aim
-
         public static void Aimbot_Method()
         {
             foreach (Player player in Main._players)
@@ -19,7 +18,7 @@ namespace UnhandledException
                     if (player.GroupId != Main._localPlayer.GroupId || Main._localPlayer.GroupId == "" || Main._localPlayer.GroupId == "0" || Main._localPlayer.GroupId == null)
                     {
                         Vector3 vector = getBonePos(player);
-                        if (!(vector == Vector3.zero) && CalcInFov(vector) <= Cons.Aim.AAN_FOV && IsVisible(player.gameObject, getBonePos(player)))
+                        if (!(vector == Vector3.zero) && CalcInFov(vector) <= Cons.Aim.AAN_FOV/* && IsVisible(player.gameObject, getBonePos(player))*/)
                         {
                             AimAtPos(vector);
                         }
@@ -31,6 +30,7 @@ namespace UnhandledException
         private static bool IsVisible(GameObject obj, Vector3 Position)
         {
             RaycastHit raycastHit;
+            //int mask = 1 << 12 | 1 << 18; // its working for RayCast from game
             return Physics.Linecast(GetShootPos(), Position, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject;
         }
 

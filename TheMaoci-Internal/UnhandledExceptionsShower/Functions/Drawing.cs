@@ -96,5 +96,22 @@ namespace UnhandledException
             GUI.color = savedColor;
         }
         #endregion
+
+        #region DrawBox
+        public static void DrawBox(float x, float y, float w, float h, Color color)
+        {
+            DrawLine(new Vector2(x, y), new Vector2(x + w, y), color);
+            DrawLine(new Vector2(x, y), new Vector2(x, y + h), color);
+            DrawLine(new Vector2(x + w, y), new Vector2(x + w, y + h), color);
+            DrawLine(new Vector2(x, y + h), new Vector2(x + w, y + h), color);
+        }
+        #endregion
+        #region DrawCircle
+
+        public static void Circle(int X, int Y, float radius)
+        {
+            //DrawBox(X - (radius / 2), Y - (radius / 2), radius, radius, Color.yellow);
+        }
+        #endregion
     }
 }

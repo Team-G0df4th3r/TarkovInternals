@@ -75,8 +75,8 @@
     <Compile Include="Cons.cs" />
     <Compile Include="ErrorHandler.cs" />
     <Compile Include="Functions\FUNC_Addons.cs" />
-    <Compile Include="Functions\FUNC_Aiming_Helper.cs" />
-    <Compile Include="Functions\FUNC_Drawing.cs" />
+    <Compile Include="Functions\FUNC_AimHelper.cs" />
+    <Compile Include="Functions\FUNC_DrawObjects.cs" />
     <Compile Include="Functions\FastMath.cs" />
     <Compile Include="Functions\FUNC_Additional_Drawing.cs" />
     <Compile Include="Statics.cs" />

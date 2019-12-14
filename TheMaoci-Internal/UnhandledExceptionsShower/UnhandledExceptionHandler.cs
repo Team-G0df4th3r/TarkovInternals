@@ -285,26 +285,27 @@ namespace UnhandledException
                     if (Switches.Draw_ESP)
                     {
                         enabled = enabled + "P";
-                        FUNC_Drawing.DrawPlayers(Main._players, Main._localPlayer, Cons.RenderDistance.d_1000, Switches.Switch_Colors);
+                        FUNC_DrawObjects.DrawPlayers(Main._players, Main._localPlayer, Cons.RenderDistance.d_1000, Switches.Switch_Colors);
                     }
                     if (Switches.Draw_Grenades)
                     {
                         enabled = enabled + "G";
-                        FUNC_Drawing.DrawDTG(Main._grenades, Main._localPlayer, Cons.RenderDistance.d_100);
+                        FUNC_DrawObjects.DrawDTG(Main._grenades, Main._localPlayer, Cons.RenderDistance.d_100);
                     }
                     if (Switches.Draw_Loot)
                     {
                         enabled = enabled + "L";
-                        FUNC_Drawing.DrawDLI(Main._lootItems, Cons.RenderDistance.d_250);
+                        FUNC_DrawObjects.DrawDLI(Main._lootItems, Cons.RenderDistance.d_250);
                     }
                     if (Switches.Draw_Corpses)
                     {
                         enabled = enabled + "C";
-                        FUNC_Drawing.DrawPDB(Main._corpses, Cons.RenderDistance.d_250);
+                        FUNC_DrawObjects.DrawPDB(Main._corpses, Cons.RenderDistance.d_250);
                     }
                     if (Switches.AimingAtNikita) {
                         enabled = enabled + "A";
-                        FUNC_Aiming_Helper.Aimbot_Method();
+                        FUNC_AimHelper.Aimbot_Method();
+                        Drawing.Circle(Cons.ScreenWidth, Cons.ScreenHeight, Cons.Aim.AAN_FOV);
                     }
                     if (Switches.Draw_ESP || Switches.Draw_Grenades || Switches.Draw_Loot || Switches.Draw_Corpses || Switches.AimingAtNikita)
                     {
