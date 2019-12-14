@@ -8,177 +8,97 @@ namespace UnhandledException
 {
     class FUNC_Aiming_Helper
     {
-        #region DLLImporting + mouse events
-        //[DllImport("user32.dll")]
-        //static extern bool GetCursorPos(out POINT lpPoint);
-        [DllImport("user32.dll")]
-        static extern void mouse_event(int dwFlags, int dx, int dy, int dwData, int dwExtraInfo);
-        private const int MOUSEEVENTF_MOVE = 0x0001;
-        public static void Move(int xDelta, int yDelta)
-        {
-            mouse_event(MOUSEEVENTF_MOVE, xDelta, yDelta, 0, 0);
-        }
-        // _lP.ProceduralWeaponAnimation.HandsContainer.CameraTransform.
+        #region vangle_aim
 
-        /*public struct POINT
+        public static void Aimbot_Method()
         {
-            public int X;
-            public int Y;
-        }*/
-        #endregion
-        public static void TargetLock(IEnumerable<Player> _ply, Player _lP, float _AimSpeed, float _checkDistance = 200f, double _distance2d = 100)
-        {
-            
-            if (_ply != null && _lP != null)
+            foreach (Player player in Main._players)
             {
-                float aimPosX = 0;
-                float aimPosY = 0;
-                Vector3 velocity = new Vector3(0, 0, 0);
-                var enumerator = _ply.GetEnumerator();
-                while (enumerator.MoveNext())
+                if (!(player == null) && !(player == Main._localPlayer) && player.HealthController != null && player.HealthController.IsAlive)
                 {
-                    try
+                    if (player.GroupId != Main._localPlayer.GroupId || Main._localPlayer.GroupId == "" || Main._localPlayer.GroupId == "0" || Main._localPlayer.GroupId == null)
                     {
-                        var p = enumerator.Current;
-                        if (p != null)
+                        Vector3 vector = getBonePos(player);
+                        if (!(vector == Vector3.zero) && CalcInFov(vector) <= Cons.Aim.AAN_FOV && IsVisible(player.gameObject, getBonePos(player)))
                         {
-                            /*if (Cons.Aim.lastTargeted != null)
-                            {
-                                if (@Cons.Aim.lastTargeted.Profile.AccountId == p.Profile.AccountId)
-                                {
-                                    Vector3 playerHeadVector = Camera.main.WorldToScreenPoint(p.PlayerBones.Head.position);
-                                    double screenDist = FastMath.FDv2(new Vector2(Screen.width, Screen.height) / 2, new Vector2(playerHeadVector.x, playerHeadVector.y));
-                                    if (p.HealthController.IsAlive || screenDist < _distance2d)
-                                    {
-                                        velocity = p.Velocity;
-                                        aimPosX = playerHeadVector.x;
-                                        aimPosY = playerHeadVector.y;
-                                        AimAtPos(aimPosX, aimPosY, velocity, _AimSpeed);
-                                        continue;
-                                    }
-                                    else
-                                    {
-                                        Cons.Aim.lastTargeted = null;
-                                    }
-                                }
-                            }*/
-                            if (_lP.Profile.Info.GroupId == p.Profile.Info.GroupId && _lP.Profile.Info.GroupId != "0" && _lP.Profile.Info.GroupId != "" && _lP.Profile.Info.GroupId != null) continue;
-                            //if (!p.IsVisible) continue;
-                            float distanceToObject = FastMath.FD(Camera.main.transform.position, p.Transform.position);
-                            if (distanceToObject < _checkDistance)
-                            {
-                                if (p.HealthController.IsAlive && p.IsVisible && EPointOfView.FirstPerson != p.PointOfView)
-                                {
-                                    Vector3 playerHeadVector = Camera.main.WorldToScreenPoint(p.PlayerBones.Head.position);
-                                    double screenDist = FastMath.FDv2(new Vector2(Screen.width, Screen.height) / 2, new Vector2(playerHeadVector.x, playerHeadVector.y));
-                                    if (screenDist < _distance2d)
-                                    {
-                                        Cons.Aim.lastTargeted = p;
-                                        velocity = p.Velocity;
-                                        aimPosX = playerHeadVector.x;
-                                        aimPosY = playerHeadVector.y;
-                                    }
-                                    else
-                                        continue;
-                                }
-                                else
-                                    continue;
-                            }
-                            else
-                                continue;
+                            AimAtPos(vector);
                         }
-                        else
-                            continue;
-
-                    }
-                    catch (NullReferenceException ex)
-                    {
-                        ErrorHandler.Catch("AimError", ex);
                     }
                 }
-                AimAtPos(aimPosX, aimPosY, velocity, _AimSpeed);
-
             }
-
         }
-        private static void AimAtPos(float x, float y, Vector3 velocity, float _AimSpeed)
+
+        private static bool IsVisible(GameObject obj, Vector3 Position)
         {
-            int ScreenCenterX = (Screen.width / 2);
-            int ScreenCenterY = (Screen.height / 2);
-            float TargetX = 0;
-            float TargetY = 0;
-
-
-            float diffrenceX = Math.Abs(ScreenCenterX - x);
-            float diffrenceY = Math.Abs(ScreenCenterY - y);
-
-
-            if (x != 0)
-            {
-                if (x > ScreenCenterX)
-                {
-                    TargetX = -(ScreenCenterX - x);
-                    TargetX /= _AimSpeed;
-                    if (TargetX + ScreenCenterX > Screen.width) TargetX = 0;
-                }
-                if (x < ScreenCenterX)
-                {
-                    TargetX = x - ScreenCenterX;
-                    TargetX /= _AimSpeed;
-                    if (TargetX + ScreenCenterX < 0) TargetX = 0;
-                }
-            }
-
-            if (y != 0)
-            {
-                if (y > ScreenCenterY)
-                {
-                    TargetY = ScreenCenterY - y;
-                    TargetY /= _AimSpeed;
-                    if (TargetY + ScreenCenterY > Screen.height) TargetY = 0;
-                }
-                if (y < ScreenCenterY)
-                {
-                    TargetY = -(y - ScreenCenterY);
-                    TargetY /= _AimSpeed;
-                    if (TargetY + ScreenCenterY < 0) TargetY = 0;
-                }
-            }
-            #region No Smoothing
-            if (!Switches.Aim_Smoothing)
-            {
-                Move((int)TargetX, (int)TargetY);
-                return;
-            }
-            #endregion
-            TargetX = TargetX + TargetX;
-            TargetY = TargetY + TargetY;
-            //TargetX /= 10;
-            //TargetY /= 10;
-            if (Math.Abs(TargetX) >= 1 || Math.Abs(TargetY) >= 1)
-            {
-                Move((int)TargetX, (int)TargetY);
-                /*if (TargetX > 0)
-                {
-                    TargetX = 1f;
-                }
-                if (TargetX < 0)
-                {
-                    TargetX = -1f;
-                }
-            }
-            if (Math.Abs(TargetY) < 1f)
-            {
-                if (TargetY > 0)
-                {
-                    TargetY = 1f;
-                }
-                if (TargetY < 0)
-                {
-                    TargetY = -1f;
-                }*/
-            }
-            
+            RaycastHit raycastHit;
+            return Physics.Linecast(GetShootPos(), Position, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject;
         }
+
+        public static Vector3 GetShootPos()
+        {
+            if (Main._localPlayer == null)
+            {
+                return Vector3.zero;
+            }
+            Player.FirearmController firearmController = Main._localPlayer.HandsController as Player.FirearmController;
+            if (firearmController == null)
+            {
+                return Vector3.zero;
+            }
+            return firearmController.Fireport.position + Camera.main.transform.forward * 1f;
+        }
+
+        public enum ibid
+        {
+            Head,
+            Neck,
+            Chest,
+            Stomach
+        }
+
+        public static int idtobid(ibid bid)
+        {
+            switch (bid)
+            {
+                case ibid.Neck:
+                    return 132;
+
+                case ibid.Chest:
+                    return 36;
+
+                case ibid.Stomach:
+                    return 29;
+
+                default:
+                    return 133;
+            }
+        }
+
+        public static Vector3 getBonePos(Player inP)
+        {
+            int bid = idtobid(ibid.Neck);
+            return Cons.GetBonePosByID(inP, bid);
+        }
+
+        public static float CalcInFov(Vector3 Position)
+        {
+            Vector3 position = Camera.main.transform.position;
+            Vector3 forward = Camera.main.transform.forward;
+            Vector3 normalized = (Position - position).normalized;
+            return Mathf.Acos(Mathf.Clamp(Vector3.Dot(forward, normalized), -1f, 1f)) * 57.29578f;
+        }
+
+        public static void AimAtPos(Vector3 pos)
+        {
+            Vector2 rotation = Main._localPlayer.MovementContext.Rotation;
+            Vector3 b = GetShootPos();
+            Vector3 eulerAngles = Quaternion.LookRotation((pos - b).normalized).eulerAngles;
+            if (eulerAngles.x > 180f)
+            {
+                eulerAngles.x -= 360f;
+            }
+            Main._localPlayer.MovementContext.Rotation = new Vector2(eulerAngles.y, eulerAngles.x);
+        }
+        #endregion
     }
 }

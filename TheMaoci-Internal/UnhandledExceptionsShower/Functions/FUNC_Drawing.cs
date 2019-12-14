@@ -281,7 +281,7 @@ namespace UnhandledException
                     }
                     else if (LocalPlayer.Profile.Info.GroupId == player.Profile.Info.GroupId && LocalPlayer.Profile.Info.GroupId != "0" && LocalPlayer.Profile.Info.GroupId != "" && LocalPlayer.Profile.Info.GroupId != null)
                     {
-                        playerDisplayName = player.Profile.Info.Nickname;
+                        playerDisplayName = (Switches.StreamerMode)?"team":player.Profile.Info.Nickname;
                         playerColor = Statics.Colors.ESP.group;
                     }
                     else if (player.Profile.Info.Side == EPlayerSide.Savage)
@@ -293,7 +293,7 @@ namespace UnhandledException
                     }
                     else
                     {
-                        playerDisplayName = player.Profile.Info.Nickname + " [" + player.Profile.Info.Level.ToString() + "]";
+                        playerDisplayName = (Switches.StreamerMode) ? "Bastian" : (player.Profile.Info.Nickname + " [" + player.Profile.Info.Level.ToString() + "]");
                         playerColor = Statics.Colors.ESP.player[0];
                         Drawing.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Statics.Colors.Red, find_sizebox);
                     }
@@ -375,6 +375,18 @@ namespace UnhandledException
                             Statics.Colors.Black, 
                             new Vector2(1f, 1f)
                         );
+                    }
+                #endregion
+
+                    #region snap lines
+                    if (Switches.SnapLines && player != Main._localPlayer)
+                    {
+                        Vector3 w2s = Camera.main.WorldToScreenPoint(player.PlayerBones.RootJoint.position);
+                        if (!(w2s.z < 0.01f))
+                        {
+                            Drawing.DrawLine(new Vector2((Screen.width / 2), Screen.height), new Vector2(w2s.x, Screen.height - w2s.y), playerColor);
+                        }
+
                     }
                     #endregion
             }

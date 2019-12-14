@@ -304,7 +304,7 @@ namespace UnhandledException
                     }
                     if (Switches.AimingAtNikita) {
                         enabled = enabled + "A";
-                        FUNC_Aiming_Helper.TargetLock(Main._players, Main._localPlayer, Cons.Aim.aimSpeed, Cons.Aim.distanceToScan, Cons.Aim.distanceFromCenterOfScreen);
+                        FUNC_Aiming_Helper.Aimbot_Method();
                     }
                     if (Switches.Draw_ESP || Switches.Draw_Grenades || Switches.Draw_Loot || Switches.Draw_Corpses || Switches.AimingAtNikita)
                     {
@@ -412,7 +412,8 @@ namespace UnhandledException
         public static bool Display_HUDGui = false;
         public static bool Recoil_Reducer = false;
         public static bool Aim_Smoothing = true;
-
+        public static bool StreamerMode = false;
+        public static bool SnapLines = false;
         public static void SetToOff()
         {
             Draw_ESP = false;
