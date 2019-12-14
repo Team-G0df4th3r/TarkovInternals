@@ -9,7 +9,7 @@ namespace UnhandledException
     {
         public class Aim {
             public static float distanceToScan = 200f;
-            public static float AAN_FOV = 10f;
+            public static float AAN_FOV = 3f;
             public static Player lastTargeted;
         }
         public static Vector2 InitialHealthBox = new Vector2(19f, 32f);

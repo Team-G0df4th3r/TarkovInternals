@@ -322,8 +322,6 @@ namespace UnhandledException
                 #endregion
                 #region Prepare Main Texts
                 string nameNickname = $"{playerDisplayName}";
-                if (Switches.StreamerMode)
-                    nameNickname = "";
                 string playerStatus = $"[{(int)dTO}m] {Status}";
                 string WeaponName = "";
                 #endregion

@@ -108,8 +108,8 @@ namespace UnhandledException
             //Switches.Aim_Smoothing = GUI.Toggle(new Rect(initial.x + Cons.boxSize.box_100, initial.y * 3, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.Aim_Smoothing, "Smoothing");
             //GUI.Label(new Rect(initial.x + Cons.boxSize.box_150, initial.y * 4, Cons.boxSize.box_50, Cons.boxSize.box_20), "Speed:" + Cons.Aim.aimSpeed.ToString());
             //Cons.Aim.aimSpeed = (int)GUI.HorizontalSlider(new Rect(initial.x + Cons.boxSize.box_100, initial.y * 4, 50f, 20f), (float)Cons.Aim.aimSpeed, 1, 25);
-            GUI.Label(new Rect(initial.x + Cons.boxSize.box_150, initial.y * 3, Cons.boxSize.box_100, Cons.boxSize.box_20), "FOV:" + Cons.Aim.AAN_FOV.ToString());
-            Cons.Aim.AAN_FOV = (int)GUI.HorizontalSlider(new Rect(initial.x + Cons.boxSize.box_100, initial.y * 3, 50f, 20f), (float)Cons.Aim.AAN_FOV, 1f, 360f);
+            GUI.Label(new Rect(initial.x, initial.y * 3, Cons.boxSize.box_100, Cons.boxSize.box_20), "FOV:" + Cons.Aim.AAN_FOV.ToString());
+            Cons.Aim.AAN_FOV = (int)GUI.HorizontalSlider(new Rect(initial.x + Cons.boxSize.box_100, initial.y * 4, 100f, 20f), (float)Cons.Aim.AAN_FOV, 1f, 25f);
 
             //GUI.Label(new Rect(initial.x + Cons.boxSize.box_150, initial.y * 4, Cons.boxSize.box_100, Cons.boxSize.box_20), "Dis3d:" + Cons.Aim.distanceToScan.ToString());
             //Cons.Aim.distanceToScan = (int)GUI.HorizontalSlider(new Rect(initial.x + Cons.boxSize.box_100, initial.y * 4, 50f, 20f), (float)Cons.Aim.distanceToScan, 10f, 800f);
