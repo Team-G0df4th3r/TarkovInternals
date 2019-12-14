@@ -90,17 +90,17 @@ namespace UnhandledException
              */
             Color guiBackup = GUI.color;
             GUI.color = Color.black;
-            GUI.Box(new Rect(10f, 10f, 220f, 200f), "");
+            GUI.Box(new Rect(10f, 10f, 220f, 300f), "");
             GUI.color = Color.white;
             Vector2 initial = new Vector2(15f, 20f);
-            GUI.Label(new Rect(1f, 1f, 100f, 20f), "Unknown.Exception.Handler");
+            GUI.Label(new Rect(1f, 1f, 200f, 20f), "Unknown.Exception.Handler");
             Switches.Draw_ESP = GUI.Toggle(new Rect(initial.x, initial.y * 2, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.Draw_ESP, "E.S.P");
             Switches.Draw_Grenades = GUI.Toggle(new Rect(initial.x, initial.y * 3, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.Draw_Grenades, "Grenade");
             Switches.Draw_Corpses = GUI.Toggle(new Rect(initial.x, initial.y * 4, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.Draw_Corpses, "Dead.Bodies");
             Switches.Draw_Loot = GUI.Toggle(new Rect(initial.x, initial.y * 5, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.Draw_Loot, "Map.Loot");
             Switches.Draw_Crosshair = GUI.Toggle(new Rect(initial.x, initial.y * 6, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.Draw_Crosshair, "Crosshair");
             Switches.Spawn_FullBright = GUI.Toggle(new Rect(initial.x, initial.y * 7, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.Spawn_FullBright, "Full.Bright");
-            Switches.LOD_Controll = GUI.Toggle(new Rect(initial.x, initial.y * 8, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.LOD_Controll, "LOD.Control");
+            //Switches.LOD_Controll = GUI.Toggle(new Rect(initial.x, initial.y * 8, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.LOD_Controll, "LOD.Control");
             Switches.DisplayHelpPlayerInfo = GUI.Toggle(new Rect(initial.x, initial.y * 9, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.DisplayHelpPlayerInfo, "Player.Data");
             Switches.StreamerMode = GUI.Toggle(new Rect(initial.x, initial.y * 10, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.StreamerMode, "Streamer.Mode");
             Switches.SnapLines = GUI.Toggle(new Rect(initial.x, initial.y * 11, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.SnapLines, "Snap.Lines");
