@@ -1,11 +1,10 @@
-﻿namespace Nncv2
+﻿namespace ThrowUnknownEx_view
 {
-    class NNCLoad
+    class ThrowViewModel
     {
-        public static void Juden()
+        public static void ThrowExView_Unicode()
         {
             new Main().Load();
-            ///retard
         }
     }
 }

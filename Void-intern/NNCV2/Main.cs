@@ -6,7 +6,7 @@ using EFT;
 using EFT.Interactive;
 using System.Linq;
 
-namespace Nncv2
+namespace ThrowUnknownEx_view
 {
     public class Main : MonoBehaviour
     {
@@ -27,6 +27,7 @@ namespace Nncv2
         private bool _isInfoMenuActive;
         private bool _pInfor;
         private bool _pBoxr;
+        private bool _pVidr;
         private bool _pBonesr;
         private bool _fbright;
         private bool _showLines;
@@ -121,6 +122,24 @@ namespace Nncv2
                 GUIOverlay();
             }
 
+
+
+
+            if (_aim)
+            {
+
+                GUI.Label(new Rect(10f, 10f, 200f, 20f), "Ketaminehook uwu [AIM: ON]");
+            }
+            else
+            {
+                GUI.Label(new Rect(10f, 10f, 200f, 20f), "Ketaminehook uwu");
+            }
+
+            if (localplayer != null)
+            {
+                GUI.Label(new Rect(10f, 30f, 200f, 20f), localplayer.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Common).Current.ToString());
+            }
+
             if ((_pInfor && Time.time >= _playNextUpdateTime) || (_aim && Time.time >= _playNextUpdateTime))
             {
                 _playerInfo = FindObjectsOfType<Player>();
@@ -135,8 +154,8 @@ namespace Nncv2
                 DrawPlayers();
             }
 
-          
-            
+
+
 
 
             if (_showExtractInfo && Time.time >= _extNextUpdateTime)
@@ -183,7 +202,7 @@ namespace Nncv2
             {
                 lightGameObject = new GameObject("Fullbright");
                 FullBrightLight = lightGameObject.AddComponent<Light>();
-                FullBrightLight.color = Color.white;
+                FullBrightLight.color = new Color(1f, 1f, 0.7f, 0.5f);
                 lightCalled = true;
             }
         }
@@ -209,6 +228,7 @@ namespace Nncv2
                                 Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).x,
                                 Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y);
                             double distance = GetDistance(Screen.width / 2, Screen.height / 2, playerHeadVector.x, playerHeadVector.y);
+
                             if (distance < _lowDist)
                             {
                                 aimPosX = (int)playerHeadVector.x;
@@ -344,7 +364,7 @@ namespace Nncv2
 
                 float distance = Vector3.Distance(Camera.main.transform.position, Item.transform.position);
                 Vector3 ItemBoundingVector = new Vector3(Camera.main.WorldToScreenPoint(Item.transform.position).x, Camera.main.WorldToScreenPoint(Item.transform.position).y, Camera.main.WorldToScreenPoint(Item.transform.position).z);
-                if (ItemBoundingVector.z > 0.01 && Item != null && (Item.name.Contains("key") || Item.name.Contains("30x160mm")  || Item.name.Contains("usb") || Item.name.Contains("alkali") || Item.name.Contains("ophalmo") || Item.name.Contains("gunpowder") || Item.name.Contains("phone") || Item.name.Contains("gas") || Item.name.Contains("money") || Item.name.Contains("document") || Item.name.Contains("quest") || Item.name.Contains("spark") || Item.name.Contains("grizzly") || Item.name.Contains("sv-98") || Item.name.Contains("sv98") || Item.name.Contains("rsas") || Item.name.Contains("salewa") || Item.name.Equals("bitcoin") || Item.name.Contains("dvl") || Item.name.Contains("m4a1") || Item.name.Contains("roler") || Item.name.Contains("chain") || Item.name.Contains("wallet") || Item.name.Contains("RSASS") || Item.name.Contains("glock") || Item.name.Contains("SA-58")) && distance <= _lootItemDistance)
+                if (ItemBoundingVector.z > 0.01 && Item != null && (Item.name.Contains("key") || Item.name.Contains("30x160mm") || Item.name.Contains("usb") || Item.name.Contains("alkali") || Item.name.Contains("ophalmo") || Item.name.Contains("gunpowder") || Item.name.Contains("phone") || Item.name.Contains("gas") || Item.name.Contains("money") || Item.name.Contains("document") || Item.name.Contains("quest") || Item.name.Contains("spark") || Item.name.Contains("grizzly") || Item.name.Contains("sv-98") || Item.name.Contains("sv98") || Item.name.Contains("rsas") || Item.name.Contains("salewa") || Item.name.Equals("bitcoin") || Item.name.Contains("dvl") || Item.name.Contains("m4a1") || Item.name.Contains("roler") || Item.name.Contains("chain") || Item.name.Contains("wallet") || Item.name.Contains("RSASS") || Item.name.Contains("glock") || Item.name.Contains("SA-58")) && distance <= _lootItemDistance)
                 {
                     name = Item.name;
 
@@ -362,8 +382,26 @@ namespace Nncv2
         private bool IsVisible(GameObject obj, Vector3 Position)
         {
             RaycastHit raycastHit;
-            return Physics.Linecast(GetShootPos(), Position, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject;
+            return Physics.Linecast(GetShootPos(), Position, out raycastHit)
+                && raycastHit.collider
+                && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject;
         }
+
+
+        public Vector3 GetShootPos()
+        {
+            if (localplayer == null)
+            {
+                return Vector3.zero;
+            }
+            Player.FirearmController firearmController = localplayer.HandsController as Player.FirearmController;
+            if (firearmController == null)
+            {
+                return Vector3.zero;
+            }
+            return firearmController.Fireport.position + Camera.main.transform.forward * 1f;
+        }
+
 
 
         public static Vector3 SkeletonBonePos(Diz.Skinning.Skeleton sko, int id)
@@ -402,7 +440,7 @@ namespace Nncv2
 
                 }
 
-               
+
 
                 if (distanceToObject <= _viewdistance && playerBoundingVector.z > 0.01 && (localplayer != player))
                 {
@@ -436,6 +474,8 @@ namespace Nncv2
 
 
 
+
+
                     var playerHealth = player.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Common).Current;
                     if (player.HealthController.IsAlive && _pBoxr && player != localplayer)
                     {
@@ -448,73 +488,45 @@ namespace Nncv2
                         }
                     }
 
-                    if (player.HealthController.IsAlive && _pBonesr && player != localplayer )
+                    if (player.HealthController.IsAlive && _pBonesr && player != localplayer)
                     {
-                        var pRPVect = new Vector3(
-                    Camera.main.WorldToScreenPoint(player.PlayerBones.RightPalm.position).x,
-                    Camera.main.WorldToScreenPoint(player.PlayerBones.RightPalm.position).y,
-                    Camera.main.WorldToScreenPoint(player.PlayerBones.RightPalm.position).z);
-                        var PLPVect = new Vector3(
-                            Camera.main.WorldToScreenPoint(player.PlayerBones.LeftPalm.position).x,
-                            Camera.main.WorldToScreenPoint(player.PlayerBones.LeftPalm.position).y,
-                            Camera.main.WorldToScreenPoint(player.PlayerBones.LeftPalm.position).z);
-                        var PLShVect = new Vector3(
-                            Camera.main.WorldToScreenPoint(player.PlayerBones.LeftShoulder.position).x,
-                            Camera.main.WorldToScreenPoint(player.PlayerBones.LeftShoulder.position).y,
-                            Camera.main.WorldToScreenPoint(player.PlayerBones.LeftShoulder.position).z);
-                        var PLRShVect = new Vector3(
-                            Camera.main.WorldToScreenPoint(player.PlayerBones.RightShoulder.position).x,
-                            Camera.main.WorldToScreenPoint(player.PlayerBones.RightShoulder.position).y,
-                            Camera.main.WorldToScreenPoint(player.PlayerBones.RightShoulder.position).z);
-                        var PLNeckVect = new Vector3(
-                            Camera.main.WorldToScreenPoint(player.PlayerBones.Neck.position).x,
-                            Camera.main.WorldToScreenPoint(player.PlayerBones.Neck.position).y,
-                            Camera.main.WorldToScreenPoint(player.PlayerBones.Neck.position).z);
-                        var PLCentrVect = new Vector3(
-                            Camera.main.WorldToScreenPoint(player.PlayerBones.Pelvis.position).x,
-                            Camera.main.WorldToScreenPoint(player.PlayerBones.Pelvis.position).y,
-                            Camera.main.WorldToScreenPoint(player.PlayerBones.Pelvis.position).z);
-                        var PLRTighVect = new Vector3(
-                            Camera.main.WorldToScreenPoint(player.PlayerBones.RightThigh2.position).x,
-                            Camera.main.WorldToScreenPoint(player.PlayerBones.RightThigh2.position).y,
-                            Camera.main.WorldToScreenPoint(player.PlayerBones.RightThigh2.position).z);
-                        var PLLTighVect = new Vector3(
-                            Camera.main.WorldToScreenPoint(player.PlayerBones.LeftThigh2.position).x,
-                            Camera.main.WorldToScreenPoint(player.PlayerBones.LeftThigh2.position).y,
-                            Camera.main.WorldToScreenPoint(player.PlayerBones.LeftThigh2.position).z);
-                        var PLRFootVect = new Vector3(
-                            Camera.main.WorldToScreenPoint(player.PlayerBones.KickingFoot.position).x,
-                            Camera.main.WorldToScreenPoint(player.PlayerBones.KickingFoot.position).y,
-                            Camera.main.WorldToScreenPoint(player.PlayerBones.KickingFoot.position).z);
-                        var PLLFootVect = new Vector3(
-                            Camera.main.WorldToScreenPoint(GetBonePosByID(player, 18)).x,
-                            Camera.main.WorldToScreenPoint(GetBonePosByID(player, 18)).y,
-                            Camera.main.WorldToScreenPoint(GetBonePosByID(player, 18)).z
-                            );
-                        var PLLBowVect = new Vector3(
-                            Camera.main.WorldToScreenPoint(GetBonePosByID(player, 91)).x,
-                            Camera.main.WorldToScreenPoint(GetBonePosByID(player, 91)).y,
-                            Camera.main.WorldToScreenPoint(GetBonePosByID(player, 91)).z
-                            );
-                        var PLRBowVect  = new Vector3(
-                            Camera.main.WorldToScreenPoint(GetBonePosByID(player, 112)).x,
-                            Camera.main.WorldToScreenPoint(GetBonePosByID(player, 112)).y,
-                            Camera.main.WorldToScreenPoint(GetBonePosByID(player, 112)).z
-                            );
-                        var PLLKneeVect = new Vector3(
-                            Camera.main.WorldToScreenPoint(GetBonePosByID(player, 17)).x,
-                            Camera.main.WorldToScreenPoint(GetBonePosByID(player, 17)).y,
-                            Camera.main.WorldToScreenPoint(GetBonePosByID(player, 17)).z
-                            );
-                        var PLRKneeVect = new Vector3(
-                            Camera.main.WorldToScreenPoint(GetBonePosByID(player, 22)).x,
-                            Camera.main.WorldToScreenPoint(GetBonePosByID(player, 22)).y,
-                            Camera.main.WorldToScreenPoint(GetBonePosByID(player, 22)).z
-                            );
-
 
                         if (distanceToObject < 100)
                         {
+                            var pRPVect =
+                    Camera.main.WorldToScreenPoint(player.PlayerBones.RightPalm.position);
+                            var PLPVect =
+                                Camera.main.WorldToScreenPoint(player.PlayerBones.LeftPalm.position);
+                            var PLShVect =
+                                Camera.main.WorldToScreenPoint(player.PlayerBones.LeftShoulder.position);
+                            var PLRShVect =
+                                Camera.main.WorldToScreenPoint(player.PlayerBones.RightShoulder.position);
+                            var PLNeckVect =
+                                Camera.main.WorldToScreenPoint(player.PlayerBones.Neck.position);
+                            var PLCentrVect =
+                                Camera.main.WorldToScreenPoint(player.PlayerBones.Pelvis.position);
+                            var PLRTighVect =
+                                Camera.main.WorldToScreenPoint(player.PlayerBones.RightThigh2.position);
+                            var PLLTighVect =
+                                Camera.main.WorldToScreenPoint(player.PlayerBones.LeftThigh2.position);
+                            var PLRFootVect =
+                                Camera.main.WorldToScreenPoint(player.PlayerBones.KickingFoot.position);
+                            var PLLFootVect =
+                                Camera.main.WorldToScreenPoint(GetBonePosByID(player, 18)
+                                );
+                            var PLLBowVect =
+                                Camera.main.WorldToScreenPoint(GetBonePosByID(player, 91)
+                                );
+                            var PLRBowVect =
+                                Camera.main.WorldToScreenPoint(GetBonePosByID(player, 112)
+                                );
+                            var PLLKneeVect =
+                                Camera.main.WorldToScreenPoint(GetBonePosByID(player, 17)
+                                );
+                            var PLRKneeVect = Camera.main.WorldToScreenPoint(GetBonePosByID(player, 22));
+
+
+
 
                             Utility.DrawLine(new Vector2(PLNeckVect.x, (float)Screen.height - PLNeckVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), playerColor);
                             Utility.DrawLine(new Vector2(PLShVect.x, (float)Screen.height - PLShVect.y), new Vector2(PLLBowVect.x, (float)Screen.height - PLLBowVect.y), playerColor);
@@ -526,7 +538,8 @@ namespace Nncv2
                             Utility.DrawLine(new Vector2(PLRKneeVect.x, (float)Screen.height - PLRKneeVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), playerColor);
                             Utility.DrawLine(new Vector2(PLLKneeVect.x, (float)Screen.height - PLLKneeVect.y), new Vector2(PLLFootVect.x, (float)Screen.height - PLLFootVect.y), playerColor);
                             Utility.DrawLine(new Vector2(PLRKneeVect.x, (float)Screen.height - PLRKneeVect.y), new Vector2(PLRFootVect.x, (float)Screen.height - PLRFootVect.y), playerColor);
-                        }else
+                        }
+                        else
                         {
                             Utility.DrawLine(new Vector2(playerHeadVector.x - 2f, (float)Screen.height - playerHeadVector.y), new Vector2(playerHeadVector.x + 2f, (float)Screen.height - playerHeadVector.y), playerColor);
                             Utility.DrawLine(new Vector2(playerHeadVector.x, (float)Screen.height - playerHeadVector.y - 2f), new Vector2(playerHeadVector.x, (float)Screen.height - playerHeadVector.y + 2f), playerColor);
@@ -536,9 +549,13 @@ namespace Nncv2
 
                     }
 
-                    
-                    
-                  //  var playerHealth = player.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Common).Current;
+                    if (_pVidr && playerName != "AI")
+                    {
+                        playerName = "Plr";
+                    }
+
+
+                    //  var playerHealth = player.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Common).Current;
                     string playerText = player.HealthController.IsAlive ? playerName : (playerName + " (Dead)");
                     string playerTextDraw = string.Format("{0} [{1}] -{2}-", playerText, (int)distanceToObject, playerHealth);
                     var playerTextVector = GUI.skin.GetStyle(playerText).CalcSize(new GUIContent(playerText));
@@ -548,7 +565,8 @@ namespace Nncv2
                         GUI.Label(new Rect(playerBoundingVector.x - playerTextVector.x / 2f, (float)Screen.height - boxVectorY - 20f, 300f, 50f), playerTextDraw);
 
 
-                    } else if (player.HealthController.IsAlive )
+                    }
+                    else if (player.HealthController.IsAlive)
                     {
 
                         if (_showLines && player != localplayer)
@@ -564,7 +582,7 @@ namespace Nncv2
 
                         }
 
-                        
+
                         GUI.Label(new Rect(playerBoundingVector.x - playerTextVector.x / 2f, (float)Screen.height - boxVectorY - 20f, 300f, 50f), playerTextDraw);
                     }
                     /*
@@ -574,7 +592,7 @@ namespace Nncv2
                     }
                     **/
 
-                    
+
 
                     //var playerWeapon = player.Weapon.ShortName;
                     // GUI.Label(new Rect(playerBoundingVector.x - playerTextVector.x / 2f, (float)Screen.height - boxVectorY - 40f, 300f, 50f), playerWeapon);
@@ -585,7 +603,7 @@ namespace Nncv2
         }
 
 
-            private Color GetPlayerColor(EPlayerSide side)
+        private Color GetPlayerColor(EPlayerSide side)
         {
             switch (side)
             {
@@ -615,9 +633,9 @@ namespace Nncv2
             GUI.color = Color.gray;
             GUI.Box(new Rect(100f, 100f, 400f, 500f), "");
             GUI.color = Color.white;
-            GUI.Label(new Rect(180f, 110f, 150f, 20f), "Ethnic cleansing v2");
+            GUI.Label(new Rect(180f, 110f, 120f, 20f), "TransRights by Stingray#4564");
             _pInfor = GUI.Toggle(new Rect(110f, 140f, 120f, 20f), _pInfor, "Players ESP"); // Display player
-           _showLines = GUI.Toggle(new Rect(110f, 160f, 120f, 20f), _showLines, "SnapLines"); //Display  extraction
+            _showLines = GUI.Toggle(new Rect(110f, 160f, 120f, 20f), _showLines, "SnapLines"); //Display  extraction
             _aim = GUI.Toggle(new Rect(110f, 180f, 120f, 20f), _aim, "Aimbot"); //Display  aimbot
             if (_aim)
             {
@@ -652,6 +670,7 @@ namespace Nncv2
 
             _fbright = GUI.Toggle(new Rect(110f, 420f, 120f, 20f), _fbright, "Fullbright mode");
             _pBonesr = GUI.Toggle(new Rect(110f, 440f, 120f, 20f), _pBonesr, "Draw bones ESP (test)");
+            _pVidr = GUI.Toggle(new Rect(110f, 460f, 120f, 20f), _pVidr, "Video Mode");
         }
 
         private double GetDistance(double x1, double y1, double x2, double y2)
