@@ -31,6 +31,7 @@ namespace ThrowUnknownEx_view
         private bool _pBonesr;
         private bool _fbright;
         private bool _showLines;
+        private bool _showWeapons;
         private bool _showBodies;
         private bool _showExtractInfo;
         private bool _showItems;
@@ -147,7 +148,8 @@ namespace ThrowUnknownEx_view
             }
 
             if (_aim)
-                Aimbot();
+                Aimbot_Method();
+            // Aimbot();
 
             if (_pInfor)
             {
@@ -310,6 +312,104 @@ namespace ThrowUnknownEx_view
         }
 
 
+        #region vangle_aim
+
+        public void Aimbot_Method()
+        {
+            foreach (Player player in _playerInfo)
+            {
+                if (!(player == null) && !(player == localplayer) && player.HealthController != null && player.HealthController.IsAlive)
+                {
+                    if (player.GroupId != localgroup || localgroup == "" || localgroup == "0" || localgroup == null)
+                    {
+                        Vector3 vector = getBonePos(player);
+                        if (!(vector == Vector3.zero) && CalcInFov(vector) <= 10 /* FOV AIM*/ && IsVisible(player.gameObject, getBonePos(player)))
+                        {
+                            AimAtPos(vector);
+                        }
+                    }
+                }
+            }
+        }
+
+        private bool IsVisible(GameObject obj, Vector3 Position)
+        {
+            RaycastHit raycastHit;
+            return Physics.Linecast(GetShootPos(), Position, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject;
+        }
+
+        public Vector3 GetShootPos()
+        {
+            if (localplayer == null)
+            {
+                return Vector3.zero;
+            }
+            Player.FirearmController firearmController = localplayer.HandsController as Player.FirearmController;
+            if (firearmController == null)
+            {
+                return Vector3.zero;
+            }
+            return firearmController.Fireport.position + Camera.main.transform.forward * 1f;
+        }
+
+      
+
+
+
+        public enum ibid
+        {
+            Head,
+            Neck,
+            Chest,
+            Stomach
+        }
+
+        public int idtobid(ibid bid)
+        {
+            switch (bid)
+            {
+                case ibid.Neck:
+                    return 132;
+
+                case ibid.Chest:
+                    return 36;
+
+                case ibid.Stomach:
+                    return 29;
+
+                default:
+                    return 133;
+            }
+        }
+
+        public Vector3 getBonePos(Player inP)
+        {
+            int bid = idtobid(ibid.Neck);
+            return this.GetBonePosByID(inP, bid);
+        }
+
+        public static float CalcInFov(Vector3 Position)
+        {
+            Vector3 position = Camera.main.transform.position;
+            Vector3 forward = Camera.main.transform.forward;
+            Vector3 normalized = (Position - position).normalized;
+            return Mathf.Acos(Mathf.Clamp(Vector3.Dot(forward, normalized), -1f, 1f)) * 57.29578f;
+        }
+
+        public void AimAtPos(Vector3 pos)
+        {
+            Vector2 rotation = localplayer.MovementContext.Rotation;
+            Vector3 b = GetShootPos();
+            Vector3 eulerAngles = Quaternion.LookRotation((pos - b).normalized).eulerAngles;
+            if (eulerAngles.x > 180f)
+            {
+                eulerAngles.x -= 360f;
+            }
+            localplayer.MovementContext.Rotation = new Vector2(eulerAngles.y, eulerAngles.x);
+        }
+
+        #endregion
+
         private void DrawExtractInfo()
         {
             foreach (var point in _extract)
@@ -379,28 +479,6 @@ namespace ThrowUnknownEx_view
         string localgroup;
 
 
-        private bool IsVisible(GameObject obj, Vector3 Position)
-        {
-            RaycastHit raycastHit;
-            return Physics.Linecast(GetShootPos(), Position, out raycastHit)
-                && raycastHit.collider
-                && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject;
-        }
-
-
-        public Vector3 GetShootPos()
-        {
-            if (localplayer == null)
-            {
-                return Vector3.zero;
-            }
-            Player.FirearmController firearmController = localplayer.HandsController as Player.FirearmController;
-            if (firearmController == null)
-            {
-                return Vector3.zero;
-            }
-            return firearmController.Fireport.position + Camera.main.transform.forward * 1f;
-        }
 
 
 
@@ -554,10 +632,22 @@ namespace ThrowUnknownEx_view
                         playerName = "Plr";
                     }
 
+                    string WeaponName;
+                    try
+                    {
+                        WeaponName = player.Weapon.ShortName.Localized();
+                    }
+                    catch (Exception e)
+                    {
+
+                        WeaponName = ".";
+                    }
+
+
 
                     //  var playerHealth = player.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Common).Current;
                     string playerText = player.HealthController.IsAlive ? playerName : (playerName + " (Dead)");
-                    string playerTextDraw = string.Format("{0} [{1}] -{2}-", playerText, (int)distanceToObject, playerHealth);
+                    string playerTextDraw = string.Format("{0} [{1}]-{2}", playerText, (int)distanceToObject, playerHealth);
                     var playerTextVector = GUI.skin.GetStyle(playerText).CalcSize(new GUIContent(playerText));
 
                     if (_showBodies && !player.HealthController.IsAlive)
@@ -582,6 +672,10 @@ namespace ThrowUnknownEx_view
 
                         }
 
+                        if (_showWeapons)
+                        {
+                            GUI.Label(new Rect(playerBoundingVector.x - playerTextVector.x / 2f, (float)Screen.height - boxVectorY - 33f, 300f, 50f), WeaponName);
+                        }
 
                         GUI.Label(new Rect(playerBoundingVector.x - playerTextVector.x / 2f, (float)Screen.height - boxVectorY - 20f, 300f, 50f), playerTextDraw);
                     }
@@ -671,6 +765,7 @@ namespace ThrowUnknownEx_view
             _fbright = GUI.Toggle(new Rect(110f, 420f, 120f, 20f), _fbright, "Fullbright mode");
             _pBonesr = GUI.Toggle(new Rect(110f, 440f, 120f, 20f), _pBonesr, "Draw bones ESP (test)");
             _pVidr = GUI.Toggle(new Rect(110f, 460f, 120f, 20f), _pVidr, "Video Mode");
+            _showWeapons = GUI.Toggle(new Rect(110f, 480f, 120f, 20f), _showWeapons, "Show Weapons");
         }
 
         private double GetDistance(double x1, double y1, double x2, double y2)
