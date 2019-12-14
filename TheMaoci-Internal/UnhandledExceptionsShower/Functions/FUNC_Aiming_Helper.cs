@@ -56,7 +56,7 @@ namespace UnhandledException
             Stomach
         }
 
-        public static int idtobid(ibid bid)
+        public static int idtobid(ibid bid = ibid.Head)
         {
             switch (bid)
             {
@@ -76,7 +76,7 @@ namespace UnhandledException
 
         public static Vector3 getBonePos(Player inP)
         {
-            int bid = idtobid(ibid.Neck);
+            int bid = idtobid();
             return Cons.GetBonePosByID(inP, bid);
         }
 

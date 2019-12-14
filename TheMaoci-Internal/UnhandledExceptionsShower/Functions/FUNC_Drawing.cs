@@ -260,16 +260,19 @@ namespace UnhandledException
                         var PLRBowVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 112));
                         var PLLKneeVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 17));
                         var PLRKneeVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 22));
-                        Drawing.DrawLine(new Vector2(PLNeckVect.x, (float)Screen.height - PLNeckVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), playerColor, 1f);
-                        Drawing.DrawLine(new Vector2(PLShVect.x, (float)Screen.height - PLShVect.y), new Vector2(PLLBowVect.x, (float)Screen.height - PLLBowVect.y), playerColor, 1f);
-                        Drawing.DrawLine(new Vector2(PLRShVect.x, (float)Screen.height - PLRShVect.y), new Vector2(PLRBowVect.x, (float)Screen.height - PLRBowVect.y), playerColor, 1f);
-                        Drawing.DrawLine(new Vector2(PLLBowVect.x, (float)Screen.height - PLLBowVect.y), new Vector2(PLPVect.x, (float)Screen.height - PLPVect.y), playerColor, 1f);
-                        Drawing.DrawLine(new Vector2(PLRBowVect.x, (float)Screen.height - PLRBowVect.y), new Vector2(pRPVect.x, (float)Screen.height - pRPVect.y), playerColor, 1f);
-                        Drawing.DrawLine(new Vector2(PLRShVect.x, (float)Screen.height - PLRShVect.y), new Vector2(PLShVect.x, (float)Screen.height - PLShVect.y), playerColor, 1f);
-                        Drawing.DrawLine(new Vector2(PLLKneeVect.x, (float)Screen.height - PLLKneeVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), playerColor, 1f);
-                        Drawing.DrawLine(new Vector2(PLRKneeVect.x, (float)Screen.height - PLRKneeVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), playerColor, 1f);
-                        Drawing.DrawLine(new Vector2(PLLKneeVect.x, (float)Screen.height - PLLKneeVect.y), new Vector2(PLLFootVect.x, (float)Screen.height - PLLFootVect.y), playerColor, 1f);
-                        Drawing.DrawLine(new Vector2(PLRKneeVect.x, (float)Screen.height - PLRKneeVect.y), new Vector2(PLRFootVect.x, (float)Screen.height - PLRFootVect.y), playerColor, 1f);
+                        if (PLNeckVect.z > 0.01f)
+                        {
+                            Drawing.DrawLine(new Vector2(PLNeckVect.x, (float)Screen.height - PLNeckVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), playerColor, 1f);
+                            Drawing.DrawLine(new Vector2(PLShVect.x, (float)Screen.height - PLShVect.y), new Vector2(PLLBowVect.x, (float)Screen.height - PLLBowVect.y), playerColor, 1f);
+                            Drawing.DrawLine(new Vector2(PLRShVect.x, (float)Screen.height - PLRShVect.y), new Vector2(PLRBowVect.x, (float)Screen.height - PLRBowVect.y), playerColor, 1f);
+                            Drawing.DrawLine(new Vector2(PLLBowVect.x, (float)Screen.height - PLLBowVect.y), new Vector2(PLPVect.x, (float)Screen.height - PLPVect.y), playerColor, 1f);
+                            Drawing.DrawLine(new Vector2(PLRBowVect.x, (float)Screen.height - PLRBowVect.y), new Vector2(pRPVect.x, (float)Screen.height - pRPVect.y), playerColor, 1f);
+                            Drawing.DrawLine(new Vector2(PLRShVect.x, (float)Screen.height - PLRShVect.y), new Vector2(PLShVect.x, (float)Screen.height - PLShVect.y), playerColor, 1f);
+                            Drawing.DrawLine(new Vector2(PLLKneeVect.x, (float)Screen.height - PLLKneeVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), playerColor, 1f);
+                            Drawing.DrawLine(new Vector2(PLRKneeVect.x, (float)Screen.height - PLRKneeVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), playerColor, 1f);
+                            Drawing.DrawLine(new Vector2(PLLKneeVect.x, (float)Screen.height - PLLKneeVect.y), new Vector2(PLLFootVect.x, (float)Screen.height - PLLFootVect.y), playerColor, 1f);
+                            Drawing.DrawLine(new Vector2(PLRKneeVect.x, (float)Screen.height - PLRKneeVect.y), new Vector2(PLRFootVect.x, (float)Screen.height - PLRFootVect.y), playerColor, 1f);
+                        }
                     }
                     #endregion
                     #region Set: PlayerName / Color / Head Pixel
@@ -281,7 +284,7 @@ namespace UnhandledException
                     }
                     else if (LocalPlayer.Profile.Info.GroupId == player.Profile.Info.GroupId && LocalPlayer.Profile.Info.GroupId != "0" && LocalPlayer.Profile.Info.GroupId != "" && LocalPlayer.Profile.Info.GroupId != null)
                     {
-                        playerDisplayName = (Switches.StreamerMode)?"team":player.Profile.Info.Nickname;
+                        playerDisplayName = player.Profile.Info.Nickname;
                         playerColor = Statics.Colors.ESP.group;
                     }
                     else if (player.Profile.Info.Side == EPlayerSide.Savage)
@@ -293,13 +296,15 @@ namespace UnhandledException
                     }
                     else
                     {
-                        playerDisplayName = (Switches.StreamerMode) ? "Bastian" : (player.Profile.Info.Nickname + " [" + player.Profile.Info.Level.ToString() + "]");
+                        playerDisplayName = player.Profile.Info.Nickname + " [" + player.Profile.Info.Level.ToString() + "]";
                         playerColor = Statics.Colors.ESP.player[0];
                         Drawing.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Statics.Colors.Red, find_sizebox);
                     }
                     #endregion
                     #region Prepare Main Texts
                     string nameNickname = $"{playerDisplayName}";
+                    if (Switches.StreamerMode)
+                        nameNickname = "";
                     string playerStatus = $"[{(int)dTO}m] {Status}";
                     string WeaponName = "";
                     #endregion
