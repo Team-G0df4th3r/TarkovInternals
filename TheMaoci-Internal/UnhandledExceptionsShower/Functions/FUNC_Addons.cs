@@ -20,7 +20,8 @@ namespace UnhandledException
                         playerPos.y += 1f;
 
                         global::UnhandledException.FullBright.lightGameObject.transform.position = playerPos;
-                        global::UnhandledException.FullBright.FullBrightLight.range = 1000;
+                        global::UnhandledException.FullBright.FullBrightLight.range = 1000f;
+                        global::UnhandledException.FullBright.FullBrightLight.intensity = 0.4f;
                     }
                     else
                     {
@@ -64,7 +65,7 @@ namespace UnhandledException
                 {
                     global::UnhandledException.FullBright.lightGameObject = new GameObject("Fullbright");
                     global::UnhandledException.FullBright.FullBrightLight = global::UnhandledException.FullBright.lightGameObject.AddComponent<Light>();
-                    global::UnhandledException.FullBright.FullBrightLight.color = Color.white;
+                    global::UnhandledException.FullBright.FullBrightLight.color = new Color(1f, 0.839f, 0.66f, 1f);
                     global::UnhandledException.FullBright.lightCalled = true;
                 }
             }

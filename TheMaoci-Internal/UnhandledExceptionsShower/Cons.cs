@@ -7,6 +7,12 @@ namespace UnhandledException
 {
     public class Cons
     {
+        public class Aim {
+            public static float distanceToScan = 200f;
+            public static int distanceFromCenterOfScreen = 100;
+            public static float aimSpeed = 10;
+            public static Player lastTargeted;
+        }
         public static Vector2 InitialHealthBox = new Vector2(19f, 32f);
         public class HealthBox {
             public static Vector2 Head = new Vector2(49f, 0f);

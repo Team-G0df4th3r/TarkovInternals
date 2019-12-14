@@ -119,8 +119,6 @@ namespace UnhandledException
         }
         #endregion
 
-
-
         #region [MAIN] - Update
         private void Update()
         {
@@ -306,7 +304,7 @@ namespace UnhandledException
                     }
                     if (Switches.AimingAtNikita) {
                         enabled = enabled + "A";
-                        FUNC_Aiming_Helper.TargetLock(Main._players, Main._localPlayer, 3, Cons.RenderDistance.d_250, 100);
+                        FUNC_Aiming_Helper.TargetLock(Main._players, Main._localPlayer, Cons.Aim.aimSpeed, Cons.Aim.distanceToScan, Cons.Aim.distanceFromCenterOfScreen);
                     }
                     if (Switches.Draw_ESP || Switches.Draw_Grenades || Switches.Draw_Loot || Switches.Draw_Corpses || Switches.AimingAtNikita)
                     {
@@ -347,7 +345,7 @@ namespace UnhandledException
         }
         #endregion
     }
-    class Exceptlon
+    public class Exceptlon
     {
         public static void Catch()
         {
