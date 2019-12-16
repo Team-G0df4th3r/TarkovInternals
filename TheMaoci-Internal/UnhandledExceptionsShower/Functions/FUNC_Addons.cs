@@ -44,18 +44,18 @@ namespace UnhandledException
                     }
             }
             #region [FUNCTION] - LOD Controller // TODO Not working - need to find work around
-            public LODGroup group;
+            /*public LODGroup group;
             private void SetLODToLow()
             {
-                /*if (Switches.LOD_Controll)
+                if (Switches.LOD_Controll)
                 {
                     group.ForceLOD(6);
                 }
                 else 
                 {
                     group.ForceLOD(0);
-                }*/
-            }
+                }
+            }*/
             #endregion
         }
         public class OnGUI {

@@ -23,7 +23,7 @@ namespace UnhandledException
         {
             UnityEngine.Debug.unityLogger.logEnabled = false;
             // recalculate shit for diffrent screen sizes
-            Cons.RedalculateDistances();
+            Constants.Locations.RedalculateDistances();
             Main.G_Scene.Game_Scene = new Scene(); // inicializate this shit cause or random error spams
         }
         #endregion
@@ -157,6 +157,9 @@ namespace UnhandledException
                                     if (p.PointOfView == EPointOfView.FirstPerson)
                                     {
                                         Main._localPlayer = p;
+                                        Cons.LocalPlayer.Weapon.SetRecoil();
+                                        Cons.LocalPlayer.Weapon.UpdateAmmo();
+                                        Cons.LocalPlayer.Status.UpdateStatus();
                                     }
                                     else
                                     {
@@ -173,7 +176,7 @@ namespace UnhandledException
                                             {
                                                 AliveCount.dist_100_250++;
                                             }
-                                            if (distance > 1f && distance <= Cons.RenderDistance.d_1000 && Camera.main.WorldToScreenPoint(p.Transform.position).z > 0.01f)
+                                            if (distance > 1f && distance <= Constants.Locations.RenderDistance.d_1000 && Camera.main.WorldToScreenPoint(p.Transform.position).z > 0.01f)
                                             {
                                                 Main.tPlayer.Add(p);
                                             }
@@ -233,7 +236,18 @@ namespace UnhandledException
                                 {
                                     LootItem temp = temporalItemsEnum.Current;
                                     if (temp.GetType() == Types.LootItem || temp.GetType() == Types.ObservedLootItem)
-                                        Main.tItems.Add(temp);
+                                    {
+                                        if(Cons.LootSearcher == "")
+                                            Main.tItems.Add(temp);
+                                        try
+                                        {
+                                            if (Cons.LootSearcher == temp.Item.ShortName.Localized())
+                                            {
+                                                Main.tItems.Add(temp);
+                                            }
+                                        }
+                                        catch (Exception e) {}
+                                    }
                                 }
                                 Main._lootItems = Main.tItems;
                                 temporalItemsEnum.Dispose();
@@ -285,22 +299,22 @@ namespace UnhandledException
                     if (Switches.Draw_ESP)
                     {
                         enabled = enabled + "P";
-                        FUNC_DrawObjects.DrawPlayers(Main._players, Main._localPlayer, Cons.RenderDistance.d_1000, Switches.Switch_Colors);
+                        FUNC_DrawObjects.DrawPlayers(Main._players, Main._localPlayer, Constants.Locations.RenderDistance.d_1000, Switches.Switch_Colors);
                     }
                     if (Switches.Draw_Grenades)
                     {
                         enabled = enabled + "G";
-                        FUNC_DrawObjects.DrawDTG(Main._grenades, Main._localPlayer, Cons.RenderDistance.d_100);
+                        FUNC_DrawObjects.DrawDTG(Main._grenades, Main._localPlayer, Constants.Locations.RenderDistance.d_100);
                     }
                     if (Switches.Draw_Loot)
                     {
                         enabled = enabled + "L";
-                        FUNC_DrawObjects.DrawDLI(Main._lootItems, Cons.RenderDistance.d_250);
+                        FUNC_DrawObjects.DrawDLI(Main._lootItems, Constants.Locations.RenderDistance.d_250);
                     }
                     if (Switches.Draw_Corpses)
                     {
                         enabled = enabled + "C";
-                        FUNC_DrawObjects.DrawPDB(Main._corpses, Cons.RenderDistance.d_250);
+                        FUNC_DrawObjects.DrawPDB(Main._corpses, Constants.Locations.RenderDistance.d_250);
                     }
                     if (Switches.AimingAtNikita) {
                         enabled = enabled + "A";
@@ -313,11 +327,11 @@ namespace UnhandledException
                             new Rect(
                                 1f,
                                 300f,
-                                Cons.boxSize.box_200,
-                                Cons.boxSize.box_20
+                                Constants.Locations.boxSize.box_200,
+                                Constants.Locations.boxSize.box_20
                                 ),
                             enabled,
-                            Statics.Colors.White
+                            Constants.Colors.White
                         );
                     }
                     //SetLODToLow(); // TODO for testing only

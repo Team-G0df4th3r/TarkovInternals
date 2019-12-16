@@ -42,7 +42,7 @@ namespace UnhandledException
                                         itemPosition.x - boxSize[1],
                                         (float)(Screen.height - itemPosition.y) - boxSize[1]
                                         ),
-                                    Statics.Colors.ESP.bodies,
+                                    Constants.Colors.ESP.bodies,
                                     boxSize[0]
                                 );
                                 Drawing.DrawShadow(
@@ -54,8 +54,8 @@ namespace UnhandledException
                                         ),
                                     new GUIContent(distanceText),
                                     LabelSize,
-                                    Statics.Colors.ESP.bodies,
-                                    Statics.Colors.Black,
+                                    Constants.Colors.ESP.bodies,
+                                    Constants.Colors.Black,
                                     new Vector2(1f, 1f)
                                 );
                             }
@@ -97,7 +97,7 @@ namespace UnhandledException
                                 int FontSize = 12;
                                 FastMath.DistSizer(distance, ref FontSize, ref deltaDistance, ref devLabel);
                                 LabelSize.fontSize = FontSize;
-                                LabelSize.normal.textColor = Statics.Colors.ESP.items;
+                                LabelSize.normal.textColor = Constants.Colors.ESP.items;
                                 //item.TemplateId == "5909e4b686f7747f5b744fa4"; // dead Scav Body
                                 string distanceText = $"{(int)distance}m";
                                 string DebugText = "";
@@ -109,13 +109,13 @@ namespace UnhandledException
                                     ErrorHandler.Catch("LootTranslation", exp, item.Item.ShortName);
                                     DebugText = ""; }
                                 Vector2 sizeOfText = GUI.skin.GetStyle(distanceText).CalcSize(new GUIContent(distanceText));
-                                GUI.color = Statics.Colors.ESP.items;
+                                GUI.color = Constants.Colors.ESP.items;
                                 Drawing.P(
                                     new Vector2(
                                         itemPosition.x - boxSize[1],
                                         (float)(Screen.height - itemPosition.y) - boxSize[1]
                                         ),
-                                    Statics.Colors.ESP.items,
+                                    Constants.Colors.ESP.items,
                                     boxSize[0]
                                 );
                                 GUI.Label(
@@ -174,16 +174,16 @@ namespace UnhandledException
                             int FontSize = 10;
                             FastMath.DistSizer(dTO, ref FontSize, ref deltaDistance, ref devLabel);
                             LabelSize.fontSize = FontSize;
-                            LabelSize.normal.textColor = Statics.Colors.ESP.grenades;
+                            LabelSize.normal.textColor = Constants.Colors.ESP.grenades;
                             string distanceText = $"{(int)dTO}m";
                             Vector2 sizeOfText = GUI.skin.GetStyle(distanceText).CalcSize(new GUIContent(distanceText));
-                            GUI.color = Statics.Colors.ESP.grenades;
+                            GUI.color = Constants.Colors.ESP.grenades;
                             Drawing.P(
                                 new Vector2(
                                     pGrenadePosition.x - 1.5f,
                                     (float)(Screen.height - pGrenadePosition.y) - 1.5f
                                     ),
-                                Statics.Colors.ESP.grenades,
+                                Constants.Colors.ESP.grenades,
                                 3f
                             );
                             Drawing.DrawShadow(
@@ -195,8 +195,8 @@ namespace UnhandledException
                                     ),
                                 new GUIContent(distanceText),
                                 LabelSize,
-                                Statics.Colors.ESP.grenades,
-                                Statics.Colors.Black,
+                                Constants.Colors.ESP.grenades,
+                                Constants.Colors.Black,
                                 new Vector2(1f, 1f)
                             );
                         }
@@ -219,7 +219,7 @@ namespace UnhandledException
             float devLabel = 1f;
             string Status = "";
             var LabelSize = new GUIStyle { fontSize = 12 };
-            Color playerColor = Statics.Colors.ESP.npc;
+            Color playerColor = Constants.Colors.ESP.npc;
             float distancesAxisY_0 = 0;
             float distancesAxisY_1 = 0;
             float distancesAxisY_2 = 0;
@@ -283,8 +283,8 @@ namespace UnhandledException
                 if (player.Profile.Info.RegistrationDate <= 0)
                 {
                     playerDisplayName = "";
-                    playerColor = Statics.Colors.ESP.npc;
-                    Drawing.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Statics.Colors.Red, find_sizebox);
+                    playerColor = Constants.Colors.ESP.npc;
+                    Drawing.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Constants.Colors.Red, find_sizebox);
                 }
                 else if (LocalPlayer.Profile.Info.GroupId == player.Profile.Info.GroupId && LocalPlayer.Profile.Info.GroupId != "0" && LocalPlayer.Profile.Info.GroupId != "" && LocalPlayer.Profile.Info.GroupId != null)
                 {
@@ -292,15 +292,15 @@ namespace UnhandledException
                         playerDisplayName = "team";
                     else
                         playerDisplayName = player.Profile.Info.Nickname;
-                    playerColor = Statics.Colors.ESP.group;
+                    playerColor = Constants.Colors.ESP.group;
                 }
                 else if (player.Profile.Info.Side == EPlayerSide.Savage)
                 {
                     playerDisplayName = "";
-                    playerColor = Statics.Colors.ESP.scav_player;
+                    playerColor = Constants.Colors.ESP.scav_player;
                     Backup = GUI.color;
                     GUI.color = Color.red;
-                    Drawing.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Statics.Colors.Red, find_sizebox);
+                    Drawing.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Constants.Colors.Red, find_sizebox);
                     GUI.color = Backup;
                 }
                 else
@@ -313,10 +313,10 @@ namespace UnhandledException
                     {
                         playerDisplayName = player.Profile.Info.Nickname + " [" + player.Profile.Info.Level.ToString() + "]";
                     }
-                    playerColor = Statics.Colors.ESP.player[0];
+                    playerColor = Constants.Colors.ESP.player[0];
                     Backup = GUI.color;
                     GUI.color = Color.red;
-                    Drawing.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Statics.Colors.Red, find_sizebox);
+                    Drawing.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Constants.Colors.Red, find_sizebox);
                     GUI.color = Backup;
                 }
                 #endregion
@@ -353,7 +353,7 @@ namespace UnhandledException
                         new GUIContent(nameNickname),
                         LabelSize,
                         playerColor,
-                        Statics.Colors.Black,
+                        Constants.Colors.Black,
                         new Vector2(1f, 1f)
                     );
                 }
@@ -373,7 +373,7 @@ namespace UnhandledException
                     content, 
                     LabelSize, 
                     playerColor,
-                    Statics.Colors.Black, 
+                    Constants.Colors.Black, 
                     new Vector2(1f, 1f)
                 );
                 #endregion
@@ -392,7 +392,7 @@ namespace UnhandledException
                         new GUIContent(WeaponName), 
                         LabelSize, 
                         playerColor,
-                        Statics.Colors.Black, 
+                        Constants.Colors.Black, 
                         new Vector2(1f, 1f)
                     );
                 }

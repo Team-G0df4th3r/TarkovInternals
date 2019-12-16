@@ -107,11 +107,76 @@ namespace UnhandledException
         }
         #endregion
         #region DrawCircle
-
         public static void Circle(int X, int Y, float radius)
         {
             //DrawBox(X - (radius / 2), Y - (radius / 2), radius, radius, Color.yellow);
         }
+        #endregion
+        #region ActionThings
+        public static void CheckBox(ref bool variable, string name, int row = 1, int column = 1)
+        {
+            variable = GUI.Toggle(
+                new Rect(
+                    Constants.Locations.initialInputSizes.x * column,
+                    Constants.Locations.initialInputSizes.y * row,
+                    Constants.Locations.boxSize.box_100,
+                    Constants.Locations.boxSize.box_20
+                ),
+                variable,
+                name
+            );
+        }
+        public static void Label(ref bool variable, string name, int row = 1, int column = 1, float width = 0f, float height = 0f)
+        {
+            if (height == 0f)
+                height = Constants.Locations.boxSize.box_20;
+            if (width == 0f)
+                width = Constants.Locations.boxSize.box_100;
+            GUI.Label(
+                new Rect(
+                    Constants.Locations.initialInputSizes.x * column,
+                    Constants.Locations.initialInputSizes.y * row,
+                    width,
+                    height
+                ),
+                name
+            );
+        }
+        public static void HorizontalSlider(ref float variable, float minimum = 1f, float maximum = 1000f, int row = 1, int column = 1)
+        {
+            variable = GUI.HorizontalSlider(
+                new Rect(
+                    Constants.Locations.initialInputSizes.x * column,
+                    Constants.Locations.initialInputSizes.y * row,
+                    Constants.Locations.boxSize.box_100,
+                    Constants.Locations.boxSize.box_20
+                ),
+                variable,
+                minimum,
+                maximum
+            );
+        }
+        public static void TextField(ref string variable, int row = 1, int column = 0)
+        {
+            variable = GUI.TextField(
+                new Rect(
+                    Constants.Locations.initialInputSizes.x * (column * Constants.Locations.boxSize.box_100), // this should give 0 and only input if not column was specified
+                    Constants.Locations.initialInputSizes.y * row,
+                    Constants.Locations.boxSize.box_100,
+                    Constants.Locations.boxSize.box_20
+                ),
+                variable
+            );
+        }
+        /*
+            GUI.Label(
+            new Rect(initial.x, initial.y * 1, 
+            Constants.Locations.boxSize.box_100, Constants.Locations.boxSize.box_20)
+            , "FOV:" + Cons.Aim.AAN_FOV.ToString());
+
+         
+         */
+
         #endregion
     }
 }
