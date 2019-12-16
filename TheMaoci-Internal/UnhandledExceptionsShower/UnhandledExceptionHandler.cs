@@ -448,6 +448,7 @@ namespace UnhandledException
         public static bool StreamerMode = false;
         public static bool SnapLines = false;
         public static bool IKnowWhatImDoing = false;
+        public static bool Dump = false;
         public static void SetToOff()
         {
             Draw_ESP = false;

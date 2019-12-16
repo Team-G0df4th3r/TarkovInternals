@@ -218,6 +218,7 @@ namespace UnhandledException
             Drawing.HorizontalSlider(ref Cons.Distances.Corpses, 100f, 1000f, 21);
             //i know what im doing
             Drawing.CheckBox(ref Switches.IKnowWhatImDoing, "IKWID", 1, 2);
+            Drawing.CheckBox(ref Switches.Dump, "DUMP", 2, 2);
             // Second column indicates with column = 1
             if (!Switches.Draw_Loot)
                 Drawing.TextField(ref Cons.LootSearcher, 5, 1);

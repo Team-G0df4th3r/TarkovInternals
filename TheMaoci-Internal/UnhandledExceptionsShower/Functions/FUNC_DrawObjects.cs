@@ -277,6 +277,9 @@ namespace UnhandledException
                         Drawing.DrawLine(new Vector2(PLRKneeVect.x, (float)Screen.height - PLRKneeVect.y), new Vector2(PLRFootVect.x, (float)Screen.height - PLRFootVect.y), Color.white, 1f);
                         GUI.color = Backup;
                     }
+
+
+
                 }
                 #endregion
                 #region Set: PlayerName / Color / Head Pixel
@@ -397,7 +400,29 @@ namespace UnhandledException
                     );
                 }
                 #endregion
-                #region snap lines
+                #region Bone Log
+                if (Switches.Dump && player != Main._localPlayer)
+                {
+                    if (dTO < 20f)
+                    {
+
+
+                        Vector3[] bones = new Vector3[256];
+
+                        
+                            for ( int i = 0; i < 256; i++)
+                              {
+                                 bones[i] = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, i));
+                                 GUI.Label(new Rect(bones[i].x, (float)Screen.height - bones[i].y, 100f, 20f) , i.ToString());
+
+                           }
+                        
+                    }
+                }
+                #endregion
+
+
+                #region bone dump
                 if (Switches.SnapLines && player != Main._localPlayer)
                 {
                     Vector3 w2s = Camera.main.WorldToScreenPoint(player.PlayerBones.RootJoint.position);
@@ -405,13 +430,13 @@ namespace UnhandledException
                     {
                         Drawing.DrawLine(
                             new Vector2(
-                                (Screen.width / 2), 
+                                (Screen.width / 2),
                                 Screen.height
-                                ), 
+                                ),
                             new Vector2(
-                                w2s.x, 
+                                w2s.x,
                                 Screen.height - w2s.y
-                                ), 
+                                ),
                             playerColor
                        );
                     }
