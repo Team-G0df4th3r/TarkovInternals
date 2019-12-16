@@ -90,6 +90,22 @@ namespace UnhandledException
             {
                 Switches.AimingAtNikita = !Switches.AimingAtNikita;
             }
+            if (Switches.IKnowWhatImDoing) {
+                if (Input.GetKeyDown(KeyCode.F10)) {
+                    if (Input.GetKeyDown(KeyCode.F10) && Main._localPlayer != null)
+                    {
+                        // we can add an prevention to too fast teleporting adding like once per second etc.
+                        //if (Time.time >= _secTime) {
+                        //_secTime = Time.time + 1f;
+                        Main._localPlayer.Transform.position = Main._localPlayer.Transform.position + Camera.main.transform.forward * 1f;
+                        //}
+                    }
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.F11)) {
+                GClass433.SetFov(120f, 1f);
+                GClass433.ApplyFoV(120, 100, 120);
+            }
             #endregion
 
             #region Draw non sensitive data
@@ -129,6 +145,7 @@ namespace UnhandledException
                 // make sure scene is map scene and is loaded and ready
                 if (Main.G_Scene.isInMatch() && Main.G_Scene.isActiveAndLoaded())
                 {
+                    
                     // delay start of script for 20 seconds on start of match cause match is starting way before deploy is displaying - it will cause less errors displaying
                     // lower time from 20f if its holdup too long
                     if (timestamp == 0f)
@@ -291,6 +308,13 @@ namespace UnhandledException
         private void OnGUI()
         {
             try {
+                FUNC_Additional_Drawing.DisplayMenu();
+                if (Switches.Display_HelpInfo)
+                {
+                    FUNC_Additional_Drawing.HelpMenu();
+                }
+                if (Switches.Display_HUDGui)
+                    FUNC_Additional_Drawing.DrawHUDMenu();
                 //Updates Each Frame
                 if (Main.G_Scene.isInMatch() && Main.G_Scene.isActiveAndLoaded())
                 {
@@ -299,22 +323,22 @@ namespace UnhandledException
                     if (Switches.Draw_ESP)
                     {
                         enabled = enabled + "P";
-                        FUNC_DrawObjects.DrawPlayers(Main._players, Main._localPlayer, Constants.Locations.RenderDistance.d_1000, Switches.Switch_Colors);
+                        FUNC_DrawObjects.DrawPlayers(Main._players, Main._localPlayer);
                     }
                     if (Switches.Draw_Grenades)
                     {
                         enabled = enabled + "G";
-                        FUNC_DrawObjects.DrawDTG(Main._grenades, Main._localPlayer, Constants.Locations.RenderDistance.d_100);
+                        FUNC_DrawObjects.DrawDTG(Main._grenades, Main._localPlayer);
                     }
                     if (Switches.Draw_Loot)
                     {
                         enabled = enabled + "L";
-                        FUNC_DrawObjects.DrawDLI(Main._lootItems, Constants.Locations.RenderDistance.d_250);
+                        FUNC_DrawObjects.DrawDLI(Main._lootItems);
                     }
                     if (Switches.Draw_Corpses)
                     {
                         enabled = enabled + "C";
-                        FUNC_DrawObjects.DrawPDB(Main._corpses, Constants.Locations.RenderDistance.d_250);
+                        FUNC_DrawObjects.DrawPDB(Main._corpses);
                     }
                     if (Switches.AimingAtNikita) {
                         enabled = enabled + "A";
@@ -342,13 +366,7 @@ namespace UnhandledException
                     Switches.SetToOff();
                     Drawing.P(new Vector2(1f, 1f), Color.white, 1f);
                 }
-                FUNC_Additional_Drawing.DisplayMenu();
-                if (Switches.Display_HelpInfo)
-                {
-                    FUNC_Additional_Drawing.HelpMenu();
-                }
-                if(Switches.Display_HUDGui)
-                    FUNC_Additional_Drawing.DrawHUDMenu();
+
                 #region Help Me... Nygga - DISABLED CAUSE SHIT
                     //Drawing.L(new Vector2(184f, 1065f), new Vector2(245f, 1065f), Color.black, 20f);
                 #endregion
@@ -429,6 +447,7 @@ namespace UnhandledException
         public static bool Aim_Smoothing = true;
         public static bool StreamerMode = false;
         public static bool SnapLines = false;
+        public static bool IKnowWhatImDoing = false;
         public static void SetToOff()
         {
             Draw_ESP = false;

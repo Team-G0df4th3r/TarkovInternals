@@ -12,6 +12,13 @@ namespace UnhandledException
             public static float AAN_FOV = 3f;
             public static Player lastTargeted;
         }
+        public class Distances
+        {
+            public static float Aim = 200f;
+            public static float Loot = 1000f;
+            public static float Corpses = 200f;
+            public static float Grenade = 100f;
+        }
         public class LocalPlayer {
             #region Group
             private static string Group = "";

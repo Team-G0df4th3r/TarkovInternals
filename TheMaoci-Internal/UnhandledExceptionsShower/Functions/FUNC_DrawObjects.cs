@@ -9,7 +9,7 @@ namespace UnhandledException
     class FUNC_DrawObjects
     {
         #region - CORPSES -
-        public static void DrawPDB(List<LootItem> _lContainer, float _displayDistance = 300f)
+        public static void DrawPDB(List<LootItem> _lContainer)
         {
             if (_lContainer == null)
                 return;
@@ -27,7 +27,7 @@ namespace UnhandledException
                         if (Camera.main.WorldToScreenPoint(item.transform.position).z > 0.01f)
                         { // do not display out of bounds items
                             float distance = FastMath.FD(Camera.main.transform.position, item.transform.position);
-                            if (distance < _displayDistance)
+                            if (distance < Cons.Distances.Corpses)
                             {
                                 Vector3 itemPosition = Camera.main.WorldToScreenPoint(item.transform.position);
                                 float[] boxSize = new float[2] { 3f, 1.5f };
@@ -71,7 +71,7 @@ namespace UnhandledException
         #endregion
 
         #region - LOOT -
-        public static void DrawDLI(List<LootItem> _lContainer, float _displayDistance = 300f) {
+        public static void DrawDLI(List<LootItem> _lContainer) {
             if (_lContainer == null)
                 return;
             var e = _lContainer.GetEnumerator();
@@ -90,7 +90,7 @@ namespace UnhandledException
                         if (Camera.main.WorldToScreenPoint(item.transform.position).z > 0.01f)
                         { // do not display out of bounds items
                             float distance = FastMath.FD(Camera.main.transform.position, item.transform.position);
-                            if (distance < _displayDistance)
+                            if (distance < Cons.Distances.Loot)
                             {
                                 Vector3 itemPosition = Camera.main.WorldToScreenPoint(item.transform.position);
                                 float[] boxSize = new float[2] { 3f, 1.5f };
@@ -151,7 +151,7 @@ namespace UnhandledException
         #endregion
 
         #region - Grenade ESP -
-        public static void DrawDTG(List<Throwable> _g, Player _localP, float _displayDistance = 100f) {
+        public static void DrawDTG(List<Throwable> _g, Player _localP) {
             // 100m for grenades is more then enough
             if (_g == null || _localP == null)
                 return;
@@ -167,7 +167,7 @@ namespace UnhandledException
                         if (Camera.main.WorldToScreenPoint(throwable.transform.position).z > 0.01f)
                         {
                             float dTO = FastMath.FD(Camera.main.transform.position, throwable.transform.position);
-                            if (dTO > _displayDistance)
+                            if (dTO > Cons.Distances.Grenade)
                                 continue;
 
                             Vector3 pGrenadePosition = Camera.main.WorldToScreenPoint(throwable.transform.position);
@@ -212,7 +212,7 @@ namespace UnhandledException
         #endregion
 
         #region - Player ESP -
-        public static void DrawPlayers(List<Player> _PlayersList, Player LocalPlayer, float _viewdistance, bool switch_colors)
+        public static void DrawPlayers(List<Player> _PlayersList, Player LocalPlayer)
         {
             float deltaDistance = 25f;
             string playerDisplayName = "";

@@ -191,29 +191,36 @@ namespace UnhandledException
              */
             Color guiBackup = GUI.color;
             GUI.color = Color.black;
-            GUI.Box(new Rect(10f, 10f, 220f, 300f), "");
+            GUI.Box(new Rect(10f, 10f, 220f, 450f), "");
             GUI.color = Color.white;
             Vector2 initial = new Vector2(15f, 20f);
-            GUI.Label(new Rect(1f, 1f, 200f, 20f), "Unknown.Exception.Handler");
-            Switches.Draw_ESP = GUI.Toggle(new Rect(initial.x, initial.y * 2, Constants.Locations.boxSize.box_100, Constants.Locations.boxSize.box_20), Switches.Draw_ESP, "E.S.P");
-            Switches.Draw_Grenades = GUI.Toggle(new Rect(initial.x, initial.y * 3, Constants.Locations.boxSize.box_100, Constants.Locations.boxSize.box_20), Switches.Draw_Grenades, "Grenade");
-            Switches.Draw_Corpses = GUI.Toggle(new Rect(initial.x, initial.y * 4, Constants.Locations.boxSize.box_100, Constants.Locations.boxSize.box_20), Switches.Draw_Corpses, "Dead.Bodies");
-            Switches.Draw_Loot = GUI.Toggle(new Rect(initial.x, initial.y * 5, Constants.Locations.boxSize.box_100, Constants.Locations.boxSize.box_20), Switches.Draw_Loot, "Map.Loot");
-            Switches.Draw_Crosshair = GUI.Toggle(new Rect(initial.x, initial.y * 6, Constants.Locations.boxSize.box_100, Constants.Locations.boxSize.box_20), Switches.Draw_Crosshair, "Crosshair");
-            Switches.Spawn_FullBright = GUI.Toggle(new Rect(initial.x, initial.y * 7, Constants.Locations.boxSize.box_100, Constants.Locations.boxSize.box_20), Switches.Spawn_FullBright, "Full.Bright");
-            //Switches.LOD_Controll = GUI.Toggle(new Rect(initial.x, initial.y * 8, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.LOD_Controll, "LOD.Control");
-            Switches.DisplayHelpPlayerInfo = GUI.Toggle(new Rect(initial.x, initial.y * 9, Constants.Locations.boxSize.box_100, Constants.Locations.boxSize.box_20), Switches.DisplayHelpPlayerInfo, "Player.Data");
-            Switches.StreamerMode = GUI.Toggle(new Rect(initial.x, initial.y * 10, Constants.Locations.boxSize.box_100, Constants.Locations.boxSize.box_20), Switches.StreamerMode, "Streamer.Mode");
-            Switches.SnapLines = GUI.Toggle(new Rect(initial.x, initial.y * 11, Constants.Locations.boxSize.box_100, Constants.Locations.boxSize.box_20), Switches.SnapLines, "Snap.Lines");
-            Switches.AimingAtNikita = GUI.Toggle(new Rect(initial.x + Constants.Locations.boxSize.box_100, initial.y * 2, Constants.Locations.boxSize.box_100, Constants.Locations.boxSize.box_20), Switches.AimingAtNikita, "Aim");
-            //Switches.Aim_Smoothing = GUI.Toggle(new Rect(initial.x + Cons.boxSize.box_100, initial.y * 3, Cons.boxSize.box_100, Cons.boxSize.box_20), Switches.Aim_Smoothing, "Smoothing");
-            //GUI.Label(new Rect(initial.x + Cons.boxSize.box_150, initial.y * 4, Cons.boxSize.box_50, Cons.boxSize.box_20), "Speed:" + Cons.Aim.aimSpeed.ToString());
-            //Cons.Aim.aimSpeed = (int)GUI.HorizontalSlider(new Rect(initial.x + Cons.boxSize.box_100, initial.y * 4, 50f, 20f), (float)Cons.Aim.aimSpeed, 1, 25);
-            GUI.Label(new Rect(initial.x, initial.y * 1, Constants.Locations.boxSize.box_100, Constants.Locations.boxSize.box_20), "FOV:" + Cons.Aim.AAN_FOV.ToString());
-            Cons.Aim.AAN_FOV = (int)GUI.HorizontalSlider(new Rect(initial.x + Constants.Locations.boxSize.box_100, initial.y * 2, 100f, 20f), (float)Cons.Aim.AAN_FOV, 1f, 25f);
-            Cons.LootSearcher = GUI.TextField(new Rect(initial.x + Constants.Locations.boxSize.box_100, initial.y * 5, 100f, 20f), Cons.LootSearcher);
-            //GUI.Label(new Rect(initial.x + Cons.boxSize.box_150, initial.y * 4, Cons.boxSize.box_100, Cons.boxSize.box_20), "Dis3d:" + Cons.Aim.distanceToScan.ToString());
-            //Cons.Aim.distanceToScan = (int)GUI.HorizontalSlider(new Rect(initial.x + Cons.boxSize.box_100, initial.y * 4, 50f, 20f), (float)Cons.Aim.distanceToScan, 10f, 800f);
+            Drawing.Label("Unknown.Exception.Handler", 0, 0, Constants.Locations.boxSize.box_200, Constants.Locations.boxSize.box_20);
+            // First column
+            Drawing.CheckBox(ref Switches.Draw_ESP, "E.S.P", 2);
+            Drawing.CheckBox(ref Switches.Draw_Grenades, "Grenade", 3);
+            Drawing.CheckBox(ref Switches.Draw_Corpses, "Dead.Bodies", 4);
+            Drawing.CheckBox(ref Switches.Draw_Loot, "Map.Loot", 5);
+            Drawing.CheckBox(ref Switches.Draw_Crosshair, "Crosshair", 6); 
+            Drawing.CheckBox(ref Switches.Spawn_FullBright, "Full.Bright", 7);
+            Drawing.CheckBox(ref Switches.DisplayHelpPlayerInfo, "Player.Data", 8);
+            Drawing.CheckBox(ref Switches.StreamerMode, "Streamer.Mode", 9);
+            Drawing.CheckBox(ref Switches.SnapLines, "Snap.Lines", 10);
+            Drawing.CheckBox(ref Switches.AimingAtNikita, "Aim", 11);
+            Drawing.Label("FOV:" + Cons.Aim.AAN_FOV.ToString(), 12);
+            Drawing.HorizontalSlider(ref Cons.Aim.AAN_FOV, 1f, 25f, 13);
+            Drawing.Label("AimDist:" + Cons.Distances.Aim.ToString(), 14);
+            Drawing.HorizontalSlider(ref Cons.Distances.Aim, 100f, 1000f, 15);
+            Drawing.Label("LootDist:" + Cons.Distances.Loot.ToString(), 16);
+            Drawing.HorizontalSlider(ref Cons.Distances.Loot, 100f, 1000f, 17);
+            Drawing.Label("GrenadeDist:" + Cons.Distances.Grenade.ToString(), 18);
+            Drawing.HorizontalSlider(ref Cons.Distances.Grenade, 100f, 1000f, 19);
+            Drawing.Label("CorpseDist:" + Cons.Distances.Corpses.ToString(), 20);
+            Drawing.HorizontalSlider(ref Cons.Distances.Corpses, 100f, 1000f, 21);
+            //i know what im doing
+            Drawing.CheckBox(ref Switches.IKnowWhatImDoing, "IKWID", 1, 2);
+            // Second column indicates with column = 1
+            if (!Switches.Draw_Loot)
+                Drawing.TextField(ref Cons.LootSearcher, 5, 1);
             //FINSHED
             GUI.color = guiBackup;
         }

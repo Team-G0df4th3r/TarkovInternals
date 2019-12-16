@@ -113,12 +113,12 @@ namespace UnhandledException
         }
         #endregion
         #region ActionThings
-        public static void CheckBox(ref bool variable, string name, int row = 1, int column = 1)
+        public static void CheckBox(ref bool variable, string name, int row = 1, int column = 0)
         {
             variable = GUI.Toggle(
                 new Rect(
-                    Constants.Locations.initialInputSizes.x * column,
-                    Constants.Locations.initialInputSizes.y * row,
+                    Constants.Locations.initialInputSizes.x + (column * Constants.Locations.boxSize.box_100),
+                    Constants.Locations.initialInputSizes.y + (Constants.Locations.initialInputSizes.y * row),
                     Constants.Locations.boxSize.box_100,
                     Constants.Locations.boxSize.box_20
                 ),
@@ -126,7 +126,7 @@ namespace UnhandledException
                 name
             );
         }
-        public static void Label(ref bool variable, string name, int row = 1, int column = 1, float width = 0f, float height = 0f)
+        public static void Label(string name, int row = 1, int column = 0, float width = 0f, float height = 0f)
         {
             if (height == 0f)
                 height = Constants.Locations.boxSize.box_20;
@@ -134,20 +134,20 @@ namespace UnhandledException
                 width = Constants.Locations.boxSize.box_100;
             GUI.Label(
                 new Rect(
-                    Constants.Locations.initialInputSizes.x * column,
-                    Constants.Locations.initialInputSizes.y * row,
+                    Constants.Locations.initialInputSizes.x + (column * Constants.Locations.boxSize.box_100),
+                    Constants.Locations.initialInputSizes.y + (Constants.Locations.initialInputSizes.y * row),
                     width,
                     height
                 ),
                 name
             );
         }
-        public static void HorizontalSlider(ref float variable, float minimum = 1f, float maximum = 1000f, int row = 1, int column = 1)
+        public static void HorizontalSlider(ref float variable, float minimum = 1f, float maximum = 1000f, int row = 1, int column = 0)
         {
             variable = GUI.HorizontalSlider(
                 new Rect(
-                    Constants.Locations.initialInputSizes.x * column,
-                    Constants.Locations.initialInputSizes.y * row,
+                    Constants.Locations.initialInputSizes.x + (column * Constants.Locations.boxSize.box_100),
+                    Constants.Locations.initialInputSizes.y + (Constants.Locations.initialInputSizes.y * row),
                     Constants.Locations.boxSize.box_100,
                     Constants.Locations.boxSize.box_20
                 ),
@@ -160,8 +160,8 @@ namespace UnhandledException
         {
             variable = GUI.TextField(
                 new Rect(
-                    Constants.Locations.initialInputSizes.x * (column * Constants.Locations.boxSize.box_100), // this should give 0 and only input if not column was specified
-                    Constants.Locations.initialInputSizes.y * row,
+                    Constants.Locations.initialInputSizes.x + (column * Constants.Locations.boxSize.box_100), // this should give 0 and only input if not column was specified
+                    Constants.Locations.initialInputSizes.y + (Constants.Locations.initialInputSizes.y * row),
                     Constants.Locations.boxSize.box_100,
                     Constants.Locations.boxSize.box_20
                 ),

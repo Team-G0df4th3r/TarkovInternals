@@ -11,6 +11,8 @@ namespace UnhandledException
         #region vangle_aim
         public static void Aimbot_Method()
         {
+            Vector3 AimAtGuy = Vector3.zero;
+            float distanceOfTarget = 9999f;
             foreach (Player player in Main._players)
             {
                 if (!(player == null) && !(player == Main._localPlayer) && player.HealthController != null && player.HealthController.IsAlive)
@@ -18,12 +20,22 @@ namespace UnhandledException
                     if (player.GroupId != Main._localPlayer.GroupId || Main._localPlayer.GroupId == "" || Main._localPlayer.GroupId == "0" || Main._localPlayer.GroupId == null)
                     {
                         Vector3 vector = getBonePos(player);
+                        float dist = FastMath.FD(Camera.main.transform.position, player.Transform.position);
+                        if (dist > Cons.Distances.Aim)
+                            continue;
                         if (!(vector == Vector3.zero) && CalcInFov(vector) <= Cons.Aim.AAN_FOV/* && IsVisible(player.gameObject, getBonePos(player))*/)
                         {
-                            AimAtPos(vector);
+                            if (distanceOfTarget > dist)
+                            {
+                                distanceOfTarget = dist;
+                                AimAtGuy = vector;
+                            }
                         }
                     }
                 }
+            }
+            if (AimAtGuy != Vector3.zero) {
+                    AimAtPos(AimAtGuy);
             }
         }
 
@@ -55,7 +67,35 @@ namespace UnhandledException
             Chest,
             Stomach
         }
-
+        /*
+        public enum BodyParts
+        {
+            Head = 133,
+            Chest = 36,
+            Stomach = 29,
+            Neck = 132,
+            LeftArm,
+            RightArm,
+            LeftLeg,
+            RightLeg
+        }*/
+        /*public enum PlayerBoneType
+        {
+            Head = 133,
+            LeftShoulder,
+            RightShoulder,
+            Ribcage = 4,
+            LeftThigh2,
+            RightThigh2,
+            WeaponRoot,
+            Body,
+            Fireport,
+            AnimatedTransform,
+            Pelvis,
+            LeftThigh1,
+            RightThigh1,
+            Spine
+        }*/
         public static int idtobid(ibid bid = ibid.Head)
         {
             switch (bid)
