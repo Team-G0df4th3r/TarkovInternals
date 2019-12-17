@@ -12,35 +12,35 @@ namespace UnhandledException
         public class Update {
             public static void FullBright()
             {
-                if (Main._localPlayer != null)
+                if (Cons.Main._localPlayer != null)
                 {
-                    if (Switches.Spawn_FullBright)
+                    if (Cons.Switches.Spawn_FullBright)
                     {
-                        Vector3 playerPos = Main._localPlayer.Transform.position;
+                        Vector3 playerPos = Cons.Main._localPlayer.Transform.position;
                         playerPos.y += 1f;
 
-                        global::UnhandledException.FullBright.lightGameObject.transform.position = playerPos;
-                        global::UnhandledException.FullBright.FullBrightLight.range = 1000f;
-                        global::UnhandledException.FullBright.FullBrightLight.intensity = 0.4f;
+                        Cons.FullBright.lightGameObject.transform.position = playerPos;
+                        Cons.FullBright.FullBrightLight.range = 1000f;
+                        Cons.FullBright.FullBrightLight.intensity = 0.4f;
                     }
                     else
                     {
-                        GameObject.Destroy(global::UnhandledException.FullBright.FullBrightLight);
-                        global::UnhandledException.FullBright.lightCalled = false;
+                        GameObject.Destroy(Cons.FullBright.FullBrightLight);
+                        Cons.FullBright.lightCalled = false;
                     }
                 }
             }
             public static void RecoilReducer()
             {
-                if (Main._localPlayer != null)
-                    if (Switches.Recoil_Reducer)
+                if (Cons.Main._localPlayer != null)
+                    if (Cons.Switches.Recoil_Reducer)
                     {
-                        if (Main._localPlayer.ProceduralWeaponAnimation.Shootingg.Intensity != 0.5f)
-                            Main._localPlayer.ProceduralWeaponAnimation.Shootingg.Intensity = 0.5f;
+                        if (Cons.Main._localPlayer.ProceduralWeaponAnimation.Shootingg.Intensity != 0.5f)
+                            Cons.Main._localPlayer.ProceduralWeaponAnimation.Shootingg.Intensity = 0.5f;
                     }
-                    else if (Main._localPlayer.ProceduralWeaponAnimation.Shootingg.Intensity != 1.0f)
+                    else if (Cons.Main._localPlayer.ProceduralWeaponAnimation.Shootingg.Intensity != 1.0f)
                     {
-                        Main._localPlayer.ProceduralWeaponAnimation.Shootingg.Intensity = 1.0f;
+                        Cons.Main._localPlayer.ProceduralWeaponAnimation.Shootingg.Intensity = 1.0f;
                     }
             }
             #region [FUNCTION] - LOD Controller // TODO Not working - need to find work around
@@ -61,12 +61,12 @@ namespace UnhandledException
         public class OnGUI {
             public static void FullBright()
             {
-                if (!global::UnhandledException.FullBright.lightCalled)
+                if (!Cons.FullBright.lightCalled)
                 {
-                    global::UnhandledException.FullBright.lightGameObject = new GameObject("Fullbright");
-                    global::UnhandledException.FullBright.FullBrightLight = global::UnhandledException.FullBright.lightGameObject.AddComponent<Light>();
-                    global::UnhandledException.FullBright.FullBrightLight.color = new Color(1f, 0.839f, 0.66f, 1f);
-                    global::UnhandledException.FullBright.lightCalled = true;
+                    Cons.FullBright.lightGameObject = new GameObject("Fullbright");
+                    Cons.FullBright.FullBrightLight = Cons.FullBright.lightGameObject.AddComponent<Light>();
+                    Cons.FullBright.FullBrightLight.color = new Color(1f, 0.839f, 0.66f, 1f);
+                    Cons.FullBright.lightCalled = true;
                 }
             }
         }

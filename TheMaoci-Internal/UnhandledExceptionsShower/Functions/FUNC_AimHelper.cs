@@ -13,11 +13,11 @@ namespace UnhandledException
         {
             Vector3 AimAtGuy = Vector3.zero;
             float distanceOfTarget = 9999f;
-            foreach (Player player in Main._players)
+            foreach (Player player in Cons.Main._players)
             {
-                if (!(player == null) && !(player == Main._localPlayer) && player.HealthController != null && player.HealthController.IsAlive)
+                if (!(player == null) && !(player == Cons.Main._localPlayer) && player.HealthController != null && player.HealthController.IsAlive)
                 {
-                    if (player.GroupId != Main._localPlayer.GroupId || Main._localPlayer.GroupId == "" || Main._localPlayer.GroupId == "0" || Main._localPlayer.GroupId == null)
+                    if (player.GroupId != Cons.Main._localPlayer.GroupId || Cons.Main._localPlayer.GroupId == "" || Cons.Main._localPlayer.GroupId == "0" || Cons.Main._localPlayer.GroupId == null)
                     {
                         Vector3 vector = getBonePos(player);
                         float dist = FastMath.FD(Camera.main.transform.position, player.Transform.position);
@@ -48,11 +48,11 @@ namespace UnhandledException
 
         public static Vector3 GetShootPos()
         {
-            if (Main._localPlayer == null)
+            if (Cons.Main._localPlayer == null)
             {
                 return Vector3.zero;
             }
-            Player.FirearmController firearmController = Main._localPlayer.HandsController as Player.FirearmController;
+            Player.FirearmController firearmController = Cons.Main._localPlayer.HandsController as Player.FirearmController;
             if (firearmController == null)
             {
                 return Vector3.zero;
@@ -130,14 +130,14 @@ namespace UnhandledException
 
         public static void AimAtPos(Vector3 pos)
         {
-            Vector2 rotation = Main._localPlayer.MovementContext.Rotation;
+            Vector2 rotation = Cons.Main._localPlayer.MovementContext.Rotation;
             Vector3 b = GetShootPos();
             Vector3 eulerAngles = Quaternion.LookRotation((pos - b).normalized).eulerAngles;
             if (eulerAngles.x > 180f)
             {
                 eulerAngles.x -= 360f;
             }
-            Main._localPlayer.MovementContext.Rotation = new Vector2(eulerAngles.y, eulerAngles.x);
+            Cons.Main._localPlayer.MovementContext.Rotation = new Vector2(eulerAngles.y, eulerAngles.x);
         }
         #endregion
     }

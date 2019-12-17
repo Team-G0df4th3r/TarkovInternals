@@ -7,12 +7,12 @@ namespace UnhandledException
     {
         private static void DrawAlive()
         {
-            if (AliveCount.All != 0)
-                Drawing.Text(new Rect(Constants.Locations.Alive.All.x, Constants.Locations.Alive.All.y, Constants.Locations.boxSize.box_200, Constants.Locations.boxSize.box_20), "Alive:" + (AliveCount.All).ToString(), Constants.Colors.White);
-            if (AliveCount.dist_0_100 != 0)
-                Drawing.Text(new Rect(Constants.Locations.Alive.zero_to_hundred.x, Constants.Locations.Alive.zero_to_hundred.y, Constants.Locations.boxSize.box_200, Constants.Locations.boxSize.box_20), "0 - 100m:" + (AliveCount.dist_0_100).ToString(), Constants.Colors.White);
-            if (AliveCount.dist_100_250 != 0)
-                Drawing.Text(new Rect(Constants.Locations.Alive.hundred_to_2fifty.x, Constants.Locations.Alive.hundred_to_2fifty.y, Constants.Locations.boxSize.box_200, Constants.Locations.boxSize.box_20), "100 - 250m:" + (AliveCount.dist_100_250).ToString(), Constants.Colors.White);
+            if (Cons.AliveCount.All != 0)
+                Drawing.Text(new Rect(Constants.Locations.Alive.All.x, Constants.Locations.Alive.All.y, Constants.Locations.boxSize.box_200, Constants.Locations.boxSize.box_20), "Alive:" + (Cons.AliveCount.All).ToString(), Constants.Colors.White);
+            if (Cons.AliveCount.dist_0_100 != 0)
+                Drawing.Text(new Rect(Constants.Locations.Alive.zero_to_hundred.x, Constants.Locations.Alive.zero_to_hundred.y, Constants.Locations.boxSize.box_200, Constants.Locations.boxSize.box_20), "0 - 100m:" + (Cons.AliveCount.dist_0_100).ToString(), Constants.Colors.White);
+            if (Cons.AliveCount.dist_100_250 != 0)
+                Drawing.Text(new Rect(Constants.Locations.Alive.hundred_to_2fifty.x, Constants.Locations.Alive.hundred_to_2fifty.y, Constants.Locations.boxSize.box_200, Constants.Locations.boxSize.box_20), "100 - 250m:" + (Cons.AliveCount.dist_100_250).ToString(), Constants.Colors.White);
         }
 
         private static void DrawRecoil() {
@@ -153,9 +153,9 @@ namespace UnhandledException
 
         public static void DisplayMenu()
         {
-            if (Switches.DisplayHelpPlayerInfo)
+            if (Cons.Switches.DisplayHelpPlayerInfo)
             {
-                if (Main._localPlayer != null)
+                if (Cons.Main._localPlayer != null)
                 {
                     #region Alive Number Display
                     DrawAlive();
@@ -173,9 +173,9 @@ namespace UnhandledException
                 #endregion
             }
             #region draw crosshair
-            if (Switches.Draw_Crosshair)
+            if (Cons.Switches.Draw_Crosshair)
             {
-                if (!Main._localPlayer.ProceduralWeaponAnimation.IsAiming)
+                if (!Cons.Main._localPlayer.ProceduralWeaponAnimation.IsAiming)
                 {
                     Drawing.P(new Vector2(Screen.width / 2f - 1f, Screen.height / 2f - 1f), Color.yellow, 2f);
                 }
@@ -196,16 +196,16 @@ namespace UnhandledException
             Vector2 initial = new Vector2(15f, 20f);
             Drawing.Label("Unknown.Exception.Handler", 0, 0, Constants.Locations.boxSize.box_200, Constants.Locations.boxSize.box_20);
             // First column
-            Drawing.CheckBox(ref Switches.Draw_ESP, "E.S.P", 2);
-            Drawing.CheckBox(ref Switches.Draw_Grenades, "Grenade", 3);
-            Drawing.CheckBox(ref Switches.Draw_Corpses, "Dead.Bodies", 4);
-            Drawing.CheckBox(ref Switches.Draw_Loot, "Map.Loot", 5);
-            Drawing.CheckBox(ref Switches.Draw_Crosshair, "Crosshair", 6); 
-            Drawing.CheckBox(ref Switches.Spawn_FullBright, "Full.Bright", 7);
-            Drawing.CheckBox(ref Switches.DisplayHelpPlayerInfo, "Player.Data", 8);
-            Drawing.CheckBox(ref Switches.StreamerMode, "Streamer.Mode", 9);
-            Drawing.CheckBox(ref Switches.SnapLines, "Snap.Lines", 10);
-            Drawing.CheckBox(ref Switches.AimingAtNikita, "Aim", 11);
+            Drawing.CheckBox(ref Cons.Switches.Draw_ESP, "E.S.P", 2);
+            Drawing.CheckBox(ref Cons.Switches.Draw_Grenades, "Grenade", 3);
+            Drawing.CheckBox(ref Cons.Switches.Draw_Corpses, "Dead.Bodies", 4);
+            Drawing.CheckBox(ref Cons.Switches.Draw_Loot, "Map.Loot", 5);
+            Drawing.CheckBox(ref Cons.Switches.Draw_Crosshair, "Crosshair", 6); 
+            Drawing.CheckBox(ref Cons.Switches.Spawn_FullBright, "Full.Bright", 7);
+            Drawing.CheckBox(ref Cons.Switches.DisplayHelpPlayerInfo, "Player.Data", 8);
+            Drawing.CheckBox(ref Cons.Switches.StreamerMode, "Streamer.Mode", 9);
+            Drawing.CheckBox(ref Cons.Switches.SnapLines, "Snap.Lines", 10);
+            Drawing.CheckBox(ref Cons.Switches.AimingAtNikita, "Aim", 11);
             Drawing.Label("FOV:" + Cons.Aim.AAN_FOV.ToString(), 12);
             Drawing.HorizontalSlider(ref Cons.Aim.AAN_FOV, 1f, 25f, 13);
             Drawing.Label("AimDist:" + Cons.Distances.Aim.ToString(), 14);
@@ -217,9 +217,9 @@ namespace UnhandledException
             Drawing.Label("CorpseDist:" + Cons.Distances.Corpses.ToString(), 20);
             Drawing.HorizontalSlider(ref Cons.Distances.Corpses, 100f, 1000f, 21);
             //i know what im doing
-            Drawing.CheckBox(ref Switches.IKnowWhatImDoing, "IKWID", 1, 2);
+            Drawing.CheckBox(ref Cons.Switches.IKnowWhatImDoing, "IKWID", 1, 2);
             // Second column indicates with column = 1
-            if (!Switches.Draw_Loot)
+            if (!Cons.Switches.Draw_Loot)
                 Drawing.TextField(ref Cons.LootSearcher, 5, 1);
             //FINSHED
             GUI.color = guiBackup;

@@ -1,7 +1,10 @@
 ﻿using EFT;
+using EFT.Interactive;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace UnhandledException
 {
@@ -105,6 +108,117 @@ namespace UnhandledException
             }
             #endregion
         }
+        public class Main
+        {
+            public class G_Scene
+            {
+                public static Scene Game_Scene;
+                private static string GetSceneName()
+                {
+                    return Game_Scene.name;
+                }
+                public static bool isActiveAndLoaded()
+                {
+                    return Game_Scene.isLoaded;
+                }
+                public static bool isInMatch()
+                {
+                    return GetSceneName() != "EnvironmentUIScene" &&
+                            GetSceneName() != "MenuUIScene" &&
+                            GetSceneName() != "CommonUIScene" &&
+                            GetSceneName() != "MainScene" &&
+                            GetSceneName() != "";
+                }
+                public static void SaveScene()
+                {
+                    Game_Scene = SceneManager.GetActiveScene();
+                }
+            }
+            public static List<Player> _players;
+            public static List<Throwable> _grenades;
+            public static List<LootItem> _corpses;
+            public static List<LootItem> _lootItems;
+            public static Player _localPlayer;
+            public static List<Player> tPlayer;
+            public static List<Throwable> tGrenades;
+            public static List<LootItem> tCorpses;
+            public static List<LootItem> tItems;
+            public static void Clear()
+            {
+                _players = null;
+                _grenades = null;
+                _corpses = null;
+                _lootItems = null;
+                _localPlayer = null;
+                tPlayer = null;
+                tGrenades = null;
+                tCorpses = null;
+                tItems = null;
+            }
+        }
+        public class Switches
+        {
+            public static bool Draw_ESP = false;
+            public static bool Draw_Corpses = false;
+            public static bool Draw_Grenades = false;
+            public static bool Draw_Loot = false;
+            public static bool Draw_Crosshair = false;
+            public static bool Display_HelpInfo = false;
+            public static bool Switch_Colors = false;
+            public static bool DisplayHelpPlayerInfo = false;
+            public static bool Spawn_FullBright = false;
+            public static bool LOD_Controll = false;
+            public static bool AimingAtNikita = false;
+            public static bool Display_HUDGui = false;
+            public static bool Recoil_Reducer = false;
+            public static bool Aim_Smoothing = true;
+            public static bool StreamerMode = false;
+            public static bool SnapLines = false;
+            public static bool IKnowWhatImDoing = false;
+            public static void SetToOff()
+            {
+                Draw_ESP = false;
+                Draw_Corpses = false;
+                Draw_Grenades = false;
+                Draw_Loot = false;
+                Draw_Crosshair = false;
+                Display_HelpInfo = false;
+                Switch_Colors = false;
+                DisplayHelpPlayerInfo = false;
+                Spawn_FullBright = false;
+                LOD_Controll = false;
+                AimingAtNikita = false;
+                Display_HUDGui = false;
+                Recoil_Reducer = false;
+            }
+        }
+        public class FullBright
+        {
+            public static GameObject lightGameObject;
+            public static Light FullBrightLight;
+            public static bool _LightEnabled = true;
+            public static bool _LightCreated;
+            public static bool lightCalled;
+        }
+        public class AliveCount
+        {
+            public static int All = 0;
+            public static int dist_0_25 = 0;
+            public static int dist_25_50 = 0;
+            public static int dist_0_100 = 0;
+            public static int dist_100_250 = 0;
+            public static int dist_250_1000 = 0;
+            public static void Reset()
+            {
+                All = 0;
+                dist_0_25 = 0;
+                dist_25_50 = 0;
+                dist_0_100 = 0;
+                dist_100_250 = 0;
+                dist_250_1000 = 0;
+            }
+        }
+
         public static string LootSearcher = "";
         public static int ScreenWidth = Screen.width;
         public static int ScreenHeight = Screen.height;
@@ -148,6 +262,14 @@ namespace UnhandledException
                 result = Vector3.zero;
             }
             return result;
+        }
+        public static bool outOfScreen(Vector3 checkVector) {
+            if (checkVector.x > 0.01f && 
+                checkVector.z > 0.01f &&
+                checkVector.x < ScreenWidth &&
+                checkVector.z < ScreenHeight)
+                return true;
+            return false;
         }
 
     }

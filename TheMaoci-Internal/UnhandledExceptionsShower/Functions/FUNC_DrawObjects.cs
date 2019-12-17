@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using EFT;
 using EFT.Interactive;
-
+#pragma warning disable CS0168
 namespace UnhandledException
 {
     class FUNC_DrawObjects
@@ -288,7 +288,7 @@ namespace UnhandledException
                 }
                 else if (LocalPlayer.Profile.Info.GroupId == player.Profile.Info.GroupId && LocalPlayer.Profile.Info.GroupId != "0" && LocalPlayer.Profile.Info.GroupId != "" && LocalPlayer.Profile.Info.GroupId != null)
                 {
-                    if (Switches.StreamerMode)
+                    if (Cons.Switches.StreamerMode)
                         playerDisplayName = "team";
                     else
                         playerDisplayName = player.Profile.Info.Nickname;
@@ -305,7 +305,7 @@ namespace UnhandledException
                 }
                 else
                 {
-                    if (Switches.StreamerMode)
+                    if (Cons.Switches.StreamerMode)
                     {
                         playerDisplayName = player.Profile.Info.Side.ToString() + " [" + player.Profile.Info.Level.ToString() + "]";
                     }
@@ -332,7 +332,7 @@ namespace UnhandledException
                     }
                     catch (Exception e)
                     {
-                        WeaponName = "none";
+                        WeaponName = "No Weapon";
                     }
                 #endregion
 
@@ -398,7 +398,7 @@ namespace UnhandledException
                 }
                 #endregion
                 #region snap lines
-                if (Switches.SnapLines && player != Main._localPlayer)
+                if (Cons.Switches.SnapLines && player != Cons.Main._localPlayer)
                 {
                     Vector3 w2s = Camera.main.WorldToScreenPoint(player.PlayerBones.RootJoint.position);
                     if (!(w2s.z < 0.01f))
@@ -422,3 +422,4 @@ namespace UnhandledException
         #endregion
     }
 }
+#pragma warning disable CS0168
