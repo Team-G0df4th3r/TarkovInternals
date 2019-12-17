@@ -8,6 +8,7 @@ namespace UnhandledException
 {
     class FUNC_DrawObjects
     {
+        private RaycastHit raycastHit;
         #region - CORPSES -
         public static void DrawPDB(List<LootItem> _lContainer)
         {
@@ -245,37 +246,52 @@ namespace UnhandledException
 
                 Status = ((int)(player.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Common).Current)).ToString() + " hp"; // Health here 
                 #region BONE ESP
-                if (dTO < 100f)
+                if (Cons.Switches.ShowBones)
                 {
-                    var pRPVect = Camera.main.WorldToScreenPoint(player.PlayerBones.RightPalm.position);
-                    var PLPVect = Camera.main.WorldToScreenPoint(player.PlayerBones.LeftPalm.position);
-                    var PLShVect = Camera.main.WorldToScreenPoint(player.PlayerBones.LeftShoulder.position);
-                    var PLRShVect = Camera.main.WorldToScreenPoint(player.PlayerBones.RightShoulder.position);
-                    var PLNeckVect = Camera.main.WorldToScreenPoint(player.PlayerBones.Neck.position);
-                    var PLCentrVect = Camera.main.WorldToScreenPoint(player.PlayerBones.Pelvis.position);
-                    var PLRTighVect = Camera.main.WorldToScreenPoint(player.PlayerBones.RightThigh2.position);
-                    var PLLTighVect = Camera.main.WorldToScreenPoint(player.PlayerBones.LeftThigh2.position);
-                    var PLRFootVect = Camera.main.WorldToScreenPoint(player.PlayerBones.KickingFoot.position);
-                    var PLLFootVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 18));
-                    var PLLBowVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 91));
-                    var PLRBowVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 112));
-                    var PLLKneeVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 17));
-                    var PLRKneeVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 22));
-                    if (PLNeckVect.z > 0.01f)
+                    if (dTO < 100f)
                     {
-                        Backup = GUI.color;
-                        GUI.color = Color.white;
-                        Drawing.DrawLine(new Vector2(PLNeckVect.x, (float)Screen.height - PLNeckVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), Color.white, 1f);
-                        Drawing.DrawLine(new Vector2(PLShVect.x, (float)Screen.height - PLShVect.y), new Vector2(PLLBowVect.x, (float)Screen.height - PLLBowVect.y), Color.white, 1f);
-                        Drawing.DrawLine(new Vector2(PLRShVect.x, (float)Screen.height - PLRShVect.y), new Vector2(PLRBowVect.x, (float)Screen.height - PLRBowVect.y), Color.white, 1f);
-                        Drawing.DrawLine(new Vector2(PLLBowVect.x, (float)Screen.height - PLLBowVect.y), new Vector2(PLPVect.x, (float)Screen.height - PLPVect.y), Color.white, 1f);
-                        Drawing.DrawLine(new Vector2(PLRBowVect.x, (float)Screen.height - PLRBowVect.y), new Vector2(pRPVect.x, (float)Screen.height - pRPVect.y), Color.white, 1f);
-                        Drawing.DrawLine(new Vector2(PLRShVect.x, (float)Screen.height - PLRShVect.y), new Vector2(PLShVect.x, (float)Screen.height - PLShVect.y), Color.white, 1f);
-                        Drawing.DrawLine(new Vector2(PLLKneeVect.x, (float)Screen.height - PLLKneeVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), Color.white, 1f);
-                        Drawing.DrawLine(new Vector2(PLRKneeVect.x, (float)Screen.height - PLRKneeVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), Color.white, 1f);
-                        Drawing.DrawLine(new Vector2(PLLKneeVect.x, (float)Screen.height - PLLKneeVect.y), new Vector2(PLLFootVect.x, (float)Screen.height - PLLFootVect.y), Color.white, 1f);
-                        Drawing.DrawLine(new Vector2(PLRKneeVect.x, (float)Screen.height - PLRKneeVect.y), new Vector2(PLRFootVect.x, (float)Screen.height - PLRFootVect.y), Color.white, 1f);
-                        GUI.color = Backup;
+                        var pRPVect = Camera.main.WorldToScreenPoint(player.PlayerBones.RightPalm.position);
+                        var PLPVect = Camera.main.WorldToScreenPoint(player.PlayerBones.LeftPalm.position);
+                        var PLShVect = Camera.main.WorldToScreenPoint(player.PlayerBones.LeftShoulder.position);
+                        var PLRShVect = Camera.main.WorldToScreenPoint(player.PlayerBones.RightShoulder.position);
+                        var PLNeckVect = Camera.main.WorldToScreenPoint(player.PlayerBones.Neck.position);
+                        var PLCentrVect = Camera.main.WorldToScreenPoint(player.PlayerBones.Pelvis.position);
+                        var PLRTighVect = Camera.main.WorldToScreenPoint(player.PlayerBones.RightThigh2.position);
+                        var PLLTighVect = Camera.main.WorldToScreenPoint(player.PlayerBones.LeftThigh2.position);
+                        var PLRFootVect = Camera.main.WorldToScreenPoint(player.PlayerBones.KickingFoot.position);
+                        var PLLFootVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 18));
+                        var PLLBowVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 91));
+                        var PLRBowVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 112));
+                        var PLLKneeVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 17));
+                        var PLRKneeVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 22));
+                        if (Cons.inScreen(PLNeckVect))
+                        {
+                            Backup = GUI.color;
+                            GUI.color = Color.white;
+
+                            if (Cons.inScreen(PLNeckVect) && Cons.inScreen(PLCentrVect))
+                                Drawing.DrawLine(new Vector2(PLNeckVect.x, (float)Screen.height - PLNeckVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), Color.white, 1f);
+                            if (Cons.inScreen(PLShVect) && Cons.inScreen(PLLBowVect))
+                                Drawing.DrawLine(new Vector2(PLShVect.x, (float)Screen.height - PLShVect.y), new Vector2(PLLBowVect.x, (float)Screen.height - PLLBowVect.y), Color.white, 1f);
+                            if (Cons.inScreen(PLRShVect) && Cons.inScreen(PLRBowVect))
+                                Drawing.DrawLine(new Vector2(PLRShVect.x, (float)Screen.height - PLRShVect.y), new Vector2(PLRBowVect.x, (float)Screen.height - PLRBowVect.y), Color.white, 1f);
+                            if (Cons.inScreen(PLLBowVect) && Cons.inScreen(PLPVect))
+                                Drawing.DrawLine(new Vector2(PLLBowVect.x, (float)Screen.height - PLLBowVect.y), new Vector2(PLPVect.x, (float)Screen.height - PLPVect.y), Color.white, 1f);
+                            if (Cons.inScreen(PLRBowVect) && Cons.inScreen(pRPVect))
+                                Drawing.DrawLine(new Vector2(PLRBowVect.x, (float)Screen.height - PLRBowVect.y), new Vector2(pRPVect.x, (float)Screen.height - pRPVect.y), Color.white, 1f);
+                            if (Cons.inScreen(PLRShVect) && Cons.inScreen(PLShVect))
+                                Drawing.DrawLine(new Vector2(PLRShVect.x, (float)Screen.height - PLRShVect.y), new Vector2(PLShVect.x, (float)Screen.height - PLShVect.y), Color.white, 1f);
+                            if (Cons.inScreen(PLLKneeVect) && Cons.inScreen(PLCentrVect))
+                                Drawing.DrawLine(new Vector2(PLLKneeVect.x, (float)Screen.height - PLLKneeVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), Color.white, 1f);
+                            if (Cons.inScreen(PLRKneeVect) && Cons.inScreen(PLCentrVect))
+                                Drawing.DrawLine(new Vector2(PLRKneeVect.x, (float)Screen.height - PLRKneeVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), Color.white, 1f);
+                            if (Cons.inScreen(PLLKneeVect) && Cons.inScreen(PLLFootVect))
+                                Drawing.DrawLine(new Vector2(PLLKneeVect.x, (float)Screen.height - PLLKneeVect.y), new Vector2(PLLFootVect.x, (float)Screen.height - PLLFootVect.y), Color.white, 1f);
+                            if (Cons.inScreen(PLRKneeVect) && Cons.inScreen(PLRFootVect))
+                                Drawing.DrawLine(new Vector2(PLRKneeVect.x, (float)Screen.height - PLRKneeVect.y), new Vector2(PLRFootVect.x, (float)Screen.height - PLRFootVect.y), Color.white, 1f);
+
+                            GUI.color = Backup;
+                        }
                     }
                 }
                 #endregion
@@ -420,6 +436,39 @@ namespace UnhandledException
             }
         }
         #endregion
+
+        public static Vector3 GetHandsPos()
+        {
+            if (Cons.Main._localPlayer == null)
+            {
+                return Vector3.zero;
+            }
+            Player.FirearmController firearmController = Cons.Main._localPlayer.HandsController as Player.FirearmController;
+            if (firearmController == null)
+            {
+                return Vector3.zero;
+            }
+            return firearmController.Fireport.position + Camera.main.transform.forward * 1f; //fireport 
+        }
+        private bool BodyRaycastCheck(GameObject obj, Vector3 pHead, Vector3 pBody, Vector3 pThorax, Vector3 pRLeg, Vector3 pLLeg)
+        {
+            RaycastHit raycastHitHead;
+
+            var HandsPos = GetHandsPos(); //either viewport or fireport (fireport tested & working)
+
+            if ((Physics.Linecast(HandsPos, pHead, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject) ||
+                (Physics.Linecast(HandsPos, pBody, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject) ||
+                (Physics.Linecast(HandsPos, pThorax, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject) ||
+                (Physics.Linecast(HandsPos, pRLeg, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject) ||
+                (Physics.Linecast(HandsPos, pLLeg, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
 #pragma warning disable CS0168

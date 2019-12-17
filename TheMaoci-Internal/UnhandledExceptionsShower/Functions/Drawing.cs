@@ -126,6 +126,18 @@ namespace UnhandledException
                 name
             );
         }
+        public static void Button(ref bool variable, string name, int row = 1, int column = 0)
+        {
+            variable = GUI.Button(
+                new Rect(
+                    Constants.Locations.initialInputSizes.x + (column * Constants.Locations.boxSize.box_100) + 25f,
+                    Constants.Locations.initialInputSizes.y + (Constants.Locations.initialInputSizes.y * row),
+                    Constants.Locations.boxSize.box_50,
+                    Constants.Locations.boxSize.box_20
+                ),
+                name
+            );
+        }
         public static void Label(string name, int row = 1, int column = 0, float width = 0f, float height = 0f)
         {
             if (height == 0f)

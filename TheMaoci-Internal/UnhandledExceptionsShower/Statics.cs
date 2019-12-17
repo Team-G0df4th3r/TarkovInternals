@@ -9,6 +9,8 @@ namespace UnhandledException
             public static Color White = new Color(1f, 1f, 1f, 1f);
             public static Color Black = new Color(0f, 0f, 0f, 1f);
             public static Color Red = new Color(1f, 0f, 0f, 1f);
+            public static Color Green = new Color(0f, 1f, 0f, 1f);
+            public static Color Blue = new Color(0f, 0f, 1f, 1f);
             public class ESP
             {
                 public static Color[] player = new Color[2] { new Color(1.0f, 0f, 0f, 1.0f), new Color(1.0f, 0f, 1.0f, 1.0f) };
@@ -36,9 +38,14 @@ namespace UnhandledException
             }
             public class Alive
             {
-                public static Vector2 All = new Vector2(19f, 32f);
-                public static Vector2 zero_to_hundred = new Vector2(19f, 52f);
-                public static Vector2 hundred_to_2fifty = new Vector2(19f, 72f);
+                public static Vector2 All = new Vector2(1f, 305f);
+                public static Vector2 d0_25 = new Vector2(1f, 325f);
+                public static Vector2 d25_50 = new Vector2(1f, 345f);
+                public static Vector2 d50_100 = new Vector2(1f, 365f);
+                public static Vector2 d100_250 = new Vector2(1f, 385f);
+                public static Vector2 d250_1000 = new Vector2(1f, 405f);
+                public static Vector2 zero_to_hundred = new Vector2(1f, 325f);
+                public static Vector2 hundred_to_2fifty = new Vector2(1f, 345f);
             }
             public class Recoil
             {
@@ -73,6 +80,7 @@ namespace UnhandledException
                 public static float box_190 = 190f;
                 public static float box_200 = 200f;
             }
+            //render distance is not used now so git gud to delete this shit
             public class RenderDistance
             {
                 public static float d_1000 = 1000f;
@@ -83,8 +91,6 @@ namespace UnhandledException
             }
             public static void RedalculateDistances()
             {
-                if (Cons.ScreenWidth != 1920 && Cons.ScreenHeight != 1080)
-                {
                     // recalculate all variables for diffrent screensizes
                     HealthBox.Chest.x = CalcSizeW(HealthBox.Chest.x);
                     HealthBox.Chest.y = CalcSizeH(HealthBox.Chest.y);
@@ -116,7 +122,6 @@ namespace UnhandledException
                     Status.Hydration.y = CalcSizeH(Status.Hydration.y);
                     InitialHealthBox.x = CalcSizeW(InitialHealthBox.x);
                     InitialHealthBox.y = CalcSizeH(InitialHealthBox.y);
-                }
             }
             private static float CalcSizeW(float size) { return Cons.ScreenWidth * size / 1920; }
             private static float CalcSizeH(float size) { return Cons.ScreenHeight * size / 1080; }

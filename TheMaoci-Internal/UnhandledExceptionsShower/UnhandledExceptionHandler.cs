@@ -8,6 +8,38 @@ using System.Reflection;
 #pragma warning disable CS0168
 namespace UnhandledException
 {
+
+    /*public class DrawRadar : MonoBehaviour
+    {
+        public float ThetaScale = 0.01f;
+        public float radius = 0f;
+        private int Size;
+        private LineRenderer LineDrawer;
+        private float Theta = 0f;
+        //DrawRadar(float size) { radius = size; }
+        void Start()
+        {
+            LineDrawer = GetComponent<LineRenderer>();
+        }
+
+        void Update()
+        {
+            if (radius != 0f)
+            {
+                Theta = 0f;
+                Size = (int)((1f / ThetaScale) + 1f);
+                LineDrawer.positionCount = Size;
+                for (int i = 0; i < Size; i++)
+                {
+                    Theta += (2.0f * Mathf.PI * ThetaScale);
+                    float x = radius * Mathf.Cos(Theta);
+                    float y = radius * Mathf.Sin(Theta);
+                    LineDrawer.SetPosition(i, new Vector3(x, y, 0));
+                }
+            }
+        }
+    }*/
+
     public class UnhandledException : MonoBehaviour
     {
         public UnhandledException() { }
@@ -23,7 +55,10 @@ namespace UnhandledException
         {
             UnityEngine.Debug.unityLogger.logEnabled = false;
             // recalculate shit for diffrent screen sizes
-            Constants.Locations.RedalculateDistances();
+            if (Cons.ScreenWidth != 1920 && Cons.ScreenHeight != 1080)
+            {
+                Constants.Locations.RedalculateDistances();
+            }
             Cons.Main.G_Scene.Game_Scene = new Scene(); // inicializate this shit cause or random error spams
         }
         #endregion
@@ -135,6 +170,29 @@ namespace UnhandledException
         }
         #endregion
 
+        #region [FUNCTION] - Buttons - function
+        private static void Buttons() {
+            if (Cons.Buttons.Ma0c1)
+            {
+                Cons.Switches.Draw_ESP = true;
+                Cons.Switches.Draw_Corpses = true;
+                Cons.Switches.Draw_Grenades = true;
+                Cons.Switches.Draw_Crosshair = true;
+                Cons.Switches.Spawn_FullBright = true;
+                Cons.Switches.AimingAtNikita = true;
+                Cons.Switches.Aim_Smoothing = true;
+                Cons.Switches.SnapLines = true;
+                Cons.Switches.ShowBones = true;
+                Cons.Buttons.Ma0c1 = false;
+            }
+            if (Cons.Buttons.Niger)
+            {
+                // not used yet :)
+                Cons.Buttons.Niger = false;
+            }
+        }
+        #endregion
+        
         #region [MAIN] - Update
         private void Update()
         {
@@ -142,6 +200,7 @@ namespace UnhandledException
             {
                 Cons.Main.G_Scene.SaveScene();
                 Hotkeys();
+                Buttons();
                 // make sure scene is map scene and is loaded and ready
                 if (Cons.Main.G_Scene.isInMatch() && Cons.Main.G_Scene.isActiveAndLoaded())
                 {
@@ -185,15 +244,28 @@ namespace UnhandledException
 
                                             Cons.AliveCount.All++;
                                             float distance = FastMath.FD(Camera.main.transform.position, p.Transform.position);
-                                            if (distance <= 100f)
+                                            if (distance > 0f && distance <= 25f)
                                             {
-                                                Cons.AliveCount.dist_0_100++;
+                                                Cons.AliveCount.dist_0_25++;
+                                            }
+
+                                            if (distance > 25f && distance <= 50f)
+                                            {
+                                                Cons.AliveCount.dist_25_50++;
+                                            }
+                                            if (distance > 50f && distance <= 100f)
+                                            {
+                                                Cons.AliveCount.dist_50_100++;
                                             }
                                             if (distance > 100f && distance <= 250f)
                                             {
                                                 Cons.AliveCount.dist_100_250++;
                                             }
-                                            if (distance > 1f && distance <= Constants.Locations.RenderDistance.d_1000 && Camera.main.WorldToScreenPoint(p.Transform.position).z > 0.01f)
+                                            if (distance > 250f && distance <= 1000f)
+                                            {
+                                                Cons.AliveCount.dist_250_1000++;
+                                            }
+                                            if (distance > 1f && distance <= Cons.Distances.Players && Cons.inScreen(Camera.main.WorldToScreenPoint(p.Transform.position)))
                                             {
                                                 Cons.Main.tPlayer.Add(p);
                                             }

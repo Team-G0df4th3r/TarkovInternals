@@ -9,10 +9,16 @@ namespace UnhandledException
         {
             if (Cons.AliveCount.All != 0)
                 Drawing.Text(new Rect(Constants.Locations.Alive.All.x, Constants.Locations.Alive.All.y, Constants.Locations.boxSize.box_200, Constants.Locations.boxSize.box_20), "Alive:" + (Cons.AliveCount.All).ToString(), Constants.Colors.White);
-            if (Cons.AliveCount.dist_0_100 != 0)
-                Drawing.Text(new Rect(Constants.Locations.Alive.zero_to_hundred.x, Constants.Locations.Alive.zero_to_hundred.y, Constants.Locations.boxSize.box_200, Constants.Locations.boxSize.box_20), "0 - 100m:" + (Cons.AliveCount.dist_0_100).ToString(), Constants.Colors.White);
+            if (Cons.AliveCount.dist_0_25 != 0)
+                Drawing.Text(new Rect(Constants.Locations.Alive.d0_25.x, Constants.Locations.Alive.d0_25.y, Constants.Locations.boxSize.box_200, Constants.Locations.boxSize.box_20), "0-25m:" + (Cons.AliveCount.dist_0_25).ToString(), Constants.Colors.White);
+            if (Cons.AliveCount.dist_25_50 != 0)
+                Drawing.Text(new Rect(Constants.Locations.Alive.d25_50.x, Constants.Locations.Alive.d25_50.y, Constants.Locations.boxSize.box_200, Constants.Locations.boxSize.box_20), "25-50m:" + (Cons.AliveCount.dist_25_50).ToString(), Constants.Colors.White);
+            if (Cons.AliveCount.dist_50_100 != 0)
+                Drawing.Text(new Rect(Constants.Locations.Alive.d50_100.x, Constants.Locations.Alive.d50_100.y, Constants.Locations.boxSize.box_200, Constants.Locations.boxSize.box_20), "50-100m:" + (Cons.AliveCount.dist_50_100).ToString(), Constants.Colors.White);
             if (Cons.AliveCount.dist_100_250 != 0)
-                Drawing.Text(new Rect(Constants.Locations.Alive.hundred_to_2fifty.x, Constants.Locations.Alive.hundred_to_2fifty.y, Constants.Locations.boxSize.box_200, Constants.Locations.boxSize.box_20), "100 - 250m:" + (Cons.AliveCount.dist_100_250).ToString(), Constants.Colors.White);
+                Drawing.Text(new Rect(Constants.Locations.Alive.d100_250.x, Constants.Locations.Alive.d100_250.y, Constants.Locations.boxSize.box_200, Constants.Locations.boxSize.box_20), "100-250m:" + (Cons.AliveCount.dist_100_250).ToString(), Constants.Colors.White);
+            if (Cons.AliveCount.dist_250_1000 != 0)
+                Drawing.Text(new Rect(Constants.Locations.Alive.d250_1000.x, Constants.Locations.Alive.d250_1000.y, Constants.Locations.boxSize.box_200, Constants.Locations.boxSize.box_20), "250-1000m:" + (Cons.AliveCount.dist_250_1000).ToString(), Constants.Colors.White);
         }
 
         private static void DrawRecoil() {
@@ -39,7 +45,7 @@ namespace UnhandledException
                     Constants.Locations.boxSize.box_100, 
                     Constants.Locations.boxSize.box_20
                     ), 
-                "Total: " + Cons.LocalPlayer.Status.Health.Common + "/" + Cons.LocalPlayer.Status.Health.CommonMax, 
+                "Total: " + Cons.LocalPlayer.Status.Health.Common, 
                 Constants.Colors.White
             );
             Drawing.Text(
@@ -49,7 +55,7 @@ namespace UnhandledException
                     Constants.Locations.boxSize.box_200, 
                     Constants.Locations.boxSize.box_20
                     ), 
-                "Energy: " + Cons.LocalPlayer.Status.Energy + "/" + Cons.LocalPlayer.Status.EnergyMax, 
+                "Energy: " + Cons.LocalPlayer.Status.Energy, 
                 Constants.Colors.White
             );
             Drawing.Text(
@@ -59,7 +65,7 @@ namespace UnhandledException
                     Constants.Locations.boxSize.box_200, 
                     Constants.Locations.boxSize.box_20
                     ), 
-                "Hydro: " + Cons.LocalPlayer.Status.Hydration + "/" + Cons.LocalPlayer.Status.HydrationMax,
+                "Hydro: " + Cons.LocalPlayer.Status.Hydration,
                 Constants.Colors.White
             );
             Drawing.Text(
@@ -69,7 +75,7 @@ namespace UnhandledException
                     Constants.Locations.boxSize.box_50, 
                     Constants.Locations.boxSize.box_20
                     ),
-                Cons.LocalPlayer.Status.Health.Head + "/" + Cons.LocalPlayer.Status.Health.HeadMax,
+                Cons.LocalPlayer.Status.Health.Head,
                 Constants.Colors.White
             );
             Drawing.Text(
@@ -79,7 +85,7 @@ namespace UnhandledException
                     Constants.Locations.boxSize.box_50, 
                     Constants.Locations.boxSize.box_20
                     ),
-                Cons.LocalPlayer.Status.Health.Chest + "/" + Cons.LocalPlayer.Status.Health.ChestMax,
+                Cons.LocalPlayer.Status.Health.Chest,
                 Constants.Colors.White
             );
             Drawing.Text(
@@ -89,7 +95,7 @@ namespace UnhandledException
                     Constants.Locations.boxSize.box_50, 
                     Constants.Locations.boxSize.box_20
                     ),
-                Cons.LocalPlayer.Status.Health.LeftArm + "/" + Cons.LocalPlayer.Status.Health.LeftArmMax,
+                Cons.LocalPlayer.Status.Health.LeftArm,
                 Constants.Colors.White
             );
             Drawing.Text(
@@ -99,7 +105,7 @@ namespace UnhandledException
                     Constants.Locations.boxSize.box_50, 
                     Constants.Locations.boxSize.box_20
                     ),
-                Cons.LocalPlayer.Status.Health.RightArm + "/" + Cons.LocalPlayer.Status.Health.RightArmMax,
+                Cons.LocalPlayer.Status.Health.RightArm,
                 Constants.Colors.White
             );
             Drawing.Text(
@@ -109,7 +115,7 @@ namespace UnhandledException
                     Constants.Locations.boxSize.box_50, 
                     Constants.Locations.boxSize.box_20
                     ),
-                Cons.LocalPlayer.Status.Health.LeftLeg + "/" + Cons.LocalPlayer.Status.Health.LeftLegMax,
+                Cons.LocalPlayer.Status.Health.LeftLeg,
                 Constants.Colors.White
             );
             Drawing.Text(
@@ -119,7 +125,7 @@ namespace UnhandledException
                     Constants.Locations.boxSize.box_50, 
                     Constants.Locations.boxSize.box_20
                     ),
-                Cons.LocalPlayer.Status.Health.RightLeg + "/" + Cons.LocalPlayer.Status.Health.RightLegMax,
+                Cons.LocalPlayer.Status.Health.RightLeg,
                 Constants.Colors.White
             );
             Drawing.Text(
@@ -129,7 +135,7 @@ namespace UnhandledException
                     Constants.Locations.boxSize.box_50, 
                     Constants.Locations.boxSize.box_20
                     ),
-                Cons.LocalPlayer.Status.Health.Stomach + "/" + Cons.LocalPlayer.Status.Health.StomachMax,
+                Cons.LocalPlayer.Status.Health.Stomach,
                 Constants.Colors.White
             );
         }
@@ -160,8 +166,8 @@ namespace UnhandledException
                     #region Alive Number Display
                     DrawAlive();
                     #endregion
-                    #region Player Health
                     DrawRecoil();
+                    #region Player Health
                     HealthInfo();
                     #endregion
                 }
@@ -205,6 +211,7 @@ namespace UnhandledException
             Drawing.CheckBox(ref Cons.Switches.DisplayHelpPlayerInfo, "Player.Data", 8);
             Drawing.CheckBox(ref Cons.Switches.StreamerMode, "Streamer.Mode", 9);
             Drawing.CheckBox(ref Cons.Switches.SnapLines, "Snap.Lines", 10);
+            Drawing.CheckBox(ref Cons.Switches.ShowBones, "Draw.Bones", 10, 1);
             Drawing.CheckBox(ref Cons.Switches.AimingAtNikita, "Aim", 11);
             Drawing.Label("FOV:" + Cons.Aim.AAN_FOV.ToString(), 12);
             Drawing.HorizontalSlider(ref Cons.Aim.AAN_FOV, 1f, 25f, 13);
@@ -218,6 +225,8 @@ namespace UnhandledException
             Drawing.HorizontalSlider(ref Cons.Distances.Corpses, 100f, 1000f, 21);
             //i know what im doing
             Drawing.CheckBox(ref Cons.Switches.IKnowWhatImDoing, "IKWID", 1, 2);
+            Drawing.Button(ref Cons.Buttons.Ma0c1, "Maoci", 2, 2);
+            Drawing.Button(ref Cons.Buttons.Niger, "Niger", 3, 2);
             // Second column indicates with column = 1
             if (!Cons.Switches.Draw_Loot)
                 Drawing.TextField(ref Cons.LootSearcher, 5, 1);

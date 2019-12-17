@@ -18,6 +18,7 @@ namespace UnhandledException
         public class Distances
         {
             public static float Aim = 200f;
+            public static float Players = 1000f;
             public static float Loot = 1000f;
             public static float Corpses = 200f;
             public static float Grenade = 100f;
@@ -50,60 +51,83 @@ namespace UnhandledException
                     //Main._localPlayer.ProceduralWeaponAnimation.Mask = EFT.Animations.EProceduralAnimationMask.ForceReaction;
                 }
 
-                public static int CurrentAmmo;
-                public static int MaxAmmo;
+                public static string CurrentAmmo;
+                public static string MaxAmmo;
                 public static void UpdateAmmo()
                 {
-                    CurrentAmmo = Main._localPlayer.Weapon.GetCurrentMagazineCount();
-                    MaxAmmo = Main._localPlayer.Weapon.GetMaxMagazineCount();
+                    try
+                    {
+                        if (Main._localPlayer.Weapon != null)
+                        {
+                            CurrentAmmo = Main._localPlayer.Weapon.GetCurrentMagazineCount().ToString();
+                            MaxAmmo = Main._localPlayer.Weapon.GetMaxMagazineCount().ToString();
+                        }
+                        else 
+                        {
+                            CurrentAmmo = "Melee";
+                            MaxAmmo = "";
+                        }
+                    }
+                    catch (Exception e) 
+                    {
+                        CurrentAmmo = "Melee";
+                        MaxAmmo = "";
+                    }
+                    
                 }
-
             }
             #endregion
             #region Status - Health and other
             public class Status {
-                public static int Energy;
-                public static int EnergyMax;
-                public static int Hydration;
-                public static int HydrationMax;
+                public static string Energy;
+                public static string Hydration;
                 public class Health {
-                    public static int Common;
-                    public static int CommonMax;
-                    public static int Head;
-                    public static int HeadMax;
-                    public static int Chest;
-                    public static int ChestMax;
-                    public static int LeftArm;
-                    public static int LeftArmMax;
-                    public static int RightArm;
-                    public static int RightArmMax;
-                    public static int LeftLeg;
-                    public static int LeftLegMax;
-                    public static int RightLeg;
-                    public static int RightLegMax;
-                    public static int Stomach;
-                    public static int StomachMax;
+                    public static string Common;
+                    public static string Head;
+                    public static string Chest;
+                    public static string LeftArm;
+                    public static string RightArm;
+                    public static string LeftLeg;
+                    public static string RightLeg;
+                    public static string Stomach;
+                }
+                private static string GetHealthEndStatus(EFT.HealthSystem.EBodyPart Part) {
+                    int curr = (int)Main._localPlayer.HealthController.GetBodyPartHealth(Part).Current;
+                    if (curr == 0)
+                        return "n/a";
+                    return curr.ToString() + "/" + ((int)Main._localPlayer.HealthController.GetBodyPartHealth(Part).Maximum).ToString();
+                }
+                private static string GetVitalEndStatus(string type) {
+                    switch (type) {
+                        case "Energy":
+                            int curr_e = (int)Main._localPlayer.HealthController.Energy.Current;
+                            if (curr_e == 0) {
+                                return "No Energy!!";
+                            }
+                            return curr_e.ToString() + "/" + ((int)Main._localPlayer.HealthController.Energy.Maximum).ToString();
+                        case "Hydration":
+                            int curr_h = (int)Main._localPlayer.HealthController.Hydration.Current;
+                            if (curr_h == 0)
+                            {
+                                return "Dehydration!!";
+                            }
+                            return curr_h.ToString() + "/" + ((int)Main._localPlayer.HealthController.Hydration.Maximum).ToString();
+                        default:
+                            return "";
+                    }
                 }
                 public static void UpdateStatus()
                 {
-                    HydrationMax = (int)Main._localPlayer.HealthController.Hydration.Maximum;
-                    Hydration = (int)Main._localPlayer.HealthController.Hydration.Current;
-                    Health.Chest = (int)Main._localPlayer.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Chest).Current;
-                    Health.ChestMax = (int)Main._localPlayer.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Chest).Maximum;
-                    Health.Common = (int)Main._localPlayer.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Common).Current;
-                    Health.CommonMax = (int)Main._localPlayer.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Common).Maximum;
-                    Health.Head = (int)Main._localPlayer.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Head).Current;
-                    Health.HeadMax = (int)Main._localPlayer.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Head).Maximum;
-                    Health.LeftArm = (int)Main._localPlayer.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.LeftArm).Current;
-                    Health.LeftArmMax = (int)Main._localPlayer.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.LeftArm).Maximum;
-                    Health.LeftLeg = (int)Main._localPlayer.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.LeftLeg).Current;
-                    Health.LeftLegMax = (int)Main._localPlayer.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.LeftLeg).Maximum;
-                    Health.RightArm = (int)Main._localPlayer.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.RightArm).Current;
-                    Health.RightArmMax = (int)Main._localPlayer.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.RightArm).Maximum;
-                    Health.RightLeg = (int)Main._localPlayer.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.RightLeg).Current;
-                    Health.RightLegMax = (int)Main._localPlayer.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.RightLeg).Maximum;
-                    Health.Stomach = (int)Main._localPlayer.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Stomach).Current;
-                    Health.StomachMax = (int)Main._localPlayer.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Stomach).Maximum;
+                    Energy = GetVitalEndStatus("Energy");
+                    Hydration = GetVitalEndStatus("Hydration");
+                    Health.Chest = GetHealthEndStatus(EFT.HealthSystem.EBodyPart.Chest);
+                    Health.Common = GetHealthEndStatus(EFT.HealthSystem.EBodyPart.Common);
+                    Health.Head = GetHealthEndStatus(EFT.HealthSystem.EBodyPart.Head);
+                    Health.LeftArm = GetHealthEndStatus(EFT.HealthSystem.EBodyPart.LeftArm);
+                    Health.LeftLeg = GetHealthEndStatus(EFT.HealthSystem.EBodyPart.LeftLeg);
+                    Health.RightArm = GetHealthEndStatus(EFT.HealthSystem.EBodyPart.RightArm);
+                    Health.RightLeg = GetHealthEndStatus(EFT.HealthSystem.EBodyPart.RightLeg);
+                    Health.Stomach = GetHealthEndStatus(EFT.HealthSystem.EBodyPart.Stomach);
                 }
             }
             #endregion
@@ -156,6 +180,10 @@ namespace UnhandledException
                 tItems = null;
             }
         }
+        public class Buttons {
+            public static bool Ma0c1 = false;
+            public static bool Niger = false;
+        }
         public class Switches
         {
             public static bool Draw_ESP = false;
@@ -174,6 +202,7 @@ namespace UnhandledException
             public static bool Aim_Smoothing = true;
             public static bool StreamerMode = false;
             public static bool SnapLines = false;
+            public static bool ShowBones = false;
             public static bool IKnowWhatImDoing = false;
             public static void SetToOff()
             {
@@ -205,7 +234,7 @@ namespace UnhandledException
             public static int All = 0;
             public static int dist_0_25 = 0;
             public static int dist_25_50 = 0;
-            public static int dist_0_100 = 0;
+            public static int dist_50_100 = 0;
             public static int dist_100_250 = 0;
             public static int dist_250_1000 = 0;
             public static void Reset()
@@ -213,7 +242,7 @@ namespace UnhandledException
                 All = 0;
                 dist_0_25 = 0;
                 dist_25_50 = 0;
-                dist_0_100 = 0;
+                dist_50_100 = 0;
                 dist_100_250 = 0;
                 dist_250_1000 = 0;
             }
@@ -263,11 +292,12 @@ namespace UnhandledException
             }
             return result;
         }
-        public static bool outOfScreen(Vector3 checkVector) {
-            if (checkVector.x > 0.01f && 
-                checkVector.z > 0.01f &&
-                checkVector.x < ScreenWidth &&
-                checkVector.z < ScreenHeight)
+        public static bool inScreen(Vector3 V) {
+            if (V.x > 0.01f && 
+                V.y > 0.01f &&
+                V.x < ScreenWidth &&
+                V.y < ScreenHeight && 
+                V.z > 0.01f)
                 return true;
             return false;
         }
