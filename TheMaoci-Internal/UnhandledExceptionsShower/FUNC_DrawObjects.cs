@@ -8,7 +8,7 @@ namespace UnhandledException
 {
     class FUNC_DrawObjects
     {
-        private static RaycastHit raycastHit;
+
         #region - CORPSES -
         public static void DrawPDB(List<LootItem> _lContainer)
         {
@@ -436,6 +436,130 @@ namespace UnhandledException
                     }
                 }
                 #endregion
+            }
+        }
+        #endregion
+
+        #region - Exfils -
+        public static void DrawExfils(List<ExfiltrationPoint> _exfils)
+        {
+            if (_exfils == null)
+                return;
+            var e = _exfils.GetEnumerator();
+            var LabelSize = new GUIStyle { fontSize = 12 };
+            float deltaDistance = 25f;
+            float devLabel = 1f;
+            while (e.MoveNext())
+            {
+                try
+                {
+                    var item = e.Current;
+                    if (item != null)
+                    {
+                        if (Camera.main.WorldToScreenPoint(item.transform.position).z > 0.01f)
+                        { // do not display out of bounds items
+                            float distance = FastMath.FD(Camera.main.transform.position, item.transform.position);
+                            if (distance < Cons.Distances.Corpses)
+                            {
+                                Vector3 itemPosition = Camera.main.WorldToScreenPoint(item.transform.position);
+                                float[] boxSize = new float[2] { 3f, 1.5f };
+                                int FontSize = 12;
+                                FastMath.DistSizer(distance, ref FontSize, ref deltaDistance, ref devLabel);
+                                LabelSize.fontSize = FontSize;
+                                LabelSize.normal.textColor = new Color(.7f, .7f, .7f, .8f);
+                                string distanceText = $"{(int)distance}m";
+                                Vector2 sizeOfText = GUI.skin.GetStyle(distanceText).CalcSize(new GUIContent(distanceText));
+                                Drawing.P(
+                                    new Vector2(
+                                        itemPosition.x - boxSize[1],
+                                        (float)(Screen.height - itemPosition.y) - boxSize[1]
+                                        ),
+                                    Constants.Colors.Red,
+                                    boxSize[0]
+                                );
+                                Drawing.DrawShadow(
+                                    new Rect(
+                                        itemPosition.x - sizeOfText.x / 2f,
+                                        (float)Screen.height - itemPosition.y - deltaDistance - 1,
+                                        sizeOfText.x,
+                                        sizeOfText.y
+                                        ),
+                                    new GUIContent(distanceText),
+                                    LabelSize,
+                                    Constants.Colors.Red,
+                                    Constants.Colors.Black,
+                                    new Vector2(1f, 1f)
+                                );
+                            }
+                        }
+                    }
+                }
+                catch (NullReferenceException ex)
+                {
+                    ErrorHandler.Catch("Exfils", ex);
+                }
+            }
+        }
+        #endregion
+
+        #region - Containers -
+        public static void DrawContainers(List<GClass711> _lootableContainers)
+        {
+            if (_lootableContainers == null)
+                return;
+            var e = _lootableContainers.GetEnumerator();
+            var LabelSize = new GUIStyle { fontSize = 12 };
+            float deltaDistance = 25f;
+            float devLabel = 1f;
+            while (e.MoveNext())
+            {
+                try
+                {
+                    var item = e.Current;
+                    if (item != null)
+                    {
+                        if (Camera.main.WorldToScreenPoint(item.Position).z > 0.01f)
+                        { // do not display out of bounds items
+                            float distance = FastMath.FD(Camera.main.transform.position, item.Position);
+                            if (distance < Cons.Distances.Corpses)
+                            {
+                                Vector3 itemPosition = Camera.main.WorldToScreenPoint(item.Position);
+                                float[] boxSize = new float[2] { 3f, 1.5f };
+                                int FontSize = 12;
+                                FastMath.DistSizer(distance, ref FontSize, ref deltaDistance, ref devLabel);
+                                LabelSize.fontSize = FontSize;
+                                LabelSize.normal.textColor = new Color(.7f, .7f, .7f, .8f);
+                                string distanceText = $"{(int)distance}m";
+                                Vector2 sizeOfText = GUI.skin.GetStyle(distanceText).CalcSize(new GUIContent(distanceText));
+                                Drawing.P(
+                                    new Vector2(
+                                        itemPosition.x - boxSize[1],
+                                        (float)(Screen.height - itemPosition.y) - boxSize[1]
+                                        ),
+                                    Constants.Colors.Blue,
+                                    boxSize[0]
+                                );
+                                Drawing.DrawShadow(
+                                    new Rect(
+                                        itemPosition.x - sizeOfText.x / 2f,
+                                        (float)Screen.height - itemPosition.y - deltaDistance - 1,
+                                        sizeOfText.x,
+                                        sizeOfText.y
+                                        ),
+                                    new GUIContent(distanceText),
+                                    LabelSize,
+                                    Constants.Colors.Blue,
+                                    Constants.Colors.Black,
+                                    new Vector2(1f, 1f)
+                                );
+                            }
+                        }
+                    }
+                }
+                catch (NullReferenceException ex)
+                {
+                    ErrorHandler.Catch("Containers", ex);
+                }
             }
         }
         #endregion

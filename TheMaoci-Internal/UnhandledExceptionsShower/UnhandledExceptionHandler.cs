@@ -271,31 +271,43 @@ namespace UnhandledException
                              */
                                 try { 
                                     Cons.Main.tItems = new List<LootItem>();
-                                    Cons.Main.tContainers = new List<LootableContainer>();
+                                    //Cons.Main.tContainers = new List<LootPoint>();
+
                                 #region LootItems
-                                    List<LootItem>.Enumerator temporalItemsEnum = _GameWorld.LootItems.GetValuesEnumerator().GetEnumerator();
-                                    while (temporalItemsEnum.MoveNext())
+                                List<LootItem>.Enumerator temporalItemsEnum = _GameWorld.LootItems.GetValuesEnumerator().GetEnumerator();
+                                Dictionary<GInterface162, EFT.GameWorld.GStruct63>.Enumerator temporalContainers = _GameWorld.ItemOwners.GetEnumerator();
+
+                                while (temporalItemsEnum.MoveNext())
+                                {
+                                    LootItem temp = temporalItemsEnum.Current;
+                                    if (temp.GetType() == Types.LootItem || temp.GetType() == Types.ObservedLootItem)
                                     {
-                                        LootItem temp = temporalItemsEnum.Current;
-                                        if (temp.GetType() == Types.LootItem || temp.GetType() == Types.ObservedLootItem)
+                                        if(Cons.LootSearcher == "")
+                                            Cons.Main.tItems.Add(temp);
+                                        try
                                         {
-                                            if(Cons.LootSearcher == "")
-                                                Cons.Main.tItems.Add(temp);
-                                            try
+                                            if (temp.Item.ShortName.Localized().ToLower().IndexOf(Cons.LootSearcher) >= 0)
                                             {
-                                                if (temp.Item.ShortName.Localized().ToLower().IndexOf(Cons.LootSearcher) >= 0)
-                                                {
-                                                    Cons.Main.tItems.Add(temp);
-                                                }
+                                                Cons.Main.tItems.Add(temp);
                                             }
-                                            catch (Exception e) {}
                                         }
+                                        catch (Exception e) {}
                                     }
-                                    Cons.Main._lootItems = Cons.Main.tItems;
-                                    temporalItemsEnum.Dispose();
+                                }
+
+                                while (temporalContainers.MoveNext())
+                                {
+                                    GInterface162 temp1 = temporalContainers.Current.Key;
+                                    EFT.GameWorld.GStruct63 temp2 = temporalContainers.Current.Value;
+
+                                }
+                                // temporalContainersEnum
+                                Cons.Main._lootItems = Cons.Main.tItems;
+                                //Cons.Main._containers = Cons.Main.tContainers;
+                                temporalItemsEnum.Dispose();
                                 #endregion
                                 #region LootableContainers
-                                    LootableContainer[] temporalContainerArray = _GameWorld.GetComponents<LootableContainer>();
+                                    /*LootableContainer[] temporalContainerArray = _GameWorld.GetComponents<LootableContainer>();
                                     Cons.Main.tContainers = new List<LootableContainer>();
                                     for (int i = 0; i < temporalContainerArray.Length; i++)
                                     {
@@ -303,7 +315,7 @@ namespace UnhandledException
                                     }
                                     Cons.Main._containers = Cons.Main.tContainers;
                                     Cons.Main.tContainers.Clear();
-                                    temporalContainerArray = null; // incase cause im freak
+                                    temporalContainerArray = null; // incase cause im freak*/
                                 #endregion
                             }
                                 catch (Exception e)
@@ -312,33 +324,33 @@ namespace UnhandledException
                                 }
                             }
                         #endregion
-                        #region Exfiltrations
-                        if (Cons.Switches.Draw_Exfil)
-                        {
-                            /* Corspes scanner - scans for corpses in the map and creates a list of them
-                             * also contains RAM free things to not cause out of memory violations 0xc0...05
-                             * also online Corpses are diffrent then Offline Corpses and i check for both of them
-                             * EFT.Interactive.ObservedCorpse - as online corpse
-                             * EFT.Interactive.Corpse - as offline corpse
-                             */
-                            try
+                            #region Exfiltrations
+                            if (Cons.Switches.Draw_Exfil)
                             {
-                                if (Cons.Main._exfils == null)
+                                /* Corspes scanner - scans for corpses in the map and creates a list of them
+                                 * also contains RAM free things to not cause out of memory violations 0xc0...05
+                                 * also online Corpses are diffrent then Offline Corpses and i check for both of them
+                                 * EFT.Interactive.ObservedCorpse - as online corpse
+                                 * EFT.Interactive.Corpse - as offline corpse
+                                 */
+                                try
                                 {
-                                    Cons.Main.tExfils = new List<ExfiltrationPoint>();
-                                    for (int i = 0; i < _GameWorld.ExfiltrationController.ExfiltrationPoints.Length; i++)
+                                    if (Cons.Main._exfils == null)
                                     {
-                                        Cons.Main.tExfils.Add(_GameWorld.ExfiltrationController.ExfiltrationPoints[i]);
+                                        Cons.Main.tExfils = new List<ExfiltrationPoint>();
+                                        for (int i = 0; i < _GameWorld.ExfiltrationController.ExfiltrationPoints.Length; i++)
+                                        {
+                                            Cons.Main.tExfils.Add(_GameWorld.ExfiltrationController.ExfiltrationPoints[i]);
+                                        }
+                                        Cons.Main._exfils = Cons.Main.tExfils;
                                     }
-                                    Cons.Main._exfils = Cons.Main.tExfils;
+                                }
+                                catch (Exception e)
+                                {
+                                    ErrorHandler.Catch("Get_Exfils", e);
                                 }
                             }
-                            catch (Exception e)
-                            {
-                                ErrorHandler.Catch("Get_Exfils", e);
-                            }
-                        }
-                        #endregion
+                            #endregion
                         #region not used - loot pool map
                         /*
                          - Items Patterns located on maps - also displays invisible loot deleted from map and broken loot below maps
@@ -458,6 +470,31 @@ namespace UnhandledException
                         ErrorHandler.Catch("Draw_Corpses", e);
                     }
                 }
+                if (Cons.Switches.Draw_Exfil)
+                {
+                    enabled = enabled + "E";
+                    try
+                    {
+                        FUNC_DrawObjects.DrawExfils(Cons.Main._exfils);
+                    }
+                    catch (Exception e)
+                    {
+                        ErrorHandler.Catch("Draw_Exfils", e);
+                    }
+                }
+                if (Cons.Switches.Draw_Containers)
+                {
+                    enabled = enabled + "K";
+                    try
+                    {
+                       // FUNC_DrawObjects.DrawContainers(Cons.Main._containers);
+                    }
+                    catch (Exception e)
+                    {
+                        ErrorHandler.Catch("Draw_Containers", e);
+                    }
+                }
+
                 if (Cons.Switches.AimingAtNikita) 
                 {
                     enabled = enabled + "A";

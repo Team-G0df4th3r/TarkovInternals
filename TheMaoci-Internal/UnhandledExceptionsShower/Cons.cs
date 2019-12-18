@@ -163,7 +163,7 @@ namespace UnhandledException
             public static List<LootItem> _corpses;
             public static List<LootItem> _lootItems;
             public static List<ExfiltrationPoint> _exfils;
-            public static List<LootableContainer> _containers;
+            public static Dictionary<GInterface162, EFT.GameWorld.GStruct63>.Enumerator _containers;
 
             public static Player _localPlayer;
             public static List<Player> tPlayer;
@@ -171,7 +171,7 @@ namespace UnhandledException
             public static List<LootItem> tCorpses;
             public static List<LootItem> tItems;
             public static List<ExfiltrationPoint> tExfils;
-            public static List<LootableContainer> tContainers;
+            //public static List<LootItem> tContainers;
             public static void Clear()
             {
                 _players = null;
@@ -179,14 +179,14 @@ namespace UnhandledException
                 _corpses = null;
                 _lootItems = null;
                 _exfils = null;
-                _containers = null;
+                //_containers = null;
                 _localPlayer = null;
                 tPlayer = null;
                 tGrenades = null;
                 tCorpses = null;
                 tItems = null;
                 tExfils = null;
-                tContainers = null;
+                //tContainers = null;
             }
         }
         public class Buttons {

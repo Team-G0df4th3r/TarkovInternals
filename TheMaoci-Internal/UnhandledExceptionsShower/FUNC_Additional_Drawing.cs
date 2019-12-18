@@ -197,7 +197,7 @@ namespace UnhandledException
              */
             Color guiBackup = GUI.color;
             GUI.color = Color.black;
-            GUI.Box(new Rect(10f, 10f, 220f, 450f), "");
+            GUI.Box(new Rect(10f, 10f, 220f, 500f), "");
             GUI.color = Color.white;
             Vector2 initial = new Vector2(15f, 20f);
             Drawing.Label("Unknown.Exception.Handler", 0, 0, Constants.Locations.boxSize.box_200, Constants.Locations.boxSize.box_20);
@@ -211,22 +211,25 @@ namespace UnhandledException
             Drawing.CheckBox(ref Cons.Switches.DisplayHelpPlayerInfo, "Player.Data", 8);
             Drawing.CheckBox(ref Cons.Switches.StreamerMode, "Streamer.Mode", 9);
             Drawing.CheckBox(ref Cons.Switches.SnapLines, "Snap.Lines", 10);
-            Drawing.CheckBox(ref Cons.Switches.ShowBones, "Draw.Bones", 10, 1);
+             Drawing.CheckBox(ref Cons.Switches.ShowBones, "Draw.Bones", 10, 1);
             Drawing.CheckBox(ref Cons.Switches.AimingAtNikita, "Aim", 11);
-            Drawing.Label("FOV:" + Cons.Aim.AAN_FOV.ToString(), 12);
-            Drawing.HorizontalSlider(ref Cons.Aim.AAN_FOV, 1f, 25f, 13);
-            Drawing.Label("AimDist:" + Cons.Distances.Aim.ToString(), 14);
-            Drawing.HorizontalSlider(ref Cons.Distances.Aim, 100f, 1000f, 15);
-            Drawing.Label("LootDist:" + Cons.Distances.Loot.ToString(), 16);
-            Drawing.HorizontalSlider(ref Cons.Distances.Loot, 100f, 1000f, 17);
-            Drawing.Label("GrenadeDist:" + Cons.Distances.Grenade.ToString(), 18);
-            Drawing.HorizontalSlider(ref Cons.Distances.Grenade, 100f, 1000f, 19);
-            Drawing.Label("CorpseDist:" + Cons.Distances.Corpses.ToString(), 20);
-            Drawing.HorizontalSlider(ref Cons.Distances.Corpses, 100f, 1000f, 21);
+            Drawing.CheckBox(ref Cons.Switches.Draw_Exfil, "Exfils", 12);
+            Drawing.CheckBox(ref Cons.Switches.Draw_Containers, "Containers", 13);
+
+            Drawing.Label("FOV:" + Cons.Aim.AAN_FOV.ToString(), 15);
+            Drawing.HorizontalSlider(ref Cons.Aim.AAN_FOV, 1f, 25f, 16);
+            Drawing.Label("AimDist:" + Cons.Distances.Aim.ToString(), 17);
+            Drawing.HorizontalSlider(ref Cons.Distances.Aim, 100f, 1000f, 18);
+            Drawing.Label("LootDist:" + Cons.Distances.Loot.ToString(), 19);
+            Drawing.HorizontalSlider(ref Cons.Distances.Loot, 100f, 1000f, 20);
+            Drawing.Label("GrenadeDist:" + Cons.Distances.Grenade.ToString(), 21);
+            Drawing.HorizontalSlider(ref Cons.Distances.Grenade, 100f, 1000f, 22);
+            Drawing.Label("CorpseDist:" + Cons.Distances.Corpses.ToString(), 23);
+            Drawing.HorizontalSlider(ref Cons.Distances.Corpses, 100f, 1000f, 24);
             //i know what im doing
             Drawing.CheckBox(ref Cons.Switches.IKnowWhatImDoing, "IKWID", 1, 2);
-            Drawing.Button(ref Cons.Buttons.Ma0c1, "Maoci", 2, 2);
-            Drawing.Button(ref Cons.Buttons.Niger, "Niger", 3, 2);
+            Drawing.Button(ref Cons.Buttons.Ma0c1, "Maoci", 4, 2);
+            //Drawing.Button(ref Cons.Buttons.Niger, "Niger", 3, 2);
             // Second column indicates with column = 1
             if (!Cons.Switches.Draw_Loot)
                 Drawing.TextField(ref Cons.LootSearcher, 5, 1);
