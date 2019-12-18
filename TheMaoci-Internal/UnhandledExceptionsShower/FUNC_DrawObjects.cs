@@ -8,7 +8,7 @@ namespace UnhandledException
 {
     class FUNC_DrawObjects
     {
-        private RaycastHit raycastHit;
+        private static RaycastHit raycastHit;
         #region - CORPSES -
         public static void DrawPDB(List<LootItem> _lContainer)
         {
@@ -215,6 +215,7 @@ namespace UnhandledException
         #region - Player ESP -
         public static void DrawPlayers(List<Player> _PlayersList, Player LocalPlayer)
         {
+            #region [INITIALS] - to skip data overflow (incase)
             float deltaDistance = 25f;
             string playerDisplayName = "";
             float devLabel = 1f;
@@ -225,6 +226,8 @@ namespace UnhandledException
             float distancesAxisY_1 = 0;
             float distancesAxisY_2 = 0;
             Color Backup;
+            #endregion
+            
             foreach (Player player in _PlayersList)
             {
                 float dTO = FastMath.FD(Camera.main.transform.position, player.Transform.position);
@@ -243,9 +246,9 @@ namespace UnhandledException
                 distancesAxisY_0 = deltaDistance + 10f;
                 distancesAxisY_1 = distancesAxisY_0 + FontSize + 1;
                 distancesAxisY_2 = distancesAxisY_1 + FontSize + 1;
-
                 Status = ((int)(player.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Common).Current)).ToString() + " hp"; // Health here 
-                #region BONE ESP
+
+                #region [BONE-ESP]
                 if (Cons.Switches.ShowBones)
                 {
                     if (dTO < 100f)
@@ -264,11 +267,8 @@ namespace UnhandledException
                         var PLRBowVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 112));
                         var PLLKneeVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 17));
                         var PLRKneeVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 22));
-                        if (Cons.inScreen(PLNeckVect))
-                        {
                             Backup = GUI.color;
                             GUI.color = Color.white;
-
                             if (Cons.inScreen(PLNeckVect) && Cons.inScreen(PLCentrVect))
                                 Drawing.DrawLine(new Vector2(PLNeckVect.x, (float)Screen.height - PLNeckVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), Color.white, 1f);
                             if (Cons.inScreen(PLShVect) && Cons.inScreen(PLLBowVect))
@@ -289,9 +289,7 @@ namespace UnhandledException
                                 Drawing.DrawLine(new Vector2(PLLKneeVect.x, (float)Screen.height - PLLKneeVect.y), new Vector2(PLLFootVect.x, (float)Screen.height - PLLFootVect.y), Color.white, 1f);
                             if (Cons.inScreen(PLRKneeVect) && Cons.inScreen(PLRFootVect))
                                 Drawing.DrawLine(new Vector2(PLRKneeVect.x, (float)Screen.height - PLRKneeVect.y), new Vector2(PLRFootVect.x, (float)Screen.height - PLRFootVect.y), Color.white, 1f);
-
                             GUI.color = Backup;
-                        }
                     }
                 }
                 #endregion
@@ -336,12 +334,18 @@ namespace UnhandledException
                     GUI.color = Backup;
                 }
                 #endregion
-                #region Prepare Main Texts
+                #region [VISIBILITY-CHECK]
+                string isVisible = "";
+                if (Raycast.BodyRaycastCheck(player.gameObject, pHeadVector, pHeadVector, pHeadVector, pHeadVector, pHeadVector)) {
+                    isVisible = "+";
+                }
+                #endregion
+                #region [INIT-Texts]
                 string nameNickname = $"{playerDisplayName}";
-                string playerStatus = $"[{(int)dTO}m] {Status}";
+                string playerStatus = $"{isVisible}[{(int)dTO}m] {Status}";
                 string WeaponName = "";
                 #endregion
-                #region Try to decode weapon name
+                #region [TRY-DecodeWeaponName]
                     try
                     {
                         WeaponName = player.Weapon.ShortName.Localized();
@@ -377,7 +381,6 @@ namespace UnhandledException
                 #region Slot 1 - Status (distance, health)
                 Vector2 vector_playerStatus = GUI.skin.GetStyle(playerStatus).CalcSize(new GUIContent(playerStatus));
                 float player_TextWidth = (devLabel == 1f) ? vector_playerStatus.x : (vector_playerStatus.x / devLabel);
-                //GUI.Label(new Rect(pHeadVector.x - player_TextWidth / 2f, (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY[1], player_TextWidth, vector_playerStatus.y), playerStatus, LabelSize);
                 GUIContent content = new GUIContent(playerStatus);
                 Drawing.DrawShadow(
                     new Rect(
@@ -417,7 +420,7 @@ namespace UnhandledException
                 if (Cons.Switches.SnapLines && player != Cons.Main._localPlayer)
                 {
                     Vector3 w2s = Camera.main.WorldToScreenPoint(player.PlayerBones.RootJoint.position);
-                    if (!(w2s.z < 0.01f))
+                    if (Cons.inScreen_SnapLines(w2s))
                     {
                         Drawing.DrawLine(
                             new Vector2(
@@ -436,39 +439,6 @@ namespace UnhandledException
             }
         }
         #endregion
-
-        public static Vector3 GetHandsPos()
-        {
-            if (Cons.Main._localPlayer == null)
-            {
-                return Vector3.zero;
-            }
-            Player.FirearmController firearmController = Cons.Main._localPlayer.HandsController as Player.FirearmController;
-            if (firearmController == null)
-            {
-                return Vector3.zero;
-            }
-            return firearmController.Fireport.position + Camera.main.transform.forward * 1f; //fireport 
-        }
-        private bool BodyRaycastCheck(GameObject obj, Vector3 pHead, Vector3 pBody, Vector3 pThorax, Vector3 pRLeg, Vector3 pLLeg)
-        {
-            RaycastHit raycastHitHead;
-
-            var HandsPos = GetHandsPos(); //either viewport or fireport (fireport tested & working)
-
-            if ((Physics.Linecast(HandsPos, pHead, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject) ||
-                (Physics.Linecast(HandsPos, pBody, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject) ||
-                (Physics.Linecast(HandsPos, pThorax, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject) ||
-                (Physics.Linecast(HandsPos, pRLeg, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject) ||
-                (Physics.Linecast(HandsPos, pLLeg, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
     }
 }
 #pragma warning disable CS0168

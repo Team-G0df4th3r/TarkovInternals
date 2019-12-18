@@ -174,7 +174,7 @@ namespace UnhandledException
                 #region Error Logs Enabled Display Message
                 if (Debug.unityLogger.logEnabled == true)
                 {
-                    Drawing.Text(new Rect(250f, Cons.ScreenHeight - 25f, 200f, 20f), "disable logger!",Constants.Colors.White);
+                    Drawing.Text(new Rect(250f, Cons.ScreenHeight.Full - 25f, 200f, 20f), "disable logger!",Constants.Colors.White);
                 }
                 #endregion
             }

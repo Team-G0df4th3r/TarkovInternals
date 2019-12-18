@@ -162,22 +162,31 @@ namespace UnhandledException
             public static List<Throwable> _grenades;
             public static List<LootItem> _corpses;
             public static List<LootItem> _lootItems;
+            public static List<ExfiltrationPoint> _exfils;
+            public static List<LootableContainer> _containers;
+
             public static Player _localPlayer;
             public static List<Player> tPlayer;
             public static List<Throwable> tGrenades;
             public static List<LootItem> tCorpses;
             public static List<LootItem> tItems;
+            public static List<ExfiltrationPoint> tExfils;
+            public static List<LootableContainer> tContainers;
             public static void Clear()
             {
                 _players = null;
                 _grenades = null;
                 _corpses = null;
                 _lootItems = null;
+                _exfils = null;
+                _containers = null;
                 _localPlayer = null;
                 tPlayer = null;
                 tGrenades = null;
                 tCorpses = null;
                 tItems = null;
+                tExfils = null;
+                tContainers = null;
             }
         }
         public class Buttons {
@@ -190,6 +199,8 @@ namespace UnhandledException
             public static bool Draw_Corpses = false;
             public static bool Draw_Grenades = false;
             public static bool Draw_Loot = false;
+            public static bool Draw_Exfil = false;
+            public static bool Draw_Containers = false;
             public static bool Draw_Crosshair = false;
             public static bool Display_HelpInfo = false;
             public static bool Switch_Colors = false;
@@ -247,10 +258,18 @@ namespace UnhandledException
                 dist_250_1000 = 0;
             }
         }
-
-        public static string LootSearcher = "";
-        public static int ScreenWidth = Screen.width;
-        public static int ScreenHeight = Screen.height;
+        
+        public static string LootSearcher = ""; // variable used for searches loot
+        public class ScreenWidth {
+            public static int Full = Screen.width;
+            public static int Half = (int)(Full / 2);
+        }
+        public class ScreenHeight {
+            public static int Full = Screen.height;
+            public static int Half = (int)(Full / 2);
+        }
+        //public static int ScreenWidth = Screen.width;
+        //public static int ScreenHeight = Screen.height;
         public static string MyDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         public static string[] HelpMenuTexts = new string[10] {
                 "Help Menu: (Turn off/on 'Home' key)",
@@ -295,8 +314,16 @@ namespace UnhandledException
         public static bool inScreen(Vector3 V) {
             if (V.x > 0.01f && 
                 V.y > 0.01f &&
-                V.x < ScreenWidth &&
-                V.y < ScreenHeight && 
+                V.x < ScreenWidth.Full &&
+                V.y < ScreenHeight.Full && 
+                V.z > 0.01f)
+                return true;
+            return false;
+        }
+        public static bool inScreen_SnapLines(Vector3 V) {
+            // properly display snap lines :)
+            if (V.y > 0.01f &&
+                V.y < (ScreenHeight.Full - 5f) &&
                 V.z > 0.01f)
                 return true;
             return false;

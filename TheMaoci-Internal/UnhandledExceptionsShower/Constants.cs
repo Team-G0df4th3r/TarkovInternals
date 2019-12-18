@@ -123,8 +123,8 @@ namespace UnhandledException
                     InitialHealthBox.x = CalcSizeW(InitialHealthBox.x);
                     InitialHealthBox.y = CalcSizeH(InitialHealthBox.y);
             }
-            private static float CalcSizeW(float size) { return Cons.ScreenWidth * size / 1920; }
-            private static float CalcSizeH(float size) { return Cons.ScreenHeight * size / 1080; }
+            private static float CalcSizeW(float size) { return Cons.ScreenWidth.Full * size / 1920; }
+            private static float CalcSizeH(float size) { return Cons.ScreenHeight.Full * size / 1080; }
         }
     }
 }
