@@ -138,9 +138,7 @@ namespace UnhandledException
                             try
                             {
                                 _GameWorld = FindObjectOfType<GameWorld>();
-                                
-                                PreloaderUI MyShitSession = PreloaderUI.Instance;
-                                MyShitSession.SetSessionId("LWIAY");
+                                MonoBehaviourSingleton<PreloaderUI>.Instance.SetSessionId("LWIAY");
                             }
                             catch (Exception e)
                             {
