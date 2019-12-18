@@ -95,6 +95,7 @@ namespace UnhandledException
         }
         #endregion
 
+        float LWIAY_timer = 0f;
         #region [MAIN] - Update
         private void Update()
         {
@@ -125,11 +126,16 @@ namespace UnhandledException
                 // make sure scene is map scene and is loaded and ready
                 if (Cons.Main.G_Scene.isInMatch() && Cons.Main.G_Scene.isActiveAndLoaded())
                 {
-                    
-                    // delay start of script for 20 seconds on start of match cause match is starting way before deploy is displaying - it will cause less errors displaying
-                    // lower time from 20f if its holdup too long
+                if (LWIAY_timer < Time.time)
+                {
+                    MonoBehaviourSingleton<PreloaderUI>.Instance.SetSessionId("LWIAY");
+                    LWIAY_timer = Time.time + 1f;
+                }
+                // delay start of script for 20 seconds on start of match cause match is starting way before deploy is displaying - it will cause less errors displaying
+                // lower time from 20f if its holdup too long
                     if (timestamp == 0f)
                         timestamp = Time.time + 20f;
+
                     if (Time.time > timestamp)
                     {
                         if (_GameWorld == null)
@@ -138,7 +144,6 @@ namespace UnhandledException
                             try
                             {
                                 _GameWorld = FindObjectOfType<GameWorld>();
-                                MonoBehaviourSingleton<PreloaderUI>.Instance.SetSessionId("LWIAY");
                             }
                             catch (Exception e)
                             {
@@ -147,6 +152,7 @@ namespace UnhandledException
                         }
                         else
                         {
+                            
                             // LiquidAce and his idea of grabbing data directly from GameWorld cause its better and less retarded - Thanks Mate
                             #region Players
                             if (Cons.Switches.Draw_ESP)
@@ -275,7 +281,6 @@ namespace UnhandledException
 
                                 #region LootItems
                                 List<LootItem>.Enumerator temporalItemsEnum = _GameWorld.LootItems.GetValuesEnumerator().GetEnumerator();
-                                Dictionary<GInterface162, EFT.GameWorld.GStruct63>.Enumerator temporalContainers = _GameWorld.ItemOwners.GetEnumerator();
 
                                 while (temporalItemsEnum.MoveNext())
                                 {
@@ -295,37 +300,36 @@ namespace UnhandledException
                                     }
                                 }
 
-                                while (temporalContainers.MoveNext())
-                                {
-                                    GInterface162 temp1 = temporalContainers.Current.Key;
-                                    EFT.GameWorld.GStruct63 temp2 = temporalContainers.Current.Value;
-
-                                }
                                 // temporalContainersEnum
                                 Cons.Main._lootItems = Cons.Main.tItems;
-                                //Cons.Main._containers = Cons.Main.tContainers;
                                 temporalItemsEnum.Dispose();
                                 #endregion
                                 #region LootableContainers
-                                    /*LootableContainer[] temporalContainerArray = _GameWorld.GetComponents<LootableContainer>();
-                                    Cons.Main.tContainers = new List<LootableContainer>();
-                                    for (int i = 0; i < temporalContainerArray.Length; i++)
-                                    {
-                                        Cons.Main.tContainers.Add(temporalContainerArray[i]);
-                                    }
-                                    Cons.Main._containers = Cons.Main.tContainers;
-                                    Cons.Main.tContainers.Clear();
-                                    temporalContainerArray = null; // incase cause im freak*/
+
+                                /*LootableContainer[] temporalContainerArray = _GameWorld.GetComponents<LootableContainer>();
+                                Cons.Main.tContainers = new List<LootableContainer>();
+                                for (int i = 0; i < temporalContainerArray.Length; i++)
+                                {
+                                    Cons.Main.tContainers.Add(temporalContainerArray[i]);
+                                }
+                                Cons.Main._containers = Cons.Main.tContainers;
+                                Cons.Main.tContainers.Clear();
+                                temporalContainerArray = null; // incase cause im freak*/
                                 #endregion
                             }
-                                catch (Exception e)
+                            catch (Exception e)
                                 {
                                     ErrorHandler.Catch("Get_LootItems", e);
                                 }
                             }
+                        if (Cons.Switches.Draw_Containers)
+                        {
+                            Cons.Main._containers = _GameWorld.ItemOwners.GetEnumerator();
+                        }
+
                         #endregion
-                            #region Exfiltrations
-                            if (Cons.Switches.Draw_Exfil)
+                        #region Exfiltrations
+                        if (Cons.Switches.Draw_Exfil)
                             {
                                 /* Corspes scanner - scans for corpses in the map and creates a list of them
                                  * also contains RAM free things to not cause out of memory violations 0xc0...05
@@ -487,7 +491,7 @@ namespace UnhandledException
                     enabled = enabled + "K";
                     try
                     {
-                       // FUNC_DrawObjects.DrawContainers(Cons.Main._containers);
+                       FUNC_DrawObjects.DrawContainers(Cons.Main._containers);
                     }
                     catch (Exception e)
                     {
@@ -522,7 +526,8 @@ namespace UnhandledException
                     );
                 }
                 //SetLODToLow(); // TODO for testing only
-                try { 
+                try
+                { 
                     FUNC.OnGUI.FullBright();
                 }
                 catch (Exception e)

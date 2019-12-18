@@ -503,11 +503,9 @@ namespace UnhandledException
         #endregion
 
         #region - Containers -
-        public static void DrawContainers(List<GClass711> _lootableContainers)
+        public static void DrawContainers(Dictionary<GInterface162, EFT.GameWorld.GStruct63>.Enumerator _lootableContainers)
         {
-            if (_lootableContainers == null)
-                return;
-            var e = _lootableContainers.GetEnumerator();
+            var e = _lootableContainers;
             var LabelSize = new GUIStyle { fontSize = 12 };
             float deltaDistance = 25f;
             float devLabel = 1f;
@@ -515,21 +513,22 @@ namespace UnhandledException
             {
                 try
                 {
-                    var item = e.Current;
-                    if (item != null)
+                    var Container = e.Current.Key;
+                    var Location = e.Current.Value;
+                    if (Container.RootItem.IsContainer)
                     {
-                        if (Camera.main.WorldToScreenPoint(item.Position).z > 0.01f)
+                        if (Camera.main.WorldToScreenPoint(Location.Transform.position).z > 0.01f)
                         { // do not display out of bounds items
-                            float distance = FastMath.FD(Camera.main.transform.position, item.Position);
+                            float distance = FastMath.FD(Camera.main.transform.position, Location.Transform.position);
                             if (distance < Cons.Distances.Corpses)
                             {
-                                Vector3 itemPosition = Camera.main.WorldToScreenPoint(item.Position);
+                                Vector3 itemPosition = Camera.main.WorldToScreenPoint(Location.Transform.position);
                                 float[] boxSize = new float[2] { 3f, 1.5f };
                                 int FontSize = 12;
                                 FastMath.DistSizer(distance, ref FontSize, ref deltaDistance, ref devLabel);
                                 LabelSize.fontSize = FontSize;
                                 LabelSize.normal.textColor = new Color(.7f, .7f, .7f, .8f);
-                                string distanceText = $"{(int)distance}m";
+                                string distanceText = $"{(int)distance}m {Container.RootItem.ShortName.Localized()}";
                                 Vector2 sizeOfText = GUI.skin.GetStyle(distanceText).CalcSize(new GUIContent(distanceText));
                                 Drawing.P(
                                     new Vector2(
