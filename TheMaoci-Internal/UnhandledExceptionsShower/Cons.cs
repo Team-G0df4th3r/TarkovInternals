@@ -52,8 +52,15 @@ namespace UnhandledException
                     RecoilIntensity = (int)(Main._localPlayer.ProceduralWeaponAnimation.Shootingg.Intensity * 100);
                 }
                 public static void NoRecoil() {
-                    Main._localPlayer.ProceduralWeaponAnimation.Mask = EFT.Animations.EProceduralAnimationMask.MotionReaction;
-                    //Main._localPlayer.ProceduralWeaponAnimation.
+                    if (Main._localPlayer != null)
+                    {
+                        Main._localPlayer.ProceduralWeaponAnimation.Mask = EFT.Animations.EProceduralAnimationMask.DrawDown;
+                        Main._localPlayer.ProceduralWeaponAnimation.AimSwayMax = new Vector3(0f, 0f, 0f);
+                        Main._localPlayer.ProceduralWeaponAnimation.AimSwayMin = new Vector3(0f, 0f, 0f);
+                        Main._localPlayer.ProceduralWeaponAnimation.AimSwayStartsThreshold = 0f; 
+                        Main._localPlayer.ProceduralWeaponAnimation.AimSwayMaxThreshold = 0f;
+                    }
+                    // Main._localPlayer.ProceduralWeaponAnimation.
                 }
 
                 public static string CurrentAmmo;
@@ -266,7 +273,8 @@ namespace UnhandledException
             }
         }
         
-        public static string LootSearcher = ""; // variable used for searches loot
+        public static string LootSearcher = ""; // variable used for searches loop
+        public static Vector3 AimPoint = Vector3.zero;
         public class ScreenWidth {
             public static int Full = Screen.width;
             public static int Half = (int)(Full / 2);
@@ -290,7 +298,6 @@ namespace UnhandledException
                 "'Num 9' - Full Bright",
                 "'Insert' - GUI Menu"
             };
-
         public static string Health(Player LocalPlayer, EFT.HealthSystem.EBodyPart bodypart)
         { // not used now but will use that later maybe
             int health_curr = (int)LocalPlayer.HealthController.GetBodyPartHealth(bodypart).Current;

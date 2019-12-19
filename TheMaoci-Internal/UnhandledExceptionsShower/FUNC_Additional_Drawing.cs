@@ -178,6 +178,12 @@ namespace UnhandledException
                 }
                 #endregion
             }
+            if (Cons.Main._localPlayer != null)
+            {
+                Drawing.Text(new Rect(1f, 350f, 200f, 20f), Cons.Main._localPlayer.ProceduralWeaponAnimation.Mask.ToString(), Color.white);
+                Drawing.Text(new Rect(1f, 370f, 200f, 20f), "x:" + Camera.main.WorldToScreenPoint(Cons.AimPoint).x.ToString() + " y:" + Camera.main.WorldToScreenPoint(Cons.AimPoint).y.ToString(), Color.white);
+                Drawing.Text(new Rect(1f, 390f, 200f, 20f), "x:" + Cons.AimPoint.x.ToString() + " y:" + Cons.AimPoint.y.ToString(), Color.white);
+            }
             #region draw crosshair
             if (Cons.Switches.Draw_Crosshair)
             {
@@ -185,6 +191,7 @@ namespace UnhandledException
                 {
                     Drawing.P(new Vector2(Screen.width / 2f - 1f, Screen.height / 2f - 1f), Color.yellow, 2f);
                 }
+                Drawing.P(new Vector2(Camera.main.WorldToScreenPoint(Cons.AimPoint).x - 1f, Screen.height - Camera.main.WorldToScreenPoint(Cons.AimPoint).y - 1f), Color.green, 2f);
             }
             #endregion
         }

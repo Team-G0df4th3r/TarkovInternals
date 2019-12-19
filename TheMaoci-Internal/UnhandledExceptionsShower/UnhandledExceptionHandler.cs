@@ -134,9 +134,13 @@ namespace UnhandledException
                         LWIAY_timer = Time.time + 1f;
                     }
                 }
+                if (Cons.Switches.StreamerMode)
+                {
+                    MonoBehaviourSingleton<PreloaderUI>.Instance.SetStreamMode(true); // this should disable this stupid text ;)
+                }
                 // delay start of script for 20 seconds on start of match cause match is starting way before deploy is displaying - it will cause less errors displaying
                 // lower time from 20f if its holdup too long
-                    if (timestamp == 0f)
+                if (timestamp == 0f)
                         timestamp = Time.time + 20f;
 
                     if (Time.time > timestamp)
@@ -147,10 +151,7 @@ namespace UnhandledException
                             try
                             {
                                 _GameWorld = FindObjectOfType<GameWorld>();
-                                if (Cons.Switches.StreamerMode)
-                                {
-                                    MonoBehaviourSingleton<PreloaderUI>.Instance.SetStreamMode(true); // this should disable this stupid text ;)
-                                }
+                                
                             }
                             catch (Exception e)
                             {
@@ -185,7 +186,6 @@ namespace UnhandledException
                                     {
                                         if (p.HealthController.IsAlive)
                                         {
-
                                             Cons.AliveCount.All++;
                                             float distance = FastMath.FD(Camera.main.transform.position, p.Transform.position);
                                             if (distance > 0f && distance <= 25f)
@@ -321,7 +321,7 @@ namespace UnhandledException
                             }
 
                         #endregion
-                        #region Exfiltrations
+                            #region Exfiltrations
                         if (Cons.Switches.Draw_Exfil)
                             {
                                 /* Corspes scanner - scans for corpses in the map and creates a list of them
@@ -347,8 +347,8 @@ namespace UnhandledException
                                     ErrorHandler.Catch("Get_Exfils", e);
                                 }
                             }
-                            #endregion
-                        #region not used - loot pool map
+                        #endregion
+                            #region not used - loot pool map
                         /*
                          - Items Patterns located on maps - also displays invisible loot deleted from map and broken loot below maps
                          if (Switches.Draw_Loot)
@@ -363,6 +363,10 @@ namespace UnhandledException
                          */
                         #endregion
                         // recoil reducer (reduces recoil 50% - 100%)
+                        Cons.LocalPlayer.Weapon.NoRecoil();
+                        if (Cons.Main._localPlayer != null)
+                            Cons.AimPoint = Raycast.BarrelRaycast().point;
+
                         //FUNC.Update.RecoilReducer(); // incase we dont use that so we can leave it like this for now
                         try
                         { 
