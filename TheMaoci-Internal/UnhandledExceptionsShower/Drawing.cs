@@ -23,7 +23,6 @@ namespace UnhandledException
             GUI.color = savedColor;
         }
         #endregion
-
         #region Drawing Shadowed Text
         public static void Text(Rect rect, string content, Color txtColor)
         {
@@ -44,7 +43,6 @@ namespace UnhandledException
         }
 
         #endregion
-
         #region DrawLine - new with overloads
 
         public static void DrawLine(Rect rect) { DrawLine(rect, GUI.contentColor, 1.0f); }
@@ -96,7 +94,6 @@ namespace UnhandledException
             GUI.color = savedColor;
         }
         #endregion
-
         #region DrawBox
         public static void DrawBox(float x, float y, float w, float h, Color color)
         {

@@ -20,7 +20,6 @@ namespace UnhandledException
             if (Cons.AliveCount.dist_250_1000 != 0)
                 Drawing.Text(new Rect(Constants.Locations.Alive.d250_1000.x, Constants.Locations.Alive.d250_1000.y, Constants.Locations.boxSize.box_200, Constants.Locations.boxSize.box_20), "250-1000m:" + (Cons.AliveCount.dist_250_1000).ToString(), Constants.Colors.White);
         }
-
         private static void DrawRecoil() {
             if (Cons.LocalPlayer.Weapon.RecoilIntensity != 100)
             {
@@ -139,7 +138,6 @@ namespace UnhandledException
                 Constants.Colors.White
             );
         }
-
         public static void HelpMenu()
         {
             for (int i = 0; i < Cons.HelpMenuTexts.Length; i++)
@@ -156,7 +154,6 @@ namespace UnhandledException
                     );
             }
         }
-
         public static void DisplayMenu()
         {
             if (Cons.Switches.DisplayPlayerInfo)
@@ -192,7 +189,6 @@ namespace UnhandledException
             }
             #endregion
         }
-
         public static void DrawHUDMenu()
         {
             /* 

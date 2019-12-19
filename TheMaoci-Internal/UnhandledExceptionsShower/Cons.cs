@@ -272,7 +272,6 @@ namespace UnhandledException
                 dist_250_1000 = 0;
             }
         }
-        
         public static string LootSearcher = ""; // variable used for searches loop
         public static Vector3 AimPoint = Vector3.zero;
         public class ScreenWidth {
@@ -307,7 +306,6 @@ namespace UnhandledException
             }
             return "n/a";
         }
-
         public static Vector3 SkeletonBonePos(Diz.Skinning.Skeleton sko, int id)
         {
             return sko.Bones.ElementAt(id).Value.position;
@@ -342,6 +340,5 @@ namespace UnhandledException
                 return true;
             return false;
         }
-
     }
 }

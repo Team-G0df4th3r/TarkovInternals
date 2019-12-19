@@ -209,7 +209,7 @@ namespace UnhandledException
                                             {
                                                 Cons.AliveCount.dist_250_1000++;
                                             }
-                                            if (distance > 1f && distance <= Cons.Distances.Players && Cons.inScreen(Camera.main.WorldToScreenPoint(p.Transform.position)))
+                                            if (distance > 1f && distance <= Cons.Distances.Players && Cons.inScreen_SnapLines(Camera.main.WorldToScreenPoint(p.Transform.position)))
                                             {
                                                 Cons.Main.tPlayer.Add(p);
                                             }

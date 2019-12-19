@@ -86,8 +86,6 @@ namespace UnhandledException
                     var item = e.Current;
                     if (item != null)
                     {
-                        //if (!item.isActiveAndEnabled && !item.IsVisibilityEnabled) // this is some BSG bullshit
-                            //continue;
                         if (Camera.main.WorldToScreenPoint(item.transform.position).z > 0.01f)
                         { // do not display out of bounds items
                             float distance = FastMath.FD(Camera.main.transform.position, item.transform.position);
@@ -99,7 +97,6 @@ namespace UnhandledException
                                 FastMath.DistSizer(distance, ref FontSize, ref deltaDistance, ref devLabel);
                                 LabelSize.fontSize = FontSize;
                                 LabelSize.normal.textColor = Constants.Colors.ESP.items;
-                                //item.TemplateId == "5909e4b686f7747f5b744fa4"; // dead Scav Body
                                 string distanceText = $"{(int)distance}m";
                                 string DebugText = "";
                                 try
@@ -213,6 +210,109 @@ namespace UnhandledException
         #endregion
 
         #region - Player ESP -
+        private class ESP {
+            public enum PlayerType {
+                Scav,
+                PlayerScav,
+                Player,
+                TeamMate,
+                Boss
+            }
+            public static void PlayerBones(float distance, Player player) {
+                if (distance < 100f)
+                {
+                    var pRPVect = Camera.main.WorldToScreenPoint(player.PlayerBones.RightPalm.position);
+                    var PLPVect = Camera.main.WorldToScreenPoint(player.PlayerBones.LeftPalm.position);
+                    var PLShVect = Camera.main.WorldToScreenPoint(player.PlayerBones.LeftShoulder.position);
+                    var PLRShVect = Camera.main.WorldToScreenPoint(player.PlayerBones.RightShoulder.position);
+                    var PLNeckVect = Camera.main.WorldToScreenPoint(player.PlayerBones.Neck.position);
+                    var PLCentrVect = Camera.main.WorldToScreenPoint(player.PlayerBones.Pelvis.position);
+                    var PLRTighVect = Camera.main.WorldToScreenPoint(player.PlayerBones.RightThigh2.position);
+                    var PLLTighVect = Camera.main.WorldToScreenPoint(player.PlayerBones.LeftThigh2.position);
+                    var PLRFootVect = Camera.main.WorldToScreenPoint(player.PlayerBones.KickingFoot.position);
+                    var PLLFootVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 18));
+                    var PLLBowVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 91));
+                    var PLRBowVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 112));
+                    var PLLKneeVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 17));
+                    var PLRKneeVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 22));
+                    Color Backup = GUI.color;
+                    GUI.color = Color.white;
+                    if (Cons.inScreen(PLNeckVect) && Cons.inScreen(PLCentrVect))
+                        Drawing.DrawLine(new Vector2(PLNeckVect.x, (float)Screen.height - PLNeckVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), Color.white, 1f);
+                    if (Cons.inScreen(PLShVect) && Cons.inScreen(PLLBowVect))
+                        Drawing.DrawLine(new Vector2(PLShVect.x, (float)Screen.height - PLShVect.y), new Vector2(PLLBowVect.x, (float)Screen.height - PLLBowVect.y), Color.white, 1f);
+                    if (Cons.inScreen(PLRShVect) && Cons.inScreen(PLRBowVect))
+                        Drawing.DrawLine(new Vector2(PLRShVect.x, (float)Screen.height - PLRShVect.y), new Vector2(PLRBowVect.x, (float)Screen.height - PLRBowVect.y), Color.white, 1f);
+                    if (Cons.inScreen(PLLBowVect) && Cons.inScreen(PLPVect))
+                        Drawing.DrawLine(new Vector2(PLLBowVect.x, (float)Screen.height - PLLBowVect.y), new Vector2(PLPVect.x, (float)Screen.height - PLPVect.y), Color.white, 1f);
+                    if (Cons.inScreen(PLRBowVect) && Cons.inScreen(pRPVect))
+                        Drawing.DrawLine(new Vector2(PLRBowVect.x, (float)Screen.height - PLRBowVect.y), new Vector2(pRPVect.x, (float)Screen.height - pRPVect.y), Color.white, 1f);
+                    if (Cons.inScreen(PLRShVect) && Cons.inScreen(PLShVect))
+                        Drawing.DrawLine(new Vector2(PLRShVect.x, (float)Screen.height - PLRShVect.y), new Vector2(PLShVect.x, (float)Screen.height - PLShVect.y), Color.white, 1f);
+                    if (Cons.inScreen(PLLKneeVect) && Cons.inScreen(PLCentrVect))
+                        Drawing.DrawLine(new Vector2(PLLKneeVect.x, (float)Screen.height - PLLKneeVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), Color.white, 1f);
+                    if (Cons.inScreen(PLRKneeVect) && Cons.inScreen(PLCentrVect))
+                        Drawing.DrawLine(new Vector2(PLRKneeVect.x, (float)Screen.height - PLRKneeVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), Color.white, 1f);
+                    if (Cons.inScreen(PLLKneeVect) && Cons.inScreen(PLLFootVect))
+                        Drawing.DrawLine(new Vector2(PLLKneeVect.x, (float)Screen.height - PLLKneeVect.y), new Vector2(PLLFootVect.x, (float)Screen.height - PLLFootVect.y), Color.white, 1f);
+                    if (Cons.inScreen(PLRKneeVect) && Cons.inScreen(PLRFootVect))
+                        Drawing.DrawLine(new Vector2(PLRKneeVect.x, (float)Screen.height - PLRKneeVect.y), new Vector2(PLRFootVect.x, (float)Screen.height - PLRFootVect.y), Color.white, 1f);
+                    GUI.color = Backup;
+                }
+            }
+            public static Color PlayerColor(PlayerType playerType) {
+                switch (playerType) {
+                    case PlayerType.Scav:
+                        return Constants.Colors.ESP.npc;
+                    case PlayerType.PlayerScav:
+                        return Constants.Colors.ESP.scav_player;
+                    case PlayerType.Player:
+                        return Constants.Colors.ESP.player[1];
+                    case PlayerType.Boss:
+                        return Constants.Colors.ESP.npc;
+                    case PlayerType.TeamMate:
+                        return Constants.Colors.ESP.group;
+                    default:
+                        return Constants.Colors.ESP.npc;
+                }
+            }
+            public static string PlayerName(Player player, ref PlayerType playerType) {
+                if (player.Profile.Info.RegistrationDate <= 0)
+                {
+                    playerType = PlayerType.Scav;
+                    return "";
+                }
+                else if (Cons.LocalPlayer.isInYourGroup(player))
+                {
+                    playerType = PlayerType.TeamMate;
+                    if (Cons.Switches.StreamerMode)
+                    {
+                        return "team";
+                    }
+                    else
+                    {
+                        return player.Profile.Info.Nickname;
+                    }
+                }
+                else if (player.Profile.Info.Side == EPlayerSide.Savage)
+                {
+                    playerType = PlayerType.PlayerScav;
+                    return "";
+                }
+                else
+                {
+                    playerType = PlayerType.Player;
+                    if (Cons.Switches.StreamerMode)
+                    {
+                        return player.Profile.Info.Side.ToString() + " [" + player.Profile.Info.Level.ToString() + "]";
+                    }
+                    else
+                    {
+                        return player.Profile.Info.Nickname + " [" + player.Profile.Info.Level.ToString() + "]";
+                    }
+                }
+            }
+        }
         public static void DrawPlayers(List<Player> _PlayersList, Player LocalPlayer)
         {
             #region [INITIALS] - to skip data overflow (incase)
@@ -227,195 +327,130 @@ namespace UnhandledException
             float distancesAxisY_2 = 0;
             Color Backup;
             #endregion
-            
-            foreach (Player player in _PlayersList)
+            var e = _PlayersList.GetEnumerator();
+            while (e.MoveNext())
             {
-                float dTO = FastMath.FD(Camera.main.transform.position, player.Transform.position);
-                // main head vector 3d (x,y,z)
-                Vector3 pHeadVector = Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position);
-                // setting head size comparing head position and neck position and multiplying by 1.5 (actually its head size)
-                float find_sizebox = Math.Abs(pHeadVector.y - Camera.main.WorldToScreenPoint(player.PlayerBones.Neck.position).y) * 1.5f; // size of the head - its not good but its scaling without much maths
-                // making sure head will not be too big
-                find_sizebox = (find_sizebox > 30f) ? 30f : find_sizebox;
-                float half_sizebox = (find_sizebox > 30f) ? 15f : find_sizebox / 2f;
-                // size of fonts depending on distance
-                int FontSize = 12;
-                FastMath.DistSizer(dTO, ref FontSize, ref deltaDistance, ref devLabel);
-                LabelSize.fontSize = FontSize;
-                //create 3 size table of distances for texts (name, status, weapon)
-                distancesAxisY_0 = deltaDistance + 10f;
-                distancesAxisY_1 = distancesAxisY_0 + FontSize + 1;
-                distancesAxisY_2 = distancesAxisY_1 + FontSize + 1;
-                Status = ((int)(player.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Common).Current)).ToString() + " hp"; // Health here 
+                var player = e.Current;
+                if (Cons.inScreen(Camera.main.WorldToScreenPoint(player.Transform.position)))
+                {
+                    float dTO = FastMath.FD(Camera.main.transform.position, player.Transform.position);
+                    // main head vector 3d (x,y,z)
+                    Vector3 pHeadVector = Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position);
+                    // setting head size comparing head position and neck position and multiplying by 1.5 (actually its head size)
+                    float find_sizebox = Math.Abs(pHeadVector.y - Camera.main.WorldToScreenPoint(player.PlayerBones.Neck.position).y) * 1.5f; // size of the head - its not good but its scaling without much maths
+                                                                                                                                              // making sure head will not be too big
+                    find_sizebox = (find_sizebox > 30f) ? 30f : find_sizebox;
+                    float half_sizebox = (find_sizebox > 30f) ? 15f : find_sizebox / 2f;
+                    // size of fonts depending on distance
+                    int FontSize = 12;
+                    FastMath.DistSizer(dTO, ref FontSize, ref deltaDistance, ref devLabel);
+                    LabelSize.fontSize = FontSize;
+                    //create 3 size table of distances for texts (name, status, weapon)
+                    distancesAxisY_0 = deltaDistance + 10f;
+                    distancesAxisY_1 = distancesAxisY_0 + FontSize + 1;
+                    distancesAxisY_2 = distancesAxisY_1 + FontSize + 1;
+                    Status = ((int)(player.HealthController.GetBodyPartHealth(EFT.HealthSystem.EBodyPart.Common).Current)).ToString() + " hp"; // Health here 
 
-                #region [BONE-ESP]
-                if (Cons.Switches.ShowBones)
-                {
-                    if (dTO < 100f)
+                    #region [BONE-ESP]
+                    if (Cons.Switches.ShowBones)
                     {
-                        var pRPVect = Camera.main.WorldToScreenPoint(player.PlayerBones.RightPalm.position);
-                        var PLPVect = Camera.main.WorldToScreenPoint(player.PlayerBones.LeftPalm.position);
-                        var PLShVect = Camera.main.WorldToScreenPoint(player.PlayerBones.LeftShoulder.position);
-                        var PLRShVect = Camera.main.WorldToScreenPoint(player.PlayerBones.RightShoulder.position);
-                        var PLNeckVect = Camera.main.WorldToScreenPoint(player.PlayerBones.Neck.position);
-                        var PLCentrVect = Camera.main.WorldToScreenPoint(player.PlayerBones.Pelvis.position);
-                        var PLRTighVect = Camera.main.WorldToScreenPoint(player.PlayerBones.RightThigh2.position);
-                        var PLLTighVect = Camera.main.WorldToScreenPoint(player.PlayerBones.LeftThigh2.position);
-                        var PLRFootVect = Camera.main.WorldToScreenPoint(player.PlayerBones.KickingFoot.position);
-                        var PLLFootVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 18));
-                        var PLLBowVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 91));
-                        var PLRBowVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 112));
-                        var PLLKneeVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 17));
-                        var PLRKneeVect = Camera.main.WorldToScreenPoint(Cons.GetBonePosByID(player, 22));
-                            Backup = GUI.color;
-                            GUI.color = Color.white;
-                            if (Cons.inScreen(PLNeckVect) && Cons.inScreen(PLCentrVect))
-                                Drawing.DrawLine(new Vector2(PLNeckVect.x, (float)Screen.height - PLNeckVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), Color.white, 1f);
-                            if (Cons.inScreen(PLShVect) && Cons.inScreen(PLLBowVect))
-                                Drawing.DrawLine(new Vector2(PLShVect.x, (float)Screen.height - PLShVect.y), new Vector2(PLLBowVect.x, (float)Screen.height - PLLBowVect.y), Color.white, 1f);
-                            if (Cons.inScreen(PLRShVect) && Cons.inScreen(PLRBowVect))
-                                Drawing.DrawLine(new Vector2(PLRShVect.x, (float)Screen.height - PLRShVect.y), new Vector2(PLRBowVect.x, (float)Screen.height - PLRBowVect.y), Color.white, 1f);
-                            if (Cons.inScreen(PLLBowVect) && Cons.inScreen(PLPVect))
-                                Drawing.DrawLine(new Vector2(PLLBowVect.x, (float)Screen.height - PLLBowVect.y), new Vector2(PLPVect.x, (float)Screen.height - PLPVect.y), Color.white, 1f);
-                            if (Cons.inScreen(PLRBowVect) && Cons.inScreen(pRPVect))
-                                Drawing.DrawLine(new Vector2(PLRBowVect.x, (float)Screen.height - PLRBowVect.y), new Vector2(pRPVect.x, (float)Screen.height - pRPVect.y), Color.white, 1f);
-                            if (Cons.inScreen(PLRShVect) && Cons.inScreen(PLShVect))
-                                Drawing.DrawLine(new Vector2(PLRShVect.x, (float)Screen.height - PLRShVect.y), new Vector2(PLShVect.x, (float)Screen.height - PLShVect.y), Color.white, 1f);
-                            if (Cons.inScreen(PLLKneeVect) && Cons.inScreen(PLCentrVect))
-                                Drawing.DrawLine(new Vector2(PLLKneeVect.x, (float)Screen.height - PLLKneeVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), Color.white, 1f);
-                            if (Cons.inScreen(PLRKneeVect) && Cons.inScreen(PLCentrVect))
-                                Drawing.DrawLine(new Vector2(PLRKneeVect.x, (float)Screen.height - PLRKneeVect.y), new Vector2(PLCentrVect.x, (float)Screen.height - PLCentrVect.y), Color.white, 1f);
-                            if (Cons.inScreen(PLLKneeVect) && Cons.inScreen(PLLFootVect))
-                                Drawing.DrawLine(new Vector2(PLLKneeVect.x, (float)Screen.height - PLLKneeVect.y), new Vector2(PLLFootVect.x, (float)Screen.height - PLLFootVect.y), Color.white, 1f);
-                            if (Cons.inScreen(PLRKneeVect) && Cons.inScreen(PLRFootVect))
-                                Drawing.DrawLine(new Vector2(PLRKneeVect.x, (float)Screen.height - PLRKneeVect.y), new Vector2(PLRFootVect.x, (float)Screen.height - PLRFootVect.y), Color.white, 1f);
-                            GUI.color = Backup;
+                        ESP.PlayerBones(dTO, player);
                     }
-                }
-                #endregion
-                #region Set: PlayerName / Color / Head Pixel
-                if (player.Profile.Info.RegistrationDate <= 0)
-                {
-                    playerDisplayName = "";
-                    playerColor = Constants.Colors.ESP.npc;
-                    Drawing.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Constants.Colors.Red, find_sizebox);
-                }
-                else if (LocalPlayer.Profile.Info.GroupId == player.Profile.Info.GroupId && LocalPlayer.Profile.Info.GroupId != "0" && LocalPlayer.Profile.Info.GroupId != "" && LocalPlayer.Profile.Info.GroupId != null)
-                {
-                    if (Cons.Switches.StreamerMode)
-                        playerDisplayName = "team";
-                    else
-                        playerDisplayName = player.Profile.Info.Nickname;
-                    playerColor = Constants.Colors.ESP.group;
-                }
-                else if (player.Profile.Info.Side == EPlayerSide.Savage)
-                {
-                    playerDisplayName = "";
-                    playerColor = Constants.Colors.ESP.scav_player;
-                    Backup = GUI.color;
-                    GUI.color = Color.red;
-                    Drawing.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Constants.Colors.Red, find_sizebox);
-                    GUI.color = Backup;
-                }
-                else
-                {
-                    if (Cons.Switches.StreamerMode)
+                    #endregion
+                    ESP.PlayerType playerType = ESP.PlayerType.Scav;
+                    playerDisplayName = ESP.PlayerName(player, ref playerType);
+                    playerColor = ESP.PlayerColor(playerType);
+                    if (playerType != ESP.PlayerType.TeamMate)
                     {
-                        playerDisplayName = player.Profile.Info.Side.ToString() + " [" + player.Profile.Info.Level.ToString() + "]";
+                        Backup = GUI.color;
+                        GUI.color = Color.red;
+                        Drawing.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Constants.Colors.Red, find_sizebox);
+                        GUI.color = Backup;
                     }
-                    else
+                    #region [VISIBILITY-CHECK]
+                    string isVisible = "";
+                    if (Raycast.BodyRaycastCheck(player.gameObject, pHeadVector, pHeadVector, pHeadVector, pHeadVector, pHeadVector))
                     {
-                        playerDisplayName = player.Profile.Info.Nickname + " [" + player.Profile.Info.Level.ToString() + "]";
+                        isVisible = "+";
                     }
-                    playerColor = Constants.Colors.ESP.player[0];
-                    Backup = GUI.color;
-                    GUI.color = Color.red;
-                    Drawing.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Constants.Colors.Red, find_sizebox);
-                    GUI.color = Backup;
-                }
-                #endregion
-                #region [VISIBILITY-CHECK]
-                string isVisible = "";
-                if (Raycast.BodyRaycastCheck(player.gameObject, pHeadVector, pHeadVector, pHeadVector, pHeadVector, pHeadVector)) {
-                    isVisible = "+";
-                }
-                #endregion
-                #region [INIT-Texts]
-                string nameNickname = $"{playerDisplayName}";
-                string playerStatus = $"{isVisible}[{(int)dTO}m] {Status}";
-                string WeaponName = "";
-                #endregion
-                #region [TRY-DecodeWeaponName]
+                    #endregion
+                    #region [INIT-Texts]
+                    string nameNickname = $"{playerDisplayName}";
+                    string playerStatus = $"{isVisible}[{(int)dTO}m] {Status}";
+                    string WeaponName = "";
+                    #endregion
+                    #region [TRY-DecodeWeaponName]
                     try
                     {
                         WeaponName = player.Weapon.ShortName.Localized();
                     }
-                    catch (Exception e)
+                    catch (Exception excep)
                     {
                         WeaponName = "No Weapon";
                     }
-                #endregion
+                    #endregion
 
-                // set colors now
-                LabelSize.normal.textColor = playerColor;
-                #region Slot 0 - Player Name (vector, size, drawing)
-                if (nameNickname != "")
-                {
-                    Vector2 vector_playerName = GUI.skin.GetStyle(nameNickname).CalcSize(new GUIContent(nameNickname));
-                    float player_NameText = (devLabel == 1f) ? vector_playerName.x : (vector_playerName.x / devLabel);
+                    // set colors now
+                    LabelSize.normal.textColor = playerColor;
+                    #region Slot 0 - Player Name (vector, size, drawing)
+                    if (nameNickname != "")
+                    {
+                        Vector2 vector_playerName = GUI.skin.GetStyle(nameNickname).CalcSize(new GUIContent(nameNickname));
+                        float player_NameText = (devLabel == 1f) ? vector_playerName.x : (vector_playerName.x / devLabel);
+                        Drawing.DrawShadow(
+                            new Rect(
+                                pHeadVector.x - player_NameText / 2f,
+                                (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY_0,
+                                player_NameText,
+                                vector_playerName.y
+                                ),
+                            new GUIContent(nameNickname),
+                            LabelSize,
+                            playerColor,
+                            Constants.Colors.Black,
+                            new Vector2(1f, 1f)
+                        );
+                    }
+                    #endregion
+                    #region Slot 1 - Status (distance, health)
+                    Vector2 vector_playerStatus = GUI.skin.GetStyle(playerStatus).CalcSize(new GUIContent(playerStatus));
+                    float player_TextWidth = (devLabel == 1f) ? vector_playerStatus.x : (vector_playerStatus.x / devLabel);
+                    GUIContent content = new GUIContent(playerStatus);
                     Drawing.DrawShadow(
                         new Rect(
-                            pHeadVector.x - player_NameText / 2f,
-                            (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY_0,
-                            player_NameText,
-                            vector_playerName.y
+                            pHeadVector.x - player_TextWidth / 2f,
+                            (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY_1,
+                            player_TextWidth,
+                            vector_playerStatus.y
                             ),
-                        new GUIContent(nameNickname),
+                        content,
                         LabelSize,
                         playerColor,
                         Constants.Colors.Black,
                         new Vector2(1f, 1f)
                     );
+                    #endregion
+                    #region Slot 2 - Weapon Name (vector, size, drawing) - if not empty
+                    if (WeaponName != "")
+                    {
+                        Vector2 vector_WeaponName = GUI.skin.GetStyle(WeaponName).CalcSize(new GUIContent(WeaponName));
+                        float player_WeaponName = (devLabel == 1f) ? vector_WeaponName.x : (vector_WeaponName.x / devLabel);
+                        Drawing.DrawShadow(
+                            new Rect(
+                                pHeadVector.x - player_WeaponName / 2f,
+                                (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY_2,
+                                player_WeaponName,
+                                vector_WeaponName.y
+                                ),
+                            new GUIContent(WeaponName),
+                            LabelSize,
+                            playerColor,
+                            Constants.Colors.Black,
+                            new Vector2(1f, 1f)
+                        );
+                    }
+                    #endregion
                 }
-                #endregion
-                #region Slot 1 - Status (distance, health)
-                Vector2 vector_playerStatus = GUI.skin.GetStyle(playerStatus).CalcSize(new GUIContent(playerStatus));
-                float player_TextWidth = (devLabel == 1f) ? vector_playerStatus.x : (vector_playerStatus.x / devLabel);
-                GUIContent content = new GUIContent(playerStatus);
-                Drawing.DrawShadow(
-                    new Rect(
-                        pHeadVector.x - player_TextWidth / 2f, 
-                        (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY_1, 
-                        player_TextWidth, 
-                        vector_playerStatus.y
-                        ), 
-                    content, 
-                    LabelSize, 
-                    playerColor,
-                    Constants.Colors.Black, 
-                    new Vector2(1f, 1f)
-                );
-                #endregion
-                #region Slot 2 - Weapon Name (vector, size, drawing) - if not empty
-                if (WeaponName != "")
-                {
-                    Vector2 vector_WeaponName = GUI.skin.GetStyle(WeaponName).CalcSize(new GUIContent(WeaponName));
-                    float player_WeaponName = (devLabel == 1f) ? vector_WeaponName.x : (vector_WeaponName.x / devLabel);
-                    Drawing.DrawShadow(
-                        new Rect(
-                            pHeadVector.x - player_WeaponName / 2f,
-                            (float)Screen.height - Camera.main.WorldToScreenPoint(player.PlayerBones.Head.position).y - distancesAxisY_2,
-                            player_WeaponName,
-                            vector_WeaponName.y
-                            ),
-                        new GUIContent(WeaponName), 
-                        LabelSize, 
-                        playerColor,
-                        Constants.Colors.Black, 
-                        new Vector2(1f, 1f)
-                    );
-                }
-                #endregion
                 #region snap lines
                 if (Cons.Switches.SnapLines && player != Cons.Main._localPlayer)
                 {
@@ -441,6 +476,27 @@ namespace UnhandledException
         #endregion
 
         #region - Exfils -
+        private class Exfiltration {
+            public static string TypeOfExfiltration(EExfiltrationStatus status) {
+                switch (status)
+                {
+                    case EExfiltrationStatus.AwaitsManualActivation:
+                        return "ManualActivation";
+                    case EExfiltrationStatus.Countdown:
+                        return "Timer";
+                    case EExfiltrationStatus.NotPresent:
+                        return "n/a";
+                    case EExfiltrationStatus.Pending:
+                        return "Pending";
+                    case EExfiltrationStatus.RegularMode:
+                        return "Default";
+                    case EExfiltrationStatus.UncompleteRequirements:
+                        return "Requirements";
+                    default:
+                        return "";
+                }
+            }
+        }
         public static void DrawExfils(List<ExfiltrationPoint> _exfils)
         {
             if (_exfils == null)
@@ -468,27 +524,8 @@ namespace UnhandledException
                                 LabelSize.fontSize = FontSize;
                                 LabelSize.normal.textColor = new Color(.7f, .7f, .7f, .8f);
                                 string requirements = (exfil.HasRequirements) ? "req" : "";
-                                string exfil_Status = "";
-                                switch (exfil.Status) {
-                                    case EExfiltrationStatus.AwaitsManualActivation:
-                                        exfil_Status = "ManualActivation";
-                                        break;
-                                    case EExfiltrationStatus.Countdown:
-                                        exfil_Status = "Timer";
-                                        break;
-                                    case EExfiltrationStatus.NotPresent:
-                                        exfil_Status = "n/a";
-                                        break;
-                                    case EExfiltrationStatus.Pending:
-                                        exfil_Status = "Pending";
-                                        break;
-                                    case EExfiltrationStatus.RegularMode:
-                                        exfil_Status = "Default";
-                                        break;
-                                    case EExfiltrationStatus.UncompleteRequirements:
-                                        exfil_Status = "Requirements";
-                                        break;
-                                }
+                                string exfil_Status = Exfiltration.TypeOfExfiltration(exfil.Status);
+
                                 string distanceText = $"({(int)distance}m){requirements}";
                                 Vector2 sizeOfText2 = GUI.skin.GetStyle(exfil_Status).CalcSize(new GUIContent(exfil_Status));
                                 Vector2 sizeOfText = GUI.skin.GetStyle(distanceText).CalcSize(new GUIContent(distanceText));
