@@ -48,6 +48,9 @@ namespace UnhandledException
 
         public static Vector3 GetShootPos()
         {
+            //Drawing.P(new Vector2(Camera.main.WorldToScreenPoint(Cons.AimPoint).x - 1f, Screen.height - Camera.main.WorldToScreenPoint(Cons.AimPoint).y - 1f), Color.green, 2f);
+            if(Cons.AimPoint != Vector3.zero)
+                return Cons.AimPoint + Camera.main.transform.forward * 1f;
             if (Cons.Main._localPlayer == null)
             {
                 return Vector3.zero;

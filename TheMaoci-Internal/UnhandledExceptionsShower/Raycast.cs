@@ -13,7 +13,7 @@ namespace UnhandledException
          * */
         private static RaycastHit raycastHit;
 
-        private static Vector3 GetHandsPos()
+        public static Vector3 GetHandsPos()
         {
             if (Cons.Main._localPlayer == null)
             {
@@ -27,7 +27,7 @@ namespace UnhandledException
             return firearmController.Fireport.position + Camera.main.transform.forward * 1f; //fireport 
         }
         public static RaycastHit BarrelRaycast() {
-            Physics.Linecast(GetHandsPos(), Cons.Main._localPlayer.Fireport.position, out raycastHit);
+            Physics.Linecast(Cons.Main._localPlayer.Fireport.position, Cons.Main._localPlayer.Fireport.position - Cons.Main._localPlayer.Fireport.up * 1000f, out raycastHit);
             return raycastHit;
         }
         public static bool BodyRaycastCheck(GameObject obj, Vector3 Vector_1, Vector3 Vector_2, Vector3 Vector_3, Vector3 Vector_4, Vector3 Vector_5)
