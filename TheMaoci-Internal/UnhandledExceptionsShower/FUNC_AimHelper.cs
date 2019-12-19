@@ -49,18 +49,19 @@ namespace UnhandledException
         public static Vector3 GetShootPos()
         {
             //Drawing.P(new Vector2(Camera.main.WorldToScreenPoint(Cons.AimPoint).x - 1f, Screen.height - Camera.main.WorldToScreenPoint(Cons.AimPoint).y - 1f), Color.green, 2f);
-            if(Cons.AimPoint != Vector3.zero)
-                return Cons.AimPoint + Camera.main.transform.forward * 1f;
+            //if(Cons.AimPoint != Vector3.zero)
+            //    return Cons.AimPoint + Camera.main.transform.forward * 1f;
             if (Cons.Main._localPlayer == null)
             {
                 return Vector3.zero;
             }
-            Player.FirearmController firearmController = Cons.Main._localPlayer.HandsController as Player.FirearmController;
+            return Cons.Main._localPlayer.Fireport.position - Cons.Main._localPlayer.Fireport.up * 1f;
+            /*Player.FirearmController firearmController = Cons.Main._localPlayer.HandsController as Player.FirearmController;
             if (firearmController == null)
             {
                 return Vector3.zero;
             }
-            return firearmController.Fireport.position + Camera.main.transform.forward * 1f;
+            return firearmController.Fireport.position + Camera.main.transform.forward * 1f;*/
         }
 
         public enum ibid
