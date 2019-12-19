@@ -126,10 +126,13 @@ namespace UnhandledException
                 // make sure scene is map scene and is loaded and ready
                 if (Cons.Main.G_Scene.isInMatch() && Cons.Main.G_Scene.isActiveAndLoaded())
                 {
-                if (LWIAY_timer < Time.time)
+                if (Cons.Switches.ChangeSessionID) 
                 {
-                    MonoBehaviourSingleton<PreloaderUI>.Instance.SetSessionId("LWIAY");
-                    LWIAY_timer = Time.time + 1f;
+                    if (LWIAY_timer < Time.time)
+                    {
+                        MonoBehaviourSingleton<PreloaderUI>.Instance.SetSessionId("NotForSale"); // use this for memes only
+                        LWIAY_timer = Time.time + 1f;
+                    }
                 }
                 // delay start of script for 20 seconds on start of match cause match is starting way before deploy is displaying - it will cause less errors displaying
                 // lower time from 20f if its holdup too long
@@ -144,6 +147,10 @@ namespace UnhandledException
                             try
                             {
                                 _GameWorld = FindObjectOfType<GameWorld>();
+                                if (Cons.Switches.StreamerMode)
+                                {
+                                    MonoBehaviourSingleton<PreloaderUI>.Instance.SetStreamMode(true); // this should disable this stupid text ;)
+                                }
                             }
                             catch (Exception e)
                             {
@@ -275,13 +282,11 @@ namespace UnhandledException
                              * EFT.Interactive.ObservedLootItem - as online LootItem
                              * EFT.Interactive.LootItem - as offline LootItem
                              */
-                                try { 
-                                    Cons.Main.tItems = new List<LootItem>();
-                                    //Cons.Main.tContainers = new List<LootPoint>();
-
+                            try { 
+                                Cons.Main.tItems = new List<LootItem>();
+                                //Cons.Main.tContainers = new List<LootPoint>();
                                 #region LootItems
                                 List<LootItem>.Enumerator temporalItemsEnum = _GameWorld.LootItems.GetValuesEnumerator().GetEnumerator();
-
                                 while (temporalItemsEnum.MoveNext())
                                 {
                                     LootItem temp = temporalItemsEnum.Current;
@@ -299,33 +304,21 @@ namespace UnhandledException
                                         catch (Exception e) {}
                                     }
                                 }
-
                                 // temporalContainersEnum
                                 Cons.Main._lootItems = Cons.Main.tItems;
                                 temporalItemsEnum.Dispose();
                                 #endregion
-                                #region LootableContainers
 
-                                /*LootableContainer[] temporalContainerArray = _GameWorld.GetComponents<LootableContainer>();
-                                Cons.Main.tContainers = new List<LootableContainer>();
-                                for (int i = 0; i < temporalContainerArray.Length; i++)
-                                {
-                                    Cons.Main.tContainers.Add(temporalContainerArray[i]);
-                                }
-                                Cons.Main._containers = Cons.Main.tContainers;
-                                Cons.Main.tContainers.Clear();
-                                temporalContainerArray = null; // incase cause im freak*/
-                                #endregion
                             }
                             catch (Exception e)
                                 {
                                     ErrorHandler.Catch("Get_LootItems", e);
                                 }
                             }
-                        if (Cons.Switches.Draw_Containers)
-                        {
-                            Cons.Main._containers = _GameWorld.ItemOwners.GetEnumerator();
-                        }
+                            if (Cons.Switches.Draw_Containers)
+                            {
+                                Cons.Main._containers = _GameWorld.ItemOwners.GetEnumerator();
+                            }
 
                         #endregion
                         #region Exfiltrations

@@ -117,7 +117,7 @@ namespace UnhandledException
         {
             variable = GUI.Toggle(
                 new Rect(
-                    Constants.Locations.initialInputSizes.x + (column * Constants.Locations.boxSize.box_100),
+                    Constants.Locations.initialInputSizes.x + (column * Constants.Locations.boxSize.box_110),
                     Constants.Locations.initialInputSizes.y + (Constants.Locations.initialInputSizes.y * row),
                     Constants.Locations.boxSize.box_100,
                     Constants.Locations.boxSize.box_20
@@ -156,7 +156,7 @@ namespace UnhandledException
         }
         public static void HorizontalSlider(ref float variable, float minimum = 1f, float maximum = 1000f, int row = 1, int column = 0)
         {
-            variable = GUI.HorizontalSlider(
+            variable = (int)GUI.HorizontalSlider(
                 new Rect(
                     Constants.Locations.initialInputSizes.x + (column * Constants.Locations.boxSize.box_100),
                     Constants.Locations.initialInputSizes.y + (Constants.Locations.initialInputSizes.y * row),

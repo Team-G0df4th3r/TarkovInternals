@@ -453,21 +453,44 @@ namespace UnhandledException
             {
                 try
                 {
-                    var item = e.Current;
-                    if (item != null)
+                    var exfil = e.Current;
+                    if (exfil != null)
                     {
-                        if (Camera.main.WorldToScreenPoint(item.transform.position).z > 0.01f)
+                        if (Camera.main.WorldToScreenPoint(exfil.transform.position).z > 0.01f)
                         { // do not display out of bounds items
-                            float distance = FastMath.FD(Camera.main.transform.position, item.transform.position);
+                            float distance = FastMath.FD(Camera.main.transform.position, exfil.transform.position);
                             if (distance < Cons.Distances.Corpses)
                             {
-                                Vector3 itemPosition = Camera.main.WorldToScreenPoint(item.transform.position);
+                                Vector3 itemPosition = Camera.main.WorldToScreenPoint(exfil.transform.position);
                                 float[] boxSize = new float[2] { 3f, 1.5f };
                                 int FontSize = 12;
                                 FastMath.DistSizer(distance, ref FontSize, ref deltaDistance, ref devLabel);
                                 LabelSize.fontSize = FontSize;
                                 LabelSize.normal.textColor = new Color(.7f, .7f, .7f, .8f);
-                                string distanceText = $"{(int)distance}m";
+                                string requirements = (exfil.HasRequirements) ? "req" : "";
+                                string exfil_Status = "";
+                                switch (exfil.Status) {
+                                    case EExfiltrationStatus.AwaitsManualActivation:
+                                        exfil_Status = "ManualActivation";
+                                        break;
+                                    case EExfiltrationStatus.Countdown:
+                                        exfil_Status = "Timer";
+                                        break;
+                                    case EExfiltrationStatus.NotPresent:
+                                        exfil_Status = "n/a";
+                                        break;
+                                    case EExfiltrationStatus.Pending:
+                                        exfil_Status = "Pending";
+                                        break;
+                                    case EExfiltrationStatus.RegularMode:
+                                        exfil_Status = "Default";
+                                        break;
+                                    case EExfiltrationStatus.UncompleteRequirements:
+                                        exfil_Status = "Requirements";
+                                        break;
+                                }
+                                string distanceText = $"({(int)distance}m){requirements}";
+                                Vector2 sizeOfText2 = GUI.skin.GetStyle(exfil_Status).CalcSize(new GUIContent(exfil_Status));
                                 Vector2 sizeOfText = GUI.skin.GetStyle(distanceText).CalcSize(new GUIContent(distanceText));
                                 Drawing.P(
                                     new Vector2(
@@ -476,6 +499,19 @@ namespace UnhandledException
                                         ),
                                     Constants.Colors.Red,
                                     boxSize[0]
+                                );
+                                Drawing.DrawShadow(
+                                    new Rect(
+                                        itemPosition.x - sizeOfText2.x / 2f,
+                                        (float)Screen.height - itemPosition.y - deltaDistance - FontSize - 1,
+                                        sizeOfText2.x,
+                                        sizeOfText2.y
+                                        ),
+                                    new GUIContent(exfil_Status),
+                                    LabelSize,
+                                    Constants.Colors.Red,
+                                    Constants.Colors.Black,
+                                    new Vector2(1f, 1f)
                                 );
                                 Drawing.DrawShadow(
                                     new Rect(
@@ -517,10 +553,27 @@ namespace UnhandledException
                     var Location = e.Current.Value;
                     if (Container.RootItem.IsContainer)
                     {
+                        #region Find Item Inside if specified
+                        if (Cons.LootSearcher != "")
+                        {
+                            bool foundItem = false;
+                            var inside = Container.Items.GetEnumerator();
+                            while (inside.MoveNext())
+                            {
+                                var item = inside.Current;
+                                if (item.ShortName.Localized().ToLower().IndexOf(Cons.LootSearcher) >= 0)
+                                {
+                                    foundItem = true;
+                                    break;
+                                }
+                            }
+                            if (!foundItem) { continue; }
+                        }
+                        #endregion
                         if (Camera.main.WorldToScreenPoint(Location.Transform.position).z > 0.01f)
                         { // do not display out of bounds items
                             float distance = FastMath.FD(Camera.main.transform.position, Location.Transform.position);
-                            if (distance < Cons.Distances.Corpses)
+                            if (distance < Cons.Distances.Crates)
                             {
                                 Vector3 itemPosition = Camera.main.WorldToScreenPoint(Location.Transform.position);
                                 float[] boxSize = new float[2] { 3f, 1.5f };
@@ -528,14 +581,14 @@ namespace UnhandledException
                                 FastMath.DistSizer(distance, ref FontSize, ref deltaDistance, ref devLabel);
                                 LabelSize.fontSize = FontSize;
                                 LabelSize.normal.textColor = new Color(.7f, .7f, .7f, .8f);
-                                string distanceText = $"{(int)distance}m {Container.RootItem.ShortName.Localized()}";
+                                string distanceText = $"<{(int)distance}m>";
                                 Vector2 sizeOfText = GUI.skin.GetStyle(distanceText).CalcSize(new GUIContent(distanceText));
                                 Drawing.P(
                                     new Vector2(
                                         itemPosition.x - boxSize[1],
                                         (float)(Screen.height - itemPosition.y) - boxSize[1]
                                         ),
-                                    Constants.Colors.Blue,
+                                    Constants.Colors.ESP.items,
                                     boxSize[0]
                                 );
                                 Drawing.DrawShadow(
@@ -547,7 +600,7 @@ namespace UnhandledException
                                         ),
                                     new GUIContent(distanceText),
                                     LabelSize,
-                                    Constants.Colors.Blue,
+                                    Constants.Colors.ESP.items,
                                     Constants.Colors.Black,
                                     new Vector2(1f, 1f)
                                 );

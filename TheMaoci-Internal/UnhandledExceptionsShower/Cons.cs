@@ -20,6 +20,8 @@ namespace UnhandledException
             public static float Aim = 200f;
             public static float Players = 1000f;
             public static float Loot = 1000f;
+            public static float Crates = 1000f;
+            public static float Exfils = 1000f;
             public static float Corpses = 200f;
             public static float Grenade = 100f;
         }
@@ -48,7 +50,10 @@ namespace UnhandledException
                 public static int RecoilIntensity; // described in %
                 public static void SetRecoil() {
                     RecoilIntensity = (int)(Main._localPlayer.ProceduralWeaponAnimation.Shootingg.Intensity * 100);
-                    //Main._localPlayer.ProceduralWeaponAnimation.Mask = EFT.Animations.EProceduralAnimationMask.ForceReaction;
+                }
+                public static void NoRecoil() {
+                    Main._localPlayer.ProceduralWeaponAnimation.Mask = EFT.Animations.EProceduralAnimationMask.MotionReaction;
+                    //Main._localPlayer.ProceduralWeaponAnimation.
                 }
 
                 public static string CurrentAmmo;
@@ -204,7 +209,7 @@ namespace UnhandledException
             public static bool Draw_Crosshair = false;
             public static bool Display_HelpInfo = false;
             public static bool Switch_Colors = false;
-            public static bool DisplayHelpPlayerInfo = false;
+            public static bool DisplayPlayerInfo = false;
             public static bool Spawn_FullBright = false;
             public static bool LOD_Controll = false;
             public static bool AimingAtNikita = false;
@@ -215,6 +220,8 @@ namespace UnhandledException
             public static bool SnapLines = false;
             public static bool ShowBones = false;
             public static bool IKnowWhatImDoing = false;
+            public static bool ChangeSessionID = false;
+            public static bool IamStrumer = false;
             public static void SetToOff()
             {
                 Draw_ESP = false;
@@ -224,7 +231,7 @@ namespace UnhandledException
                 Draw_Crosshair = false;
                 Display_HelpInfo = false;
                 Switch_Colors = false;
-                DisplayHelpPlayerInfo = false;
+                DisplayPlayerInfo = false;
                 Spawn_FullBright = false;
                 LOD_Controll = false;
                 AimingAtNikita = false;

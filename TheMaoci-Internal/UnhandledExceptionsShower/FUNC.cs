@@ -21,7 +21,7 @@ namespace UnhandledException
                 }
                 if (Input.GetKeyUp(KeyCode.Keypad2))
                 {
-                    Cons.Switches.DisplayHelpPlayerInfo = !Cons.Switches.DisplayHelpPlayerInfo;
+                    Cons.Switches.DisplayPlayerInfo = !Cons.Switches.DisplayPlayerInfo;
                 }
                 if (Input.GetKeyUp(KeyCode.Home))
                 {
