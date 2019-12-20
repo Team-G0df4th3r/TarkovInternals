@@ -26,12 +26,24 @@ namespace UnhandledException
             }
             return firearmController.Fireport.position + Camera.main.transform.forward * 1f; //fireport 
         }
+
         public static RaycastHit BarrelRaycast() {
             if (Cons.Main._localPlayer == null)
                 return new RaycastHit();
-            Physics.Linecast(Cons.Main._localPlayer.Fireport.position, Cons.Main._localPlayer.Fireport.position - Cons.Main._localPlayer.Fireport.up * 1000f, out raycastHit);
+            var mask = 1 << 12 | 1 << 18;
+            Physics.Linecast(Cons.Main._localPlayer.Fireport.position, Cons.Main._localPlayer.Fireport.position - Cons.Main._localPlayer.Fireport.up * 1000f, out raycastHit, mask);
             return raycastHit;
         }
+        #region IsVisible - Properly done (still checking mask)
+        private static bool IsVisible(GameObject obj, Vector3 Position)
+        {
+            //int mask = 1 << 12 | 1 << 18; // its working for RayCast from game
+            RaycastHit raycastHit;
+            var mask = 1 << 12 | 1 << 18;
+            return Physics.Linecast(GetHandsPos(), Position, out raycastHit, mask) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject;
+        }
+        #endregion
+        #region BodyRaycastCheck() - 5 overloads
         public static bool BodyRaycastCheck(GameObject obj, Vector3 Vector_1, Vector3 Vector_2, Vector3 Vector_3, Vector3 Vector_4, Vector3 Vector_5)
         {
             var HandsPos = GetHandsPos();
@@ -132,6 +144,6 @@ namespace UnhandledException
                 }
             return false;
         }
-
+        #endregion
     }
 }

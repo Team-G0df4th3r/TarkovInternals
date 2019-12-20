@@ -3,12 +3,58 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EFT;
 using UnityEngine;
 
 namespace UnhandledException
 {
     class FUNC
     {
+        public static bool isInScreenRestricted(Vector3 V)
+        {
+            if (V.x > 0.01f &&
+                V.y > 0.01f &&
+                V.x < Cons.ScreenWidth.Full &&
+                V.y < Cons.ScreenHeight.Full &&
+                V.z > 0.01f)
+                return true;
+            return false;
+        }
+        public static bool isInScreenYZ(Vector3 V)
+        {
+            // properly display snap lines :)
+            if (V.y > 0.01f &&
+                V.y < (Cons.ScreenHeight.Full - 5f) &&
+                V.z > 0.01f)
+                return true;
+            return false;
+        }
+        public static Vector3 W2S(Vector3 V) { return Camera.main.WorldToScreenPoint(V); } 
+        public class Bones {
+            public static Vector3 SkeletonBonePos(Diz.Skinning.Skeleton sko, int id)
+            {
+                return sko.Bones.ElementAt(id).Value.position;
+            }
+            public static string SkeletonBoneName(Diz.Skinning.Skeleton sko, int id)
+            {
+                return sko.Bones.ElementAt(id).Key.ToString();
+            }
+            public static Vector3 GetBonePosByID(Player p, int id)
+            {
+                Vector3 result;
+                if (p == null)
+                    return Vector3.zero;
+                try
+                {
+                    result = SkeletonBonePos(p.PlayerBones.AnimatedTransform.Original.gameObject.GetComponent<PlayerBody>().SkeletonRootJoint, id);
+                }
+                catch (Exception)
+                {
+                    result = Vector3.zero;
+                }
+                return result;
+            }
+        }
         public class Update {
 
             #region [HOTKEYS]

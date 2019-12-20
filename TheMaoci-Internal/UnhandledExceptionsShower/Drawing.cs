@@ -4,7 +4,15 @@ namespace UnhandledException
 {
     public static class Drawing
     {
+
         public static Texture2D lineTex;
+        #region Crosshair
+        public static void Crosshair() {
+            Vector3 AimAtPoint = FUNC.W2S(Cons.AimPoint);
+            P(new Vector2(AimAtPoint.x - 2f, Screen.height - AimAtPoint.y - 2f), new Color(0f, 0f, 0f), 4f);
+            P(new Vector2(AimAtPoint.x - 1f, Screen.height - AimAtPoint.y - 1f), new Color(1f, 1f, 1f), 2f);
+        }
+        #endregion
         #region DrawPixel
         public static void P(Vector2 Position, Color color, float thickness)
         {
@@ -24,6 +32,9 @@ namespace UnhandledException
         }
         #endregion
         #region Drawing Shadowed Text
+        public static void Text(Rect rect, string content) {
+            Text(rect, content, Constants.Colors.White);
+        }
         public static void Text(Rect rect, string content, Color txtColor)
         {
             DrawShadow(rect, new GUIContent(content), new GUIStyle(), txtColor, new Color(0f, 0f, 0f, 1f), new Vector2(1f, 1f));

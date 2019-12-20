@@ -80,7 +80,7 @@ namespace UnhandledException
                             MaxAmmo = "";
                         }
                     }
-                    catch (Exception e) 
+                    catch (Exception) 
                     {
                         CurrentAmmo = "Melee";
                         MaxAmmo = "";
@@ -183,6 +183,9 @@ namespace UnhandledException
             public static List<LootItem> tCorpses;
             public static List<LootItem> tItems;
             public static List<ExfiltrationPoint> tExfils;
+
+            public static GameObject GameObjectHolder;
+            public static GameWorld _GameWorld = null;
             //public static List<LootItem> tContainers;
             public static void Clear()
             {
@@ -282,8 +285,6 @@ namespace UnhandledException
             public static int Full = Screen.height;
             public static int Half = (int)(Full / 2);
         }
-        //public static int ScreenWidth = Screen.width;
-        //public static int ScreenHeight = Screen.height;
         public static string MyDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         public static string[] HelpMenuTexts = new string[10] {
                 "Help Menu: (Turn off/on 'Home' key)",
@@ -297,48 +298,5 @@ namespace UnhandledException
                 "'Num 9' - Full Bright",
                 "'Insert' - GUI Menu"
             };
-        public static string Health(Player LocalPlayer, EFT.HealthSystem.EBodyPart bodypart)
-        { // not used now but will use that later maybe
-            int health_curr = (int)LocalPlayer.HealthController.GetBodyPartHealth(bodypart).Current;
-            if (health_curr > 0)
-            {
-                return health_curr.ToString() + "/" + ((int)LocalPlayer.HealthController.GetBodyPartHealth(bodypart).Maximum).ToString();
-            }
-            return "n/a";
-        }
-        public static Vector3 SkeletonBonePos(Diz.Skinning.Skeleton sko, int id)
-        {
-            return sko.Bones.ElementAt(id).Value.position;
-        }
-        public static Vector3 GetBonePosByID(Player p, int id)
-        {
-            Vector3 result;
-            try
-            {
-                result = SkeletonBonePos(p.PlayerBones.AnimatedTransform.Original.gameObject.GetComponent<PlayerBody>().SkeletonRootJoint, id);
-            }
-            catch (Exception)
-            {
-                result = Vector3.zero;
-            }
-            return result;
-        }
-        public static bool inScreen(Vector3 V) {
-            if (V.x > 0.01f && 
-                V.y > 0.01f &&
-                V.x < ScreenWidth.Full &&
-                V.y < ScreenHeight.Full && 
-                V.z > 0.01f)
-                return true;
-            return false;
-        }
-        public static bool inScreen_SnapLines(Vector3 V) {
-            // properly display snap lines :)
-            if (V.y > 0.01f &&
-                V.y < (ScreenHeight.Full - 5f) &&
-                V.z > 0.01f)
-                return true;
-            return false;
-        }
     }
 }

@@ -11,106 +11,76 @@ namespace UnhandledException
         #region vangle_aim
         public static void Aimbot_Method()
         {
-            Vector3 AimAtGuy = Vector3.zero;
-            float distanceOfTarget = 9999f;
-            foreach (Player player in Cons.Main._players)
+            try
             {
-                if (!(player == null) && !(player == Cons.Main._localPlayer) && player.HealthController != null && player.HealthController.IsAlive)
+                Vector3 AimAtGuy = Vector3.zero;
+                float distanceOfTarget = 9999f;
+                foreach (Player player in Cons.Main._players)
                 {
-                    if (player.GroupId != Cons.Main._localPlayer.GroupId || Cons.Main._localPlayer.GroupId == "" || Cons.Main._localPlayer.GroupId == "0" || Cons.Main._localPlayer.GroupId == null)
+                    if (!(player == null) && !(player == Cons.Main._localPlayer) && player.HealthController != null && player.HealthController.IsAlive)
                     {
-                        Vector3 vector = getBonePos(player);
-                        float dist = FastMath.FD(Camera.main.transform.position, player.Transform.position);
-                        if (dist > Cons.Distances.Aim)
-                            continue;
-                        if (!(vector == Vector3.zero) && CalcInFov(vector) <= Cons.Aim.AAN_FOV/* && IsVisible(player.gameObject, getBonePos(player))*/)
+                        if (player.GroupId != Cons.Main._localPlayer.GroupId || Cons.Main._localPlayer.GroupId == "" || Cons.Main._localPlayer.GroupId == "0" || Cons.Main._localPlayer.GroupId == null)
                         {
-                            if (distanceOfTarget > dist)
+                            Vector3 vector = getBonePos(player);
+                            float dist = FastMath.FD(Camera.main.transform.position, player.Transform.position);
+                            if (dist > Cons.Distances.Aim)
+                                continue;
+                            if (!(vector == Vector3.zero) && CalcInFov(vector) <= Cons.Aim.AAN_FOV/* && IsVisible(player.gameObject, getBonePos(player))*/)
                             {
-                                distanceOfTarget = dist;
-                                AimAtGuy = vector;
+                                if (distanceOfTarget > dist)
+                                {
+                                    distanceOfTarget = dist;
+                                    AimAtGuy = vector;
+                                }
                             }
                         }
                     }
                 }
-            }
-            if (AimAtGuy != Vector3.zero) {
+                if (AimAtGuy != Vector3.zero)
+                {
                     AimAtPos(AimAtGuy);
+                }
             }
-        }
-
-        private static bool IsVisible(GameObject obj, Vector3 Position)
-        {
-            RaycastHit raycastHit;
-            //int mask = 1 << 12 | 1 << 18; // its working for RayCast from game
-            return Physics.Linecast(GetShootPos(), Position, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject;
-        }
-
-        public static Vector3 GetShootPos()
-        {
-            //Drawing.P(new Vector2(Camera.main.WorldToScreenPoint(Cons.AimPoint).x - 1f, Screen.height - Camera.main.WorldToScreenPoint(Cons.AimPoint).y - 1f), Color.green, 2f);
-            //if(Cons.AimPoint != Vector3.zero)
-            //    return Cons.AimPoint + Camera.main.transform.forward * 1f;
-            if (Cons.Main._localPlayer == null)
+            catch (Exception e)
             {
-                return Vector3.zero;
+                ErrorHandler.Catch("Draw_AiBo", e);
             }
-            return Cons.Main._localPlayer.Fireport.position - Cons.Main._localPlayer.Fireport.up * 1f;
-            /*Player.FirearmController firearmController = Cons.Main._localPlayer.HandsController as Player.FirearmController;
-            if (firearmController == null)
-            {
-                return Vector3.zero;
-            }
-            return firearmController.Fireport.position + Camera.main.transform.forward * 1f;*/
         }
 
-        public enum ibid
-        {
-            Head,
-            Neck,
-            Chest,
-            Stomach
-        }
-        /*
-        public enum BodyParts
+        public enum BodyPart
         {
             Head = 133,
+            Neck = 132,
             Chest = 36,
             Stomach = 29,
-            Neck = 132,
-            LeftArm,
-            RightArm,
-            LeftLeg,
-            RightLeg
-        }*/
-        /*public enum PlayerBoneType
-        {
-            Head = 133,
+            Ribcage, // propably 4
+            RightPalm,
+            LeftPalm,
             LeftShoulder,
             RightShoulder,
-            Ribcage = 4,
-            LeftThigh2,
-            RightThigh2,
-            WeaponRoot,
-            Body,
-            Fireport,
-            AnimatedTransform,
+            PlayerBones,
             Pelvis,
-            LeftThigh1,
-            RightThigh1,
-            Spine
-        }*/
-        public static int idtobid(ibid bid = ibid.Head)
+            RightThigh2,
+            LeftThigh2,
+            KickingFoot,
+            LeftFoot = 18,
+            LeftElbow = 91,
+            RightElBow = 112,
+            leftKnee = 17,
+            RightKnee = 22,
+        }
+
+        public static int idtobid(BodyPart bid = BodyPart.Head)
         {
             switch (bid)
             {
-                case ibid.Neck:
+                case BodyPart.Neck:
                     return 132;
 
-                case ibid.Chest:
+                case BodyPart.Chest:
                     return 36;
 
-                case ibid.Stomach:
+                case BodyPart.Stomach:
                     return 29;
 
                 default:
@@ -121,7 +91,7 @@ namespace UnhandledException
         public static Vector3 getBonePos(Player inP)
         {
             int bid = idtobid();
-            return Cons.GetBonePosByID(inP, bid);
+            return FUNC.Bones.GetBonePosByID(inP, bid);
         }
 
         public static float CalcInFov(Vector3 Position)
@@ -135,7 +105,7 @@ namespace UnhandledException
         public static void AimAtPos(Vector3 pos)
         {
             Vector2 rotation = Cons.Main._localPlayer.MovementContext.Rotation;
-            Vector3 b = GetShootPos();
+            Vector3 b = Raycast.GetHandsPos();
             Vector3 eulerAngles = Quaternion.LookRotation((pos - b).normalized).eulerAngles;
             if (eulerAngles.x > 180f)
             {

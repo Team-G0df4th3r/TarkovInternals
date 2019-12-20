@@ -73,10 +73,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Cons.cs" />
+    <Compile Include="E5P.cs" />
     <Compile Include="ErrorHandler.cs" />
     <Compile Include="FUNC.cs" />
     <Compile Include="FUNC_AimHelper.cs" />
-    <Compile Include="FUNC_DrawObjects.cs" />
     <Compile Include="FastMath.cs" />
     <Compile Include="FUNC_Additional_Drawing.cs" />
     <Compile Include="Raycast.cs" />
@@ -93,6 +93,9 @@
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\library\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>C:\Users\X\Desktop\EmuLib\_Libraries\UnityEngine.AssetBundleModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>bin\library\UnityEngine.CoreModule.dll</HintPath>
