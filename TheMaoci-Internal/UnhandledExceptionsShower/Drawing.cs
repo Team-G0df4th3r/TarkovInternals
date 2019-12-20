@@ -4,7 +4,15 @@ namespace UnhandledException
 {
     public static class Drawing
     {
+
         public static Texture2D lineTex;
+        #region Crosshair
+        public static void Crosshair() {
+            Vector3 AimAtPoint = FUNC.W2S(Cons.AimPoint);
+            P(new Vector2(AimAtPoint.x - 2f, Screen.height - AimAtPoint.y - 2f), new Color(0f, 0f, 0f), 4f);
+            P(new Vector2(AimAtPoint.x - 1f, Screen.height - AimAtPoint.y - 1f), new Color(1f, 1f, 1f), 2f);
+        }
+        #endregion
         #region DrawPixel
         public static void P(Vector2 Position, Color color, float thickness)
         {
@@ -23,8 +31,10 @@ namespace UnhandledException
             GUI.color = savedColor;
         }
         #endregion
-
         #region Drawing Shadowed Text
+        public static void Text(Rect rect, string content) {
+            Text(rect, content, Constants.Colors.White);
+        }
         public static void Text(Rect rect, string content, Color txtColor)
         {
             DrawShadow(rect, new GUIContent(content), new GUIStyle(), txtColor, new Color(0f, 0f, 0f, 1f), new Vector2(1f, 1f));
@@ -44,7 +54,6 @@ namespace UnhandledException
         }
 
         #endregion
-
         #region DrawLine - new with overloads
 
         public static void DrawLine(Rect rect) { DrawLine(rect, GUI.contentColor, 1.0f); }
@@ -96,7 +105,6 @@ namespace UnhandledException
             GUI.color = savedColor;
         }
         #endregion
-
         #region DrawBox
         public static void DrawBox(float x, float y, float w, float h, Color color)
         {
@@ -117,12 +125,24 @@ namespace UnhandledException
         {
             variable = GUI.Toggle(
                 new Rect(
-                    Constants.Locations.initialInputSizes.x + (column * Constants.Locations.boxSize.box_100),
+                    Constants.Locations.initialInputSizes.x + (column * Constants.Locations.boxSize.box_110),
                     Constants.Locations.initialInputSizes.y + (Constants.Locations.initialInputSizes.y * row),
                     Constants.Locations.boxSize.box_100,
                     Constants.Locations.boxSize.box_20
                 ),
                 variable,
+                name
+            );
+        }
+        public static void Button(ref bool variable, string name, int row = 1, int column = 0)
+        {
+            variable = GUI.Button(
+                new Rect(
+                    Constants.Locations.initialInputSizes.x + (column * Constants.Locations.boxSize.box_100) + 25f,
+                    Constants.Locations.initialInputSizes.y + (Constants.Locations.initialInputSizes.y * row),
+                    Constants.Locations.boxSize.box_50,
+                    Constants.Locations.boxSize.box_20
+                ),
                 name
             );
         }
@@ -144,7 +164,7 @@ namespace UnhandledException
         }
         public static void HorizontalSlider(ref float variable, float minimum = 1f, float maximum = 1000f, int row = 1, int column = 0)
         {
-            variable = GUI.HorizontalSlider(
+            variable = (int)GUI.HorizontalSlider(
                 new Rect(
                     Constants.Locations.initialInputSizes.x + (column * Constants.Locations.boxSize.box_100),
                     Constants.Locations.initialInputSizes.y + (Constants.Locations.initialInputSizes.y * row),
