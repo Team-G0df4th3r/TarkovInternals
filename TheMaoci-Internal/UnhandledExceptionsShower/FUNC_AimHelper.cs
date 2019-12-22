@@ -110,7 +110,7 @@ namespace UnhandledException
         public static void AimAtPos(Vector3 pos)
         {
             Vector2 rotation = Cons.Main._localPlayer.MovementContext.Rotation;
-            Vector3 b = Raycast.GetHandsPos();
+            Vector3 b = Raycast.GetShootPos();
             Vector3 eulerAngles = Quaternion.LookRotation((pos - b).normalized).eulerAngles;
             if (eulerAngles.x > 180f)
             {

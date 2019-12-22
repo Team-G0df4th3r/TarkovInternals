@@ -27,6 +27,7 @@ namespace UnhandledException
                             {
                                 // updating local player data
                                 Cons.Main._localPlayer = p;
+                                Cons.LocalPlayer.SetGroup(p);
                                 Cons.LocalPlayer.Weapon.SetRecoil();
                                 Cons.LocalPlayer.Weapon.UpdateAmmo();
                                 Cons.LocalPlayer.Status.UpdateStatus();
