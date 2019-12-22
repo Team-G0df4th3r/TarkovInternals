@@ -20,5 +20,17 @@ namespace UnhandledException
                 "ErrorEnds <<<<<<<<<<<<<" + Environment.NewLine
             );
         }
+        public static void Dump(string Func_Name, string additional_info = "")
+        {
+            string LocalStorage = Cons.MyDocuments + "\\_Maoci_Logs\\";
+            if (!Directory.Exists(LocalStorage))
+                Directory.CreateDirectory(LocalStorage);
+            File.WriteAllText(
+                LocalStorage + Func_Name + ".log",
+                ">>>>>>>>>>>>>" + Environment.NewLine +
+                additional_info + Environment.NewLine +
+                "<<<<<<<<<<<<<" + Environment.NewLine
+            );
+        }
     }
 }

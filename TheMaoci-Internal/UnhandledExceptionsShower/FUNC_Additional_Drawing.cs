@@ -200,57 +200,59 @@ namespace UnhandledException
                  * First Column: initial.x & initial.y * 2 (next line is 2 + n)
                  * Second Column: initial.x + Cons.boxSize.box_100 & initial.y * 2 (next line is 2 + n)
                  */
-                int column_1 = 0, column_2 = 0, column_3 = 0;
+                int column_1 = 0, column_2 = 0;//, column_3 = 0;
                 Color guiBackup = GUI.color;
                 GUI.color = Color.black;
-                GUI.Box(new Rect(10f, 10f, 110f, 500f), "");
-                GUI.Box(new Rect(120f, 10f, 110f, 500f), "");
+                GUI.Box(new Rect(10f, 10f, 210f, 500f), "");
+                GUI.Box(new Rect(230f, 10f, 210f, 500f), "");
                 GUI.color = Color.white;
                 Vector2 initial = new Vector2(15f, 20f);
                 Drawing.Label("Unknown.Exception", 0, 0, Constants.Locations.boxSize.box_100, Constants.Locations.boxSize.box_20);
                 // First column
                 column_1 = 2;
                 column_2 = 2;
-                column_3 = 2;
+                //column_3 = 2;
                 Drawing.CheckBox(ref Cons.Switches.Draw_ESP,            "E.S.P", column_1++);
                 Drawing.CheckBox(ref Cons.Switches.Draw_Grenades,       "Grenade", column_1++);
                 Drawing.CheckBox(ref Cons.Switches.Draw_Corpses,        "Dead.Bodies", column_1++);
+                Drawing.CheckBox(ref Cons.Switches.Draw_Exfil,          "Exfils", column_1++);
+                Drawing.CheckBox(ref Cons.Switches.Recoil_Reducer,      "Recoil", column_1++);
+                Drawing.CheckBox(ref Cons.Switches.AimingAtNikita,      "Aim", column_1++);
                 Drawing.CheckBox(ref Cons.Switches.Draw_Crosshair,      "Crosshair", column_1++); 
                 Drawing.CheckBox(ref Cons.Switches.Spawn_FullBright,    "Full.Bright", column_1++);
-                Drawing.CheckBox(ref Cons.Switches.DisplayPlayerInfo,   "Player.Data", column_1++);
                 Drawing.CheckBox(ref Cons.Switches.StreamerMode,        "Streamer.Mode", column_1++);
+                Drawing.CheckBox(ref Cons.Switches.ChangeSessionID,     "RenameSessionID", column_1++);
                 Drawing.CheckBox(ref Cons.Switches.SnapLines,           "Snap.Lines", column_1++);
                 Drawing.CheckBox(ref Cons.Switches.ShowBones,           "Draw.Bones", column_1++);
-                Drawing.CheckBox(ref Cons.Switches.AimingAtNikita,      "Aim", column_1++);
-                Drawing.CheckBox(ref Cons.Switches.Draw_Exfil,          "Exfils", column_1++);
+                Drawing.CheckBox(ref Cons.Switches.DisplayPlayerInfo,   "Player.Data", column_1++);
                 Drawing.CheckBox(ref Cons.Switches.Draw_Containers,     "Containers", column_1++);
-                Drawing.CheckBox(ref Cons.Switches.ChangeSessionID,     "RenameSession", column_1++);
-
-                Drawing.Label("FOV:" + Cons.Aim.AAN_FOV.ToString(), column_2++, 2);
-                Drawing.HorizontalSlider(ref Cons.Aim.AAN_FOV, 1f, 25f, column_2++, 2);
-                Drawing.Label("Aim.Dist:" + Cons.Distances.Aim.ToString(), column_2++, 2);
-                Drawing.HorizontalSlider(ref Cons.Distances.Aim, 100f, 1000f, column_2++, 2);
-                Drawing.Label("User.Dist:" + Cons.Distances.Players.ToString(), column_2++, 2);
-                Drawing.HorizontalSlider(ref Cons.Distances.Players, 100f, 1000f, column_2++, 2);
-                Drawing.Label("Exfil.Dist:" + Cons.Distances.Exfils.ToString(), column_2++, 2);
-                Drawing.HorizontalSlider(ref Cons.Distances.Exfils, 100f, 1000f, column_2++, 2);
-                Drawing.Label("Crates.Dist:" + Cons.Distances.Crates.ToString(), column_2++, 2);
-                Drawing.HorizontalSlider(ref Cons.Distances.Crates, 100f, 1000f, column_2++, 2);
-                Drawing.Label("Loot.Dist:" + Cons.Distances.Loot.ToString(), column_2++, 2);
-                Drawing.HorizontalSlider(ref Cons.Distances.Loot, 100f, 1000f, column_2++, 2);
-                Drawing.Label("Grenade.Dist:" + Cons.Distances.Grenade.ToString(), column_2++, 2);
-                Drawing.HorizontalSlider(ref Cons.Distances.Grenade, 100f, 1000f, column_2++, 2);
-                Drawing.Label("Corpse.Dist:" + Cons.Distances.Corpses.ToString(), column_2++, 2);
-                Drawing.HorizontalSlider(ref Cons.Distances.Corpses, 100f, 1000f, column_2++, 2);
-
-                Drawing.CheckBox(ref Cons.Switches.Draw_Loot, "Map.Loot", column_3++, 3);
+                Drawing.CheckBox(ref Cons.Switches.Draw_Loot,           "Map.Loot", column_1++);
                 if (!Cons.Switches.Draw_Loot)
-                    Drawing.TextField(ref Cons.LootSearcher, column_3++, 3);
+                    Drawing.TextField(ref Cons.LootSearcher, column_1++);
+                //Drawing.CheckBox(ref Cons.Switches.ChangeSessionID, "RenameSession", column_1++);
+
+                Drawing.Label("FOV:" + Cons.Aim.AAN_FOV.ToString(), column_2++, 1);
+                Drawing.HorizontalSlider(ref Cons.Aim.AAN_FOV, 1f, 25f, column_2++, 1);
+                Drawing.Label("Aim.Dist:" + Cons.Distances.Aim.ToString(), column_2++, 1);
+                Drawing.HorizontalSlider(ref Cons.Distances.Aim, 100f, 1000f, column_2++, 1);
+                Drawing.Label("User.Dist:" + Cons.Distances.Players.ToString(), column_2++, 1);
+                Drawing.HorizontalSlider(ref Cons.Distances.Players, 100f, 1000f, column_2++, 1);
+                Drawing.Label("Exfil.Dist:" + Cons.Distances.Exfils.ToString(), column_2++, 1);
+                Drawing.HorizontalSlider(ref Cons.Distances.Exfils, 100f, 1000f, column_2++, 1);
+                Drawing.Label("Crates.Dist:" + Cons.Distances.Crates.ToString(), column_2++, 1);
+                Drawing.HorizontalSlider(ref Cons.Distances.Crates, 100f, 1000f, column_2++, 1);
+                Drawing.Label("Loot.Dist:" + Cons.Distances.Loot.ToString(), column_2++, 1);
+                Drawing.HorizontalSlider(ref Cons.Distances.Loot, 100f, 1000f, column_2++, 1);
+                Drawing.Label("Grenade.Dist:" + Cons.Distances.Grenade.ToString(), column_2++, 1);
+                Drawing.HorizontalSlider(ref Cons.Distances.Grenade, 100f, 1000f, column_2++, 1);
+                Drawing.Label("Corpse.Dist:" + Cons.Distances.Corpses.ToString(), column_2++, 1);
+                Drawing.HorizontalSlider(ref Cons.Distances.Corpses, 100f, 1000f, column_2++, 1);
+
 
                 //i know what im doing
-                Drawing.CheckBox(ref Cons.Switches.IKnowWhatImDoing, "IKWID", 0, 2);
+                Drawing.CheckBox(ref Cons.Switches.IKnowWhatImDoing, "IKWID", 3, 2);
                 // start what maoci starts each time
-                Drawing.Button(ref Cons.Buttons.Ma0c1, "Maoci", 0, 3);
+                Drawing.Button(ref Cons.Buttons.Ma0c1, "Maoci", 4, 2);
 
                 //Drawing.Button(ref Cons.Buttons.Niger, "Niger", 3, 2);
                 // Second column indicates with column = 1

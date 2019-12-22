@@ -9,7 +9,7 @@ namespace UnhandledException
         #region Crosshair
         public static void Crosshair() {
             Vector3 AimAtPoint = FUNC.W2S(Cons.AimPoint);
-            P(new Vector2(AimAtPoint.x - 2f, Screen.height - AimAtPoint.y - 2f), new Color(0f, 0f, 0f), 4f);
+            P(new Vector2(AimAtPoint.x - 2f, Screen.height - AimAtPoint.y - 1f), new Color(0f, 0f, 0f), 4f);
             P(new Vector2(AimAtPoint.x - 1f, Screen.height - AimAtPoint.y - 1f), new Color(1f, 1f, 1f), 2f);
         }
         #endregion
@@ -125,9 +125,9 @@ namespace UnhandledException
         {
             variable = GUI.Toggle(
                 new Rect(
-                    Constants.Locations.initialInputSizes.x + (column * Constants.Locations.boxSize.box_110),
+                    Constants.Locations.initialInputSizes.x + (column * Constants.Locations.boxSize.box_200),
                     Constants.Locations.initialInputSizes.y + (Constants.Locations.initialInputSizes.y * row),
-                    Constants.Locations.boxSize.box_100,
+                    Constants.Locations.boxSize.box_200,
                     Constants.Locations.boxSize.box_20
                 ),
                 variable,
@@ -138,7 +138,7 @@ namespace UnhandledException
         {
             variable = GUI.Button(
                 new Rect(
-                    Constants.Locations.initialInputSizes.x + (column * Constants.Locations.boxSize.box_100) + 25f,
+                    Constants.Locations.initialInputSizes.x + (column * Constants.Locations.boxSize.box_200) + 25f,
                     Constants.Locations.initialInputSizes.y + (Constants.Locations.initialInputSizes.y * row),
                     Constants.Locations.boxSize.box_50,
                     Constants.Locations.boxSize.box_20
@@ -151,10 +151,10 @@ namespace UnhandledException
             if (height == 0f)
                 height = Constants.Locations.boxSize.box_20;
             if (width == 0f)
-                width = Constants.Locations.boxSize.box_100;
+                width = Constants.Locations.boxSize.box_200;
             GUI.Label(
                 new Rect(
-                    Constants.Locations.initialInputSizes.x + (column * Constants.Locations.boxSize.box_100),
+                    Constants.Locations.initialInputSizes.x + (column * Constants.Locations.boxSize.box_200),
                     Constants.Locations.initialInputSizes.y + (Constants.Locations.initialInputSizes.y * row),
                     width,
                     height
@@ -166,9 +166,9 @@ namespace UnhandledException
         {
             variable = (int)GUI.HorizontalSlider(
                 new Rect(
-                    Constants.Locations.initialInputSizes.x + (column * Constants.Locations.boxSize.box_100),
+                    Constants.Locations.initialInputSizes.x + (column * Constants.Locations.boxSize.box_200),
                     Constants.Locations.initialInputSizes.y + (Constants.Locations.initialInputSizes.y * row),
-                    Constants.Locations.boxSize.box_100,
+                    Constants.Locations.boxSize.box_200,
                     Constants.Locations.boxSize.box_20
                 ),
                 variable,
@@ -180,9 +180,9 @@ namespace UnhandledException
         {
             variable = GUI.TextField(
                 new Rect(
-                    Constants.Locations.initialInputSizes.x + (column * Constants.Locations.boxSize.box_100), // this should give 0 and only input if not column was specified
+                    Constants.Locations.initialInputSizes.x + (column * Constants.Locations.boxSize.box_200), // this should give 0 and only input if not column was specified
                     Constants.Locations.initialInputSizes.y + (Constants.Locations.initialInputSizes.y * row),
-                    Constants.Locations.boxSize.box_100,
+                    Constants.Locations.boxSize.box_200,
                     Constants.Locations.boxSize.box_20
                 ),
                 variable
