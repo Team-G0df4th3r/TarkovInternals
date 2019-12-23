@@ -104,7 +104,7 @@ namespace UnhandledException
                 {
                     if (LWIAY_timer < Time.time)
                     {
-                        MonoBehaviourSingleton<PreloaderUI>.Instance.SetSessionId("NotForSale"); // use this for memes only
+                        MonoBehaviourSingleton<PreloaderUI>.Instance.SetSessionId("NotForSale"); // use this for memes ;)
                         LWIAY_timer = Time.time + 1f;
                     }
                 }
@@ -212,9 +212,10 @@ namespace UnhandledException
                         */
                     #endregion
                     // recoil reducer (break recoil animations)
-                    Cons.LocalPlayer.Weapon.NoRecoil();
+                    if(Cons.Switches.Recoil_Reducer)
+                        Cons.LocalPlayer.Weapon.NoRecoil();
                     if (Cons.Main._localPlayer != null)
-                        Cons.AimPoint = Raycast.BarrelRaycast().point;
+                        Cons.AimPoint = Raycast.BarrelRaycast();
 
                     //FUNC.Update.RecoilReducer(); // incase we dont use that so we can leave it like this for now
                     try

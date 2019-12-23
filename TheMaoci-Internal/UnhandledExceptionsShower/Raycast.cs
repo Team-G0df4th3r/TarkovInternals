@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using EFT;
+using System;
 using UnityEngine;
-using EFT;
-using EFT.Interactive;
 
 namespace UnhandledException
 {
@@ -12,8 +10,16 @@ namespace UnhandledException
          *
          * */
         private static RaycastHit raycastHit;
-
+        private static int mask = 1 << 12 | 1 << 18;
         public static Vector3 GetHandsPos()
+        {
+            if (Cons.Main._localPlayer == null)
+            {
+                return Vector3.zero;
+            }
+            return Cons.Main._localPlayer.Fireport.position - Cons.Main._localPlayer.Fireport.up * 1f; //fireport 
+        }
+        public static Vector3 GetShootPos()
         {
             if (Cons.Main._localPlayer == null)
             {
@@ -24,51 +30,50 @@ namespace UnhandledException
             {
                 return Vector3.zero;
             }
-            return firearmController.Fireport.position + Camera.main.transform.forward * 1f; //fireport 
+            return firearmController.Fireport.position + Camera.main.transform.forward * 1f;
         }
-
-        public static RaycastHit BarrelRaycast() {
-            if (Cons.Main._localPlayer == null)
-                return new RaycastHit();
-            var mask = 1 << 12 | 1 << 18;
+        public static Vector3 BarrelRaycast() {
             Physics.Linecast(Cons.Main._localPlayer.Fireport.position, Cons.Main._localPlayer.Fireport.position - Cons.Main._localPlayer.Fireport.up * 1000f, out raycastHit, mask);
-            return raycastHit;
+            return raycastHit.point;
         }
-        #region IsVisible - Properly done (still checking mask)
+        #region IsVisible - Properly done with mask
         private static bool IsVisible(GameObject obj, Vector3 Position)
         {
-            //int mask = 1 << 12 | 1 << 18; // its working for RayCast from game
+            if (Cons.Main._localPlayer == null)
+                return false;
             RaycastHit raycastHit;
-            var mask = 1 << 12 | 1 << 18;
-            return Physics.Linecast(GetHandsPos(), Position, out raycastHit, mask) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject;
+            return Physics.Linecast(GetShootPos(), Position, out raycastHit, mask) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject;
         }
         #endregion
+        private static bool CastLine(Vector3 start, Vector3 end, GameObject obj) {
+            return Physics.Linecast(start, end, out raycastHit, mask) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject;
+        }  
         #region BodyRaycastCheck() - 5 overloads
         public static bool BodyRaycastCheck(GameObject obj, Vector3 Vector_1, Vector3 Vector_2, Vector3 Vector_3, Vector3 Vector_4, Vector3 Vector_5)
         {
-            var HandsPos = GetHandsPos();
-            if(Vector_1 != null)
-                if (Physics.Linecast(HandsPos, Vector_1, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject)
+            var HandsPos = GetShootPos();
+            if (Vector_1 != null)
+                if (CastLine(HandsPos, Vector_1, obj))
                 {
                     return true;
                 }
             if (Vector_2 != null)
-                if (Physics.Linecast(HandsPos, Vector_2, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject)
+                if (CastLine(HandsPos, Vector_2, obj))
                 {
                     return true;
                 }
             if (Vector_3 != null)
-                if (Physics.Linecast(HandsPos, Vector_3, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject)
+                if (CastLine(HandsPos, Vector_3, obj))
                 {
                     return true;
                 }
             if (Vector_4 != null)
-                if (Physics.Linecast(HandsPos, Vector_4, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject)
+                if (CastLine(HandsPos, Vector_4, obj))
                 {
                     return true;
                 }
             if (Vector_5 != null)
-                if (Physics.Linecast(HandsPos, Vector_5, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject)
+                if (CastLine(HandsPos, Vector_5, obj))
                 {
                     return true;
                 }
@@ -76,24 +81,24 @@ namespace UnhandledException
         }
         public static bool BodyRaycastCheck(GameObject obj, Vector3 Vector_1, Vector3 Vector_2, Vector3 Vector_3, Vector3 Vector_4)
         {
-            var HandsPos = GetHandsPos();
+            var HandsPos = GetShootPos();
             if (Vector_1 != null)
-                if (Physics.Linecast(HandsPos, Vector_1, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject)
+                if (CastLine(HandsPos, Vector_1, obj))
                 {
                     return true;
                 }
             if (Vector_2 != null)
-                if (Physics.Linecast(HandsPos, Vector_2, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject)
+                if (CastLine(HandsPos, Vector_2, obj))
                 {
                     return true;
                 }
             if (Vector_3 != null)
-                if (Physics.Linecast(HandsPos, Vector_3, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject)
+                if (CastLine(HandsPos, Vector_3, obj))
                 {
                     return true;
                 }
             if (Vector_4 != null)
-                if (Physics.Linecast(HandsPos, Vector_4, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject)
+                if (CastLine(HandsPos, Vector_4, obj))
                 {
                     return true;
                 }
@@ -101,19 +106,19 @@ namespace UnhandledException
         }
         public static bool BodyRaycastCheck(GameObject obj, Vector3 Vector_1, Vector3 Vector_2, Vector3 Vector_3)
         {
-            var HandsPos = GetHandsPos();
+            var HandsPos = GetShootPos();
             if (Vector_1 != null)
-                if (Physics.Linecast(HandsPos, Vector_1, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject)
+                if (CastLine(HandsPos, Vector_1, obj))
                 {
                     return true;
                 }
             if (Vector_2 != null)
-                if (Physics.Linecast(HandsPos, Vector_2, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject)
+                if (CastLine(HandsPos, Vector_2, obj))
                 {
                     return true;
                 }
             if (Vector_3 != null)
-                if (Physics.Linecast(HandsPos, Vector_3, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject)
+                if (CastLine(HandsPos, Vector_3, obj))
                 {
                     return true;
                 }
@@ -121,14 +126,14 @@ namespace UnhandledException
         }
         public static bool BodyRaycastCheck(GameObject obj, Vector3 Vector_1, Vector3 Vector_2)
         {
-            var HandsPos = GetHandsPos();
+            var HandsPos = GetShootPos();
             if (Vector_1 != null)
-                if (Physics.Linecast(HandsPos, Vector_1, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject)
+                if (CastLine(HandsPos, Vector_1, obj))
                 {
                     return true;
                 }
             if (Vector_2 != null)
-                if (Physics.Linecast(HandsPos, Vector_2, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject)
+                if (CastLine(HandsPos, Vector_2, obj))
                 {
                     return true;
                 }
@@ -136,9 +141,8 @@ namespace UnhandledException
         }
         public static bool BodyRaycastCheck(GameObject obj, Vector3 Vector_1)
         {
-            var HandsPos = GetHandsPos();
             if (Vector_1 != null)
-                if (Physics.Linecast(HandsPos, Vector_1, out raycastHit) && raycastHit.collider && raycastHit.collider.gameObject.transform.root.gameObject == obj.transform.root.gameObject)
+                if (CastLine(GetShootPos(), Vector_1, obj))
                 {
                     return true;
                 }

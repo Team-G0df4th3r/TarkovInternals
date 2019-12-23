@@ -56,7 +56,6 @@ namespace UnhandledException
             }
         }
         public class Update {
-
             #region [HOTKEYS]
             public static void Hotkeys()
             {

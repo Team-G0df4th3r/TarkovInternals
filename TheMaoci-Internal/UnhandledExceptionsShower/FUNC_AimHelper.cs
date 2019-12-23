@@ -54,20 +54,25 @@ namespace UnhandledException
             Chest = 36,
             Stomach = 29,
             Ribcage, // propably 4
+            Palm = 94,
             RightPalm,
             LeftPalm,
             LeftShoulder,
             RightShoulder,
-            PlayerBones,
-            Pelvis,
-            RightThigh2,
-            LeftThigh2,
-            KickingFoot,
+            Pelvis = 14,
+            LeftThigh1 = 15,
+            LeftThigh2 = 16,
+            RightThigh1 = 20,
+            RightThigh2 = 21,
+            KickingFoot, // who fucking cares ...
             LeftFoot = 18,
+            LeftToes = 19,
+            LeftKnee = 17,
+            RightFoot = 23,
+            RightToes = 24,
+            RightKnee = 22,
             LeftElbow = 91,
             RightElBow = 112,
-            leftKnee = 17,
-            RightKnee = 22,
         }
 
         public static int idtobid(BodyPart bid = BodyPart.Head)
@@ -105,7 +110,7 @@ namespace UnhandledException
         public static void AimAtPos(Vector3 pos)
         {
             Vector2 rotation = Cons.Main._localPlayer.MovementContext.Rotation;
-            Vector3 b = Raycast.GetHandsPos();
+            Vector3 b = Raycast.GetShootPos();
             Vector3 eulerAngles = Quaternion.LookRotation((pos - b).normalized).eulerAngles;
             if (eulerAngles.x > 180f)
             {

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace UnhandledException
@@ -21,17 +20,17 @@ namespace UnhandledException
                 "ErrorEnds <<<<<<<<<<<<<" + Environment.NewLine
             );
         }
-
-
-        public static void Log(string s_Func_Name, string s_Log_Msg)
+        public static void Dump(string Func_Name, string additional_info = "")
         {
             string LocalStorage = Cons.MyDocuments + "\\_Maoci_Logs\\";
             if (!Directory.Exists(LocalStorage))
                 Directory.CreateDirectory(LocalStorage);
-
-            IEnumerable<string> IE_S_Log = new List<string>() { s_Func_Name, s_Log_Msg };
-
-            File.AppendAllLines(LocalStorage, IE_S_Log);
+            File.WriteAllText(
+                LocalStorage + Func_Name + ".log",
+                ">>>>>>>>>>>>>" + Environment.NewLine +
+                additional_info + Environment.NewLine +
+                "<<<<<<<<<<<<<" + Environment.NewLine
+            );
         }
     }
 }

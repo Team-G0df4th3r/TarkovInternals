@@ -27,6 +27,7 @@ namespace UnhandledException
                             {
                                 // updating local player data
                                 Cons.Main._localPlayer = p;
+                                Cons.LocalPlayer.SetGroup(p);
                                 Cons.LocalPlayer.Weapon.SetRecoil();
                                 Cons.LocalPlayer.Weapon.UpdateAmmo();
                                 Cons.LocalPlayer.Status.UpdateStatus();
@@ -113,29 +114,37 @@ namespace UnhandledException
                                 distancesAxisY_2 = distancesAxisY_1 + FontSize + 1;
                                 Status = Calculations.GetPlayerTotalHealth(player); // Health here 
                                 #region BONE-DUMP
-                                if (dTO < 15f)
+                                /*if (dTO < 20f)
                                 {
-                                    for (int i = 0; i < 255; i++)
+                                    //string forDump = "";
+                                    try
                                     {
-                                        if (i == 133 || i == 132 || i == 36 || i == 29 || i == 18 || i == 91 || i == 112 || i == 17 || i == 22)
-                                            continue;
-                                        string name = FUNC.Bones.SkeletonBoneName(player.PlayerBones.AnimatedTransform.Original.gameObject.GetComponent<PlayerBody>().SkeletonRootJoint, i);
-                                        Vector3 position = FUNC.W2S(FUNC.Bones.SkeletonBonePos(player.PlayerBones.AnimatedTransform.Original.gameObject.GetComponent<PlayerBody>().SkeletonRootJoint, i));
-                                        Drawing.DrawShadow(
-                                            new Rect(
-                                                position.x,
-                                                (float)Screen.height - position.y,
-                                                100f,
-                                                20f
-                                                ),
-                                            new GUIContent(i.ToString()),
-                                            new GUIStyle { fontSize = 10 },
-                                            Constants.Colors.ESP.bodies,
-                                            Constants.Colors.Black,
-                                            new Vector2(1f, 1f)
-                                        );
+                                        for (int i = 0; i < 134; i++)
+                                        {
+                                            if ((i > 13 && i <= 27) || i == 38 || i == 39 || i == 40 || i == 41 || (i >= 66 && i <= 70) || i == 132)
+                                            {
+                                                string name = "";
+                                                try
+                                                {
+                                                    name = FUNC.Bones.SkeletonBoneName(player.PlayerBones.AnimatedTransform.Original.gameObject.GetComponent<PlayerBody>().SkeletonRootJoint, i);
+                                                    name = name.Split('/')[name.Split('/').Length - 1];
+                                                    Vector3 pos = FUNC.W2S(FUNC.Bones.GetBonePosByID(player, i));
+                                                    Drawing.Text(new Rect(pos.x, Screen.height - pos.y, 20f, 20f), i.ToString());
+                                                }
+                                                catch (Exception)
+                                                {
+                                                    name = "bad";
+                                                }
+                                                //forDump = forDump + name + " - " + i + Environment.NewLine;
+                                            }
+                                        }
                                     }
-                                }
+                                    catch (Exception ex)
+                                    {
+                                        ErrorHandler.Catch("DUMPED", ex);
+                                    }
+                                    //ErrorHandler.Dump("DUMPED", forDump);
+                                }*/
                                 #endregion
                                 #region [BONE-ESP]
                                 if (Cons.Switches.ShowBones)
@@ -155,7 +164,7 @@ namespace UnhandledException
                                 }
                                 #region [VISIBILITY-CHECK]
                                 string isVisible = "";
-                                if (Raycast.BodyRaycastCheck(player.gameObject, pHeadVector, pHeadVector, pHeadVector, pHeadVector, pHeadVector))
+                                if (Raycast.BodyRaycastCheck(player.gameObject, pHeadVector))
                                 {
                                     isVisible = "+";
                                 }

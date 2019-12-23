@@ -26,6 +26,15 @@ namespace UnhandledException
             public static float Grenade = 100f;
         }
         public class LocalPlayer {
+            #region Packets
+            public static void func1051() {
+                //GClass1051 gclass;
+                //gclass.
+            }
+            #endregion
+            #region Skills and HP
+
+            #endregion
             #region Group
             private static string Group = "";
             public static void SetGroup(string localPlayerGroup)
@@ -54,13 +63,14 @@ namespace UnhandledException
                 public static void NoRecoil() {
                     if (Main._localPlayer != null)
                     {
-                        Main._localPlayer.ProceduralWeaponAnimation.Mask = EFT.Animations.EProceduralAnimationMask.DrawDown;
+                        Main._localPlayer.ProceduralWeaponAnimation.Mask = EFT.Animations.EProceduralAnimationMask.ForceReaction;
+                        /*
                         Main._localPlayer.ProceduralWeaponAnimation.AimSwayMax = new Vector3(0f, 0f, 0f);
                         Main._localPlayer.ProceduralWeaponAnimation.AimSwayMin = new Vector3(0f, 0f, 0f);
-                        Main._localPlayer.ProceduralWeaponAnimation.AimSwayStartsThreshold = 0f; 
+                        Main._localPlayer.ProceduralWeaponAnimation.AimSwayStartsThreshold = 0f;
                         Main._localPlayer.ProceduralWeaponAnimation.AimSwayMaxThreshold = 0f;
+                        */
                     }
-                    // Main._localPlayer.ProceduralWeaponAnimation.
                 }
 
                 public static string CurrentAmmo;
