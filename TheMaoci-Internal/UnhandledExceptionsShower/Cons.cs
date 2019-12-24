@@ -185,7 +185,7 @@ namespace UnhandledException
             public static List<LootItem> _corpses;
             public static List<LootItem> _lootItems;
             public static List<ExfiltrationPoint> _exfils;
-            public static Dictionary<GInterface162, EFT.GameWorld.GStruct63>.Enumerator _containers;
+            public static Dictionary<GInterface163, EFT.GameWorld.GStruct65>.Enumerator _containers;
 
             public static Player _localPlayer;
             public static List<Player> tPlayer;

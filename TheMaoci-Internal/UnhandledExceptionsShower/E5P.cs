@@ -794,7 +794,7 @@ namespace UnhandledException
             }
             public class Calculations
             {
-                public static bool ItemIsInside(GInterface162 Container) {
+                public static bool ItemIsInside(GInterface163 Container) {
                     if (Cons.LootSearcher == "")
                         return true;
                     var inside = Container.Items.GetEnumerator();

@@ -123,8 +123,8 @@ namespace UnhandledException
                     if (Input.GetKeyDown(KeyCode.F11))
                     {
                         // simple FOV changer
-                        GClass433.SetFov(120f, 1f);
-                        GClass433.ApplyFoV(120, 100, 120);
+                        GClass436.SetFov(120f, 1f);
+                        GClass436.ApplyFoV(120, 100, 120);
                     }
                 }
                 #endregion
