@@ -17,15 +17,15 @@ namespace UnhandledException
                 float distanceOfTarget = 9999f;
                 foreach (Player player in Cons.Main._players)
                 {
-                    if (!(player == null) && !(player == Cons.Main._localPlayer) && player.HealthController != null && player.HealthController.IsAlive)
+                    if (player != null && player != Cons.Main._localPlayer && player.HealthController != null)
                     {
-                        if (player.GroupId != Cons.Main._localPlayer.GroupId || Cons.Main._localPlayer.GroupId == "" || Cons.Main._localPlayer.GroupId == "0" || Cons.Main._localPlayer.GroupId == null)
+                        if (!Cons.LocalPlayer.isInYourGroup(player))
                         {
                             Vector3 vector = getBonePos(player);
                             float dist = FastMath.FD(Camera.main.transform.position, player.Transform.position);
                             if (dist > Cons.Distances.Aim)
                                 continue;
-                            if (!(vector == Vector3.zero) && CalcInFov(vector) <= Cons.Aim.AAN_FOV/* && IsVisible(player.gameObject, getBonePos(player))*/)
+                            if (vector != Vector3.zero && CalcInFov(vector) <= Cons.Aim.AAN_FOV/* && IsVisible(player.gameObject, getBonePos(player))*/)
                             {
                                 if (distanceOfTarget > dist)
                                 {
@@ -81,13 +81,10 @@ namespace UnhandledException
             {
                 case BodyPart.Neck:
                     return 132;
-
                 case BodyPart.Chest:
                     return 36;
-
                 case BodyPart.Stomach:
                     return 29;
-
                 default:
                     return 133;
             }
@@ -110,7 +107,7 @@ namespace UnhandledException
         public static void AimAtPos(Vector3 pos)
         {
             Vector2 rotation = Cons.Main._localPlayer.MovementContext.Rotation;
-            Vector3 b = Raycast.GetShootPos();
+            Vector3 b = Raycast.GetHandsPos();
             Vector3 eulerAngles = Quaternion.LookRotation((pos - b).normalized).eulerAngles;
             if (eulerAngles.x > 180f)
             {

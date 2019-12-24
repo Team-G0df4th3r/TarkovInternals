@@ -141,6 +141,7 @@ namespace UnhandledException
             {
                 if (Cons.Buttons.Ma0c1)
                 {
+                    Cons.Switches.Recoil_Reducer = true;
                     Cons.Switches.Draw_ESP = true;
                     Cons.Switches.Draw_Corpses = true;
                     Cons.Switches.Draw_Grenades = true;

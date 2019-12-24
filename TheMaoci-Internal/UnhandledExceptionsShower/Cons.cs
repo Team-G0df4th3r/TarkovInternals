@@ -37,6 +37,9 @@ namespace UnhandledException
             #endregion
             #region Group
             private static string Group = "";
+            public static string GetGroup() {
+                return Group;
+            }
             public static void SetGroup(string localPlayerGroup)
             {
                 Group = localPlayerGroup;
@@ -57,19 +60,35 @@ namespace UnhandledException
             #region Weapon
             public class Weapon {
                 public static int RecoilIntensity; // described in %
+                public static Vector3 SavedCameraSpringCurrent = Vector3.zero;
+                public static Vector3 SavedHandsSpringCurrent = Vector3.zero;
                 public static void SetRecoil() {
                     RecoilIntensity = (int)(Main._localPlayer.ProceduralWeaponAnimation.Shootingg.Intensity * 100);
                 }
                 public static void NoRecoil() {
                     if (Main._localPlayer != null)
                     {
-                        Main._localPlayer.ProceduralWeaponAnimation.Mask = EFT.Animations.EProceduralAnimationMask.ForceReaction;
                         /*
-                        Main._localPlayer.ProceduralWeaponAnimation.AimSwayMax = new Vector3(0f, 0f, 0f);
-                        Main._localPlayer.ProceduralWeaponAnimation.AimSwayMin = new Vector3(0f, 0f, 0f);
-                        Main._localPlayer.ProceduralWeaponAnimation.AimSwayStartsThreshold = 0f;
-                        Main._localPlayer.ProceduralWeaponAnimation.AimSwayMaxThreshold = 0f;
+                        Main._localPlayer.ProceduralWeaponAnimation.HandsContainer.CameraRotation.InputIntensity = 0f;
+                        Main._localPlayer.ProceduralWeaponAnimation.HandsContainer.CameraRotation.AccelerationMax = 0f;
+                        Main._localPlayer.ProceduralWeaponAnimation.HandsContainer.HandsRotation.InputIntensity = 0f;
+                        Main._localPlayer.ProceduralWeaponAnimation.HandsContainer.HandsRotation.AccelerationMax = 0f;
                         */
+                        /*
+                        Main._localPlayer.ProceduralWeaponAnimation.HandsContainer.CameraRotation.AccelerationMax = .01f;
+                        Main._localPlayer.ProceduralWeaponAnimation.HandsContainer.CameraRotation.Damping = 0f;
+                        Main._localPlayer.ProceduralWeaponAnimation.HandsContainer.CameraRotation.Softness = .01f;
+                        Main._localPlayer.ProceduralWeaponAnimation.HandsContainer.CameraRotation.Max = new Vector3(0.01f, 0.01f, 0.01f);
+                        Main._localPlayer.ProceduralWeaponAnimation.HandsContainer.CameraRotation.Min = new Vector3(0.01f, 0.01f, 0.01f);
+                        Main._localPlayer.ProceduralWeaponAnimation.HandsContainer.HandsRotation.AccelerationMax = .01f;
+                        Main._localPlayer.ProceduralWeaponAnimation.HandsContainer.HandsRotation.Damping = 0f;
+                        Main._localPlayer.ProceduralWeaponAnimation.HandsContainer.HandsRotation.Softness = .01f;
+                        Main._localPlayer.ProceduralWeaponAnimation.HandsContainer.HandsRotation.Max = new Vector3(0.01f, 0.01f, 0.01f);
+                        Main._localPlayer.ProceduralWeaponAnimation.HandsContainer.HandsRotation.Min = new Vector3(0.01f, 0.01f, 0.01f);
+                        Main._localPlayer.ProceduralWeaponAnimation.HandsContainer.SwaySpring._dampingRatio = .0001f;
+                        Main._localPlayer.ProceduralWeaponAnimation.HandsContainer.Recoil.Damping = 0f;
+                        */
+                        Main._localPlayer.ProceduralWeaponAnimation.Shootingg.Intensity = 0f; // no recoil
                     }
                 }
 
@@ -86,13 +105,13 @@ namespace UnhandledException
                         }
                         else 
                         {
-                            CurrentAmmo = "Melee";
+                            CurrentAmmo = "";
                             MaxAmmo = "";
                         }
                     }
                     catch (Exception) 
                     {
-                        CurrentAmmo = "Melee";
+                        CurrentAmmo = "";
                         MaxAmmo = "";
                     }
                     

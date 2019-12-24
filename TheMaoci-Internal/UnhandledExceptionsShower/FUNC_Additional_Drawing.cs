@@ -181,11 +181,13 @@ namespace UnhandledException
                 }
                 if (Cons.Switches.Draw_Crosshair)
                 {
-                    if (!Cons.Main._localPlayer.ProceduralWeaponAnimation.IsAiming)
-                    {
+                    /*if (!Cons.Main._localPlayer.ProceduralWeaponAnimation.IsAiming)
+                    {*/
                         Drawing.Crosshair();
-                    }
+                    //}
                 }
+                Drawing.Text(new Rect(250f, Cons.ScreenHeight.Full - 45f, 200f, 20f), Cons.LocalPlayer.GetGroup(), Constants.Colors.White);
+                
             }
             catch (Exception e)
             {
