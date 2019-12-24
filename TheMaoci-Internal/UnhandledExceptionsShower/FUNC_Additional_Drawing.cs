@@ -186,8 +186,6 @@ namespace UnhandledException
                         Drawing.Crosshair();
                     //}
                 }
-                Drawing.Text(new Rect(250f, Cons.ScreenHeight.Full - 45f, 200f, 20f), Cons.LocalPlayer.GetGroup(), Constants.Colors.White);
-                
             }
             catch (Exception e)
             {
