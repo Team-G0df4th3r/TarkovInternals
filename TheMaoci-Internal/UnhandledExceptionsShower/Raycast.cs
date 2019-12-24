@@ -33,6 +33,8 @@ namespace UnhandledException
             return firearmController.Fireport.position + Camera.main.transform.forward * 1f;
         }
         public static Vector3 BarrelRaycast() {
+            if (Cons.Main._localPlayer.Fireport == null)
+                return Vector3.zero;
             Physics.Linecast(Cons.Main._localPlayer.Fireport.position, Cons.Main._localPlayer.Fireport.position - Cons.Main._localPlayer.Fireport.up * 1000f, out raycastHit, mask);
             return raycastHit.point;
         }

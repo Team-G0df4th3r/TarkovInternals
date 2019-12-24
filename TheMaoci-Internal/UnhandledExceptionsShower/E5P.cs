@@ -429,16 +429,16 @@ namespace UnhandledException
                 {
                     switch (playerType)
                     {
+                        case PlayerType.TeamMate: // this one must be above Player
+                            return Constants.Colors.ESP.group;
+                        case PlayerType.Player:
+                            return Constants.Colors.ESP.player[1];
                         case PlayerType.Scav:
                             return Constants.Colors.ESP.npc;
                         case PlayerType.PlayerScav:
                             return Constants.Colors.ESP.scav_player;
-                        case PlayerType.Player:
-                            return Constants.Colors.ESP.player[1];
                         case PlayerType.Boss:
                             return Constants.Colors.ESP.npc;
-                        case PlayerType.TeamMate:
-                            return Constants.Colors.ESP.group;
                         default:
                             return Constants.Colors.ESP.npc;
                     }
@@ -794,7 +794,7 @@ namespace UnhandledException
             }
             public class Calculations
             {
-                public static bool ItemIsInside(GInterface162 Container) {
+                public static bool ItemIsInside(GInterface163 Container) {
                     if (Cons.LootSearcher == "")
                         return true;
                     var inside = Container.Items.GetEnumerator();

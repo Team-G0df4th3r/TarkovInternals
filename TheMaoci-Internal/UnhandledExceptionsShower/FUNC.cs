@@ -123,8 +123,8 @@ namespace UnhandledException
                     if (Input.GetKeyDown(KeyCode.F11))
                     {
                         // simple FOV changer
-                        GClass433.SetFov(120f, 1f);
-                        GClass433.ApplyFoV(120, 100, 120);
+                        GClass436.SetFov(120f, 1f);
+                        GClass436.ApplyFoV(120, 100, 120);
                     }
                 }
                 #endregion
@@ -141,6 +141,7 @@ namespace UnhandledException
             {
                 if (Cons.Buttons.Ma0c1)
                 {
+                    Cons.Switches.Recoil_Reducer = true;
                     Cons.Switches.Draw_ESP = true;
                     Cons.Switches.Draw_Corpses = true;
                     Cons.Switches.Draw_Grenades = true;
