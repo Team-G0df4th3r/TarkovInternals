@@ -90,8 +90,9 @@
     <Folder Include="Functions\" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>bin\library\Assembly-CSharp.dll</HintPath>
+    <Reference Include="Assembly-CSharp_saved-cleaned, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Documents\Assembly-CSharp_saved-cleaned.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>bin\library\UnityEngine.dll</HintPath>
@@ -106,7 +107,7 @@
       <HintPath>bin\library\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>bin\library\UnityEngine.UI.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\Battlestate Games\EFT (live)\EscapeFromTarkov_Data\Managed\UnityEngine.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

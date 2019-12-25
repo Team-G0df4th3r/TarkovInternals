@@ -1,6 +1,7 @@
 ﻿using EFT;
 using EFT.Interactive;
 using System;
+using System.Collections.Generic;
 
 namespace UnhandledException
 {
@@ -12,5 +13,6 @@ namespace UnhandledException
         public static Type LootItem = new LootItem().GetType();
         public static Type Player = new Player().GetType();
         // public static Type Throwable = new Throwable().GetType(); // no interface for this
+        public static Dictionary<string, int> GroupTable = new Dictionary<string, int>();
     }
 }

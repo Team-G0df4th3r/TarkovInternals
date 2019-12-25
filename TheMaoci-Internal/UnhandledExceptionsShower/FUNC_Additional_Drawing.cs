@@ -186,6 +186,13 @@ namespace UnhandledException
                         Drawing.Crosshair();
                     //}
                 }
+                if (Cons.Switches.Draw_Crosshair2d)
+                {
+                    /*if (!Cons.Main._localPlayer.ProceduralWeaponAnimation.IsAiming)
+                    {*/
+                    Drawing.Crosshair2d();
+                    //}
+                }
             }
             catch (Exception e)
             {
@@ -218,7 +225,8 @@ namespace UnhandledException
                 Drawing.CheckBox(ref Cons.Switches.Draw_Exfil,          "Exfils", column_1++);
                 Drawing.CheckBox(ref Cons.Switches.Recoil_Reducer,      "Recoil", column_1++);
                 Drawing.CheckBox(ref Cons.Switches.AimingAtNikita,      "Aim", column_1++);
-                Drawing.CheckBox(ref Cons.Switches.Draw_Crosshair,      "Crosshair", column_1++); 
+                Drawing.CheckBox(ref Cons.Switches.Draw_Crosshair,      "Crosshair", column_1++);
+                Drawing.CheckBox(ref Cons.Switches.Draw_Crosshair2d, "Crosshair2d", column_1++);
                 Drawing.CheckBox(ref Cons.Switches.Spawn_FullBright,    "Full.Bright", column_1++);
                 Drawing.CheckBox(ref Cons.Switches.StreamerMode,        "Streamer.Mode", column_1++);
                 Drawing.CheckBox(ref Cons.Switches.ChangeSessionID,     "RenameSessionID", column_1++);
@@ -253,6 +261,7 @@ namespace UnhandledException
                 Drawing.CheckBox(ref Cons.Switches.IKnowWhatImDoing, "IKWID", 3, 2);
                 // start what maoci starts each time
                 Drawing.Button(ref Cons.Buttons.Ma0c1, "Maoci", 4, 2);
+                Drawing.Button(ref Cons.Buttons.Niger, "Void", 5, 2);
 
                 //Drawing.Button(ref Cons.Buttons.Niger, "Niger", 3, 2);
                 // Second column indicates with column = 1

@@ -20,6 +20,7 @@ namespace UnhandledException
                         Cons.AliveCount.Reset();
                         Cons.Main.tPlayer = new List<Player>();
                         var enum_Players = Cons.Main._GameWorld.RegisteredPlayers.GetEnumerator();
+                        int groupNum = 0;
                         while (enum_Players.MoveNext())
                         {
                             var p = enum_Players.Current;
@@ -39,6 +40,19 @@ namespace UnhandledException
                                     float distance = FastMath.FD(Camera.main.transform.position, p.Transform.position);
                                     Calculations.CalculateAlive(distance);
                                     // add to list if its not below 1m and not above max distance also it player is in screen (not counting width of screen - cause we are using snaplines as an radar
+
+                                    if (!Cons.LocalPlayer.isInYourGroup(p) && p.GroupId != "0" && p.GroupId != "" && p.GroupId != null)
+                                    {
+
+                                        try { 
+                                            Types.GroupTable.Add(p.GroupId, groupNum++);
+                                         } catch (Exception)
+                                        {
+                                            groupNum--;
+                                        }
+
+                                    }
+
                                     if (distance > 1f && distance <= Cons.Distances.Players && FUNC.isInScreenYZ(FUNC.W2S(p.Transform.position)))
                                     {
                                         Cons.Main.tPlayer.Add(p);
@@ -153,7 +167,18 @@ namespace UnhandledException
                                 }
                                 #endregion
                                 Calculations.PlayerType playerType = Calculations.PlayerType.Scav;
+
                                 playerDisplayName = Calculations.PlayerName(player, ref playerType);
+
+                                int gInt;
+
+                                if (Types.GroupTable.TryGetValue(player.GroupId, out gInt))
+                                {
+                                   
+                                    playerDisplayName += "{" + gInt + "}";
+                                }
+
+                                
                                 playerColor = Calculations.PlayerColor(playerType);
                                 if (playerType != Calculations.PlayerType.TeamMate)
                                 {
@@ -188,6 +213,9 @@ namespace UnhandledException
                                 // set colors now
                                 LabelSize.normal.textColor = playerColor;
                                 #region Slot 0 - Player Name (vector, size, drawing)
+
+                                
+
                                 if (nameNickname != "")
                                 {
                                     Vector2 vector_playerName = GUI.skin.GetStyle(nameNickname).CalcSize(new GUIContent(nameNickname));

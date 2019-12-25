@@ -208,6 +208,8 @@ namespace UnhandledException
 
             public static Player _localPlayer;
             public static List<Player> tPlayer;
+            
+            public static List<string> plrGroups;
             public static List<Throwable> tGrenades;
             public static List<LootItem> tCorpses;
             public static List<LootItem> tItems;
@@ -246,6 +248,7 @@ namespace UnhandledException
             public static bool Draw_Exfil = false;
             public static bool Draw_Containers = false;
             public static bool Draw_Crosshair = false;
+            public static bool Draw_Crosshair2d = false;
             public static bool Display_HelpInfo = false;
             public static bool Switch_Colors = false;
             public static bool DisplayPlayerInfo = false;
@@ -268,6 +271,7 @@ namespace UnhandledException
                 Draw_Grenades = false;
                 Draw_Loot = false;
                 Draw_Crosshair = false;
+                Draw_Crosshair2d = false;
                 Display_HelpInfo = false;
                 Switch_Colors = false;
                 DisplayPlayerInfo = false;

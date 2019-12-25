@@ -12,6 +12,13 @@ namespace UnhandledException
             P(new Vector2(AimAtPoint.x - 2f, Screen.height - AimAtPoint.y - 1f), new Color(0f, 0f, 0f), 4f);
             P(new Vector2(AimAtPoint.x - 1f, Screen.height - AimAtPoint.y - 1f), new Color(1f, 1f, 1f), 2f);
         }
+        public static void Crosshair2d()
+        {
+            if (!Cons.Main._localPlayer.ProceduralWeaponAnimation.IsAiming)
+            {
+                Drawing.P(new Vector2(Screen.width / 2f - 1f, Screen.height / 2f - 1f), Color.yellow, 2f);
+            }
+        }
         #endregion
         #region DrawPixel
         public static void P(Vector2 Position, Color color, float thickness)
