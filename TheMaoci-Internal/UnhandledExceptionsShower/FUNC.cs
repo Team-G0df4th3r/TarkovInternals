@@ -31,12 +31,54 @@ namespace UnhandledException
         }
         public static Vector3 W2S(Vector3 V) { return Camera.main.WorldToScreenPoint(V); } 
         public class Bones {
+
+            public enum BodyPart
+            {
+                Pelvis = 14,
+                LThigh1 = 15,
+                LThigh2 = 16,
+                LCalf = 17,
+                LFoot = 18,
+                LToe = 19,
+                RThigh1 = 20,
+                RThigh2 = 21,
+                RCalf = 22,
+                RFoot = 23,
+                RToe = 24,
+                Bear_Feet = 25,
+                USEC_Feet = 26,
+                BEAR_feet_1 = 27,
+                Spine1 = 29,
+                Gear1 = 30,
+                Gear2 = 31,
+                Gear3 = 32,
+                Gear4 = 33,
+                Gear4_1 = 34,
+                Gear5 = 35,
+                Spine2 = 36,
+                Spine3 = 37,
+                Ribcage = 66,
+                LCollarbone = 89,
+                LUpperarm = 90,
+                LForearm1 = 91,
+                LForearm2 = 92,
+                LForearm3 = 93,
+                LPalm = 94,
+                RUpperarm = 111,
+                RForearm1 = 112,
+                RForearm2 = 113,
+                RForearm3 = 114,
+                RPalm = 115,
+                Neck = 132,
+                Head = 133
+            }
             public static Vector3 SkeletonBonePos(Diz.Skinning.Skeleton sko, int id)
             {
                 return sko.Bones.ElementAt(id).Value.position;
             }
             public static string SkeletonBoneName(Diz.Skinning.Skeleton sko, int id)
             {
+                //most likely used for dumping
                 return sko.Bones.ElementAt(id).Key.ToString();
             }
             public static Vector3 GetBonePosByID(Player p, int id)

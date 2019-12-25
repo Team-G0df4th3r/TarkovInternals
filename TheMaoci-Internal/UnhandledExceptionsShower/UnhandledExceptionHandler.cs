@@ -304,7 +304,7 @@ namespace UnhandledException
                 if (Cons.Switches.AimingAtNikita) 
                 {
                     enabled = enabled + "A";
-                    FUNC_AimHelper.Aimbot_Method();
+                    A1M.Draw.Aimbot();
                     //Drawing.Circle(Cons.ScreenWidth, Cons.ScreenHeight, Cons.Aim.AAN_FOV);
                 }
                 if (Cons.Switches.Draw_ESP || Cons.Switches.Draw_Grenades || Cons.Switches.Draw_Loot || Cons.Switches.Draw_Corpses || Cons.Switches.AimingAtNikita)
