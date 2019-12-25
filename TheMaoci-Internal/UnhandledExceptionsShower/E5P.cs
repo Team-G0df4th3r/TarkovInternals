@@ -39,7 +39,8 @@ namespace UnhandledException
                                     float distance = FastMath.FD(Camera.main.transform.position, p.Transform.position);
                                     Calculations.CalculateAlive(distance);
                                     // add to list if its not below 1m and not above max distance also it player is in screen (not counting width of screen - cause we are using snaplines as an radar
-                                    if (distance > 1f && distance <= Cons.Distances.Players && FUNC.isInScreenYZ(FUNC.W2S(p.Transform.position)))
+
+                                    if (distance > 1f && distance <= Cons.Distances.Players) // && FUNC.isInScreenYZ(FUNC.W2S(p.Transform.position))
                                     {
                                         Cons.Main.tPlayer.Add(p);
                                     }
@@ -94,164 +95,152 @@ namespace UnhandledException
                         while (e.MoveNext())
                         {
                             var player = e.Current;
-                            if (FUNC.isInScreenRestricted(FUNC.W2S(player.Transform.position)))
+                            if (FUNC.isInScreenYZ(FUNC.W2S(player.Transform.position)))
                             {
-                                float dTO = FastMath.FD(Camera.main.transform.position, player.Transform.position);
-                                // main head vector 3d (x,y,z)
-                                Vector3 pHeadVector = FUNC.W2S(player.PlayerBones.Head.position);
-                                // setting head size comparing head position and neck position and multiplying by 1.5 (actually its head size)
-                                float find_sizebox = Math.Abs(pHeadVector.y - FUNC.W2S(player.PlayerBones.Neck.position).y) * 1.5f; // size of the head - its not good but its scaling without much maths
-                                                                                                                                                          // making sure head will not be too big
-                                find_sizebox = (find_sizebox > 30f) ? 30f : find_sizebox;
-                                float half_sizebox = (find_sizebox > 30f) ? 15f : find_sizebox / 2f;
-                                // size of fonts depending on distance
-                                int FontSize = 12;
-                                FastMath.DistSizer(dTO, ref FontSize, ref deltaDistance, ref devLabel);
-                                LabelSize.fontSize = FontSize;
-                                //create 3 size table of distances for texts (name, status, weapon)
-                                distancesAxisY_0 = deltaDistance + 10f;
-                                distancesAxisY_1 = distancesAxisY_0 + FontSize + 1;
-                                distancesAxisY_2 = distancesAxisY_1 + FontSize + 1;
-                                Status = Calculations.GetPlayerTotalHealth(player); // Health here 
-                                #region BONE-DUMP
-                                /*if (dTO < 20f)
-                                {
-                                    //string forDump = "";
-                                    try
-                                    {
-                                        for (int i = 0; i < 134; i++)
-                                        {
-                                            if ((i > 13 && i <= 27) || i == 38 || i == 39 || i == 40 || i == 41 || (i >= 66 && i <= 70) || i == 132)
-                                            {
-                                                string name = "";
-                                                try
-                                                {
-                                                    name = FUNC.Bones.SkeletonBoneName(player.PlayerBones.AnimatedTransform.Original.gameObject.GetComponent<PlayerBody>().SkeletonRootJoint, i);
-                                                    name = name.Split('/')[name.Split('/').Length - 1];
-                                                    Vector3 pos = FUNC.W2S(FUNC.Bones.GetBonePosByID(player, i));
-                                                    Drawing.Text(new Rect(pos.x, Screen.height - pos.y, 20f, 20f), i.ToString());
-                                                }
-                                                catch (Exception)
-                                                {
-                                                    name = "bad";
-                                                }
-                                                //forDump = forDump + name + " - " + i + Environment.NewLine;
-                                            }
-                                        }
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        ErrorHandler.Catch("DUMPED", ex);
-                                    }
-                                    //ErrorHandler.Dump("DUMPED", forDump);
-                                }*/
-                                #endregion
-                                #region [BONE-ESP]
-                                if (Cons.Switches.ShowBones)
-                                {
-                                    Calculations.PlayerBones(dTO, player);
-                                }
-                                #endregion
+                                //fix for colors not holds after leaving screen
                                 Calculations.PlayerType playerType = Calculations.PlayerType.Scav;
                                 playerDisplayName = Calculations.PlayerName(player, ref playerType);
                                 playerColor = Calculations.PlayerColor(playerType);
-                                if (playerType != Calculations.PlayerType.TeamMate)
+                                #region [Snap.Lines]
+                                if (Cons.Bools.SnapLines && player != Cons.Main._localPlayer)
                                 {
-                                    Backup = GUI.color;
-                                    GUI.color = Color.red;
-                                    Drawing.P(new Vector2(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox), Constants.Colors.Red, find_sizebox);
-                                    GUI.color = Backup;
-                                }
-                                #region [VISIBILITY-CHECK]
-                                string isVisible = "";
-                                if (Raycast.BodyRaycastCheck(player.gameObject, pHeadVector))
-                                {
-                                    isVisible = "+";
+                                    Calculations.SnapLines(player, playerColor);
                                 }
                                 #endregion
-                                #region [INIT-Texts]
-                                string nameNickname = $"{playerDisplayName}";
-                                string playerStatus = $"{isVisible}[{(int)dTO}m] {Status}";
-                                string WeaponName = "";
-                                #endregion
-                                #region [TRY-DecodeWeaponName]
-                                try
+                                if (FUNC.isInScreenRestricted(FUNC.W2S(player.Transform.position)))
                                 {
-                                    WeaponName = player.Weapon.ShortName.Localized();
-                                }
-                                catch (Exception)
-                                {
-                                    WeaponName = "No Weapon";
-                                }
-                                #endregion
+                                    float dTO = FastMath.FD(Camera.main.transform.position, player.Transform.position);
+                                    // main head vector 3d (x,y,z)
+                                    Vector3 pHeadVector = FUNC.W2S(player.PlayerBones.Head.position);
+                                    // setting head size comparing head position and neck position and multiplying by 1.5 (actually its head size)
+                                    float find_sizebox = Math.Abs(pHeadVector.y - FUNC.W2S(player.PlayerBones.Neck.position).y) * 1.5f; // size of the head - its not good but its scaling without much maths
+                                                                                                                                        // making sure head will not be too big
+                                    find_sizebox = (find_sizebox > 30f) ? 30f : find_sizebox;
+                                    float half_sizebox = (find_sizebox > 30f) ? 15f : find_sizebox / 2f;
+                                    // size of fonts depending on distance
+                                    int FontSize = 12;
+                                    FastMath.DistSizer(dTO, ref FontSize, ref deltaDistance, ref devLabel);
+                                    LabelSize.fontSize = FontSize;
+                                    //create 3 size table of distances for texts (name, status, weapon)
+                                    distancesAxisY_0 = deltaDistance + 10f;
+                                    distancesAxisY_1 = distancesAxisY_0 + FontSize + 1;
+                                    distancesAxisY_2 = distancesAxisY_1 + FontSize + 1;
+                                    Status = Calculations.GetPlayerTotalHealth(player); // Health here 
+                                    #region BONE-DUMP
+                                    /*if (dTO < 20f)
+                                    {
+                                        //string forDump = "";
+                                        try
+                                        {
+                                            for (int i = 0; i < 134; i++)
+                                            {
+                                                if ((i > 13 && i <= 27) || i == 38 || i == 39 || i == 40 || i == 41 || (i >= 66 && i <= 70) || i == 132)
+                                                {
+                                                    string name = "";
+                                                    try
+                                                    {
+                                                        name = FUNC.Bones.SkeletonBoneName(player.PlayerBones.AnimatedTransform.Original.gameObject.GetComponent<PlayerBody>().SkeletonRootJoint, i);
+                                                        name = name.Split('/')[name.Split('/').Length - 1];
+                                                        Vector3 pos = FUNC.W2S(FUNC.Bones.GetBonePosByID(player, i));
+                                                        Drawing.Text(new Rect(pos.x, Screen.height - pos.y, 20f, 20f), i.ToString());
+                                                    }
+                                                    catch (Exception)
+                                                    {
+                                                        name = "bad";
+                                                    }
+                                                    //forDump = forDump + name + " - " + i + Environment.NewLine;
+                                                }
+                                            }
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            ErrorHandler.Catch("DUMPED", ex);
+                                        }
+                                        //ErrorHandler.Dump("DUMPED", forDump);
+                                    }*/
+                                    #endregion
+                                    #region [BONE-ESP]
+                                    if (Cons.Bools.ShowBones)
+                                    {
+                                        Calculations.PlayerBones(dTO, player);
+                                    }
+                                    #endregion
+                                    if (playerType != Calculations.PlayerType.TeamMate)
+                                    {
+                                        Backup = GUI.color;
+                                        GUI.color = Color.red;
+                                        Drawing.Special.DrawPoint(pHeadVector.x - half_sizebox, (float)(Screen.height - pHeadVector.y) - half_sizebox, find_sizebox, Constants.Colors.Red);
+                                        GUI.color = Backup;
+                                    }
+                                    #region [VISIBILITY-CHECK]
+                                    string isVisible = "";
+                                    if (Raycast.BodyRaycastCheck(player.gameObject, pHeadVector))
+                                    {
+                                        isVisible = "+";
+                                    }
+                                    #endregion
+                                    #region [INIT-Texts]
+                                    string nameNickname = $"{playerDisplayName}";
+                                    string playerStatus = $"{isVisible}[{(int)dTO}m] {Status}";
+                                    string WeaponName = "";
+                                    #endregion
+                                    #region [TRY-DecodeWeaponName]
+                                    try
+                                    {
+                                        WeaponName = player.Weapon.ShortName.Localized();
+                                    }
+                                    catch (Exception)
+                                    {
+                                        WeaponName = "No Weapon";
+                                    }
+                                    #endregion
 
-                                // set colors now
-                                LabelSize.normal.textColor = playerColor;
-                                #region Slot 0 - Player Name (vector, size, drawing)
-                                if (nameNickname != "")
-                                {
-                                    Vector2 vector_playerName = GUI.skin.GetStyle(nameNickname).CalcSize(new GUIContent(nameNickname));
-                                    float player_NameText = (devLabel == 1f) ? vector_playerName.x : (vector_playerName.x / devLabel);
-                                    Drawing.DrawShadow(
-                                        new Rect(
+                                    // set colors now
+                                    LabelSize.normal.textColor = playerColor;
+                                    #region Slot 0 - Player Name (vector, size, drawing)
+                                    if (nameNickname != "")
+                                    {
+                                        Vector2 vector_playerName = GUI.skin.GetStyle(nameNickname).CalcSize(new GUIContent(nameNickname));
+                                        float player_NameText = (devLabel == 1f) ? vector_playerName.x : (vector_playerName.x / devLabel);
+                                        Drawing.Special.DrawText(
+                                            nameNickname,
                                             pHeadVector.x - player_NameText / 2f,
                                             (float)Screen.height - FUNC.W2S(player.PlayerBones.Head.position).y - distancesAxisY_0,
-                                            player_NameText,
-                                            vector_playerName.y
-                                            ),
-                                        new GUIContent(nameNickname),
-                                        LabelSize,
-                                        playerColor,
-                                        Constants.Colors.Black,
-                                        new Vector2(1f, 1f)
-                                    );
-                                }
-                                #endregion
-                                #region Slot 1 - Status (distance, health)
-                                Vector2 vector_playerStatus = GUI.skin.GetStyle(playerStatus).CalcSize(new GUIContent(playerStatus));
-                                float player_TextWidth = (devLabel == 1f) ? vector_playerStatus.x : (vector_playerStatus.x / devLabel);
-                                GUIContent content = new GUIContent(playerStatus);
-                                Drawing.DrawShadow(
-                                    new Rect(
+                                            vector_playerName,
+                                            LabelSize,
+                                            playerColor
+                                        );
+                                    }
+                                    #endregion
+                                    #region Slot 1 - Status (distance, health)
+                                    Vector2 vector_playerStatus = GUI.skin.GetStyle(playerStatus).CalcSize(new GUIContent(playerStatus));
+                                    float player_TextWidth = (devLabel == 1f) ? vector_playerStatus.x : (vector_playerStatus.x / devLabel);
+                                    Drawing.Special.DrawText(
+                                        playerStatus,
                                         pHeadVector.x - player_TextWidth / 2f,
                                         (float)Screen.height - FUNC.W2S(player.PlayerBones.Head.position).y - distancesAxisY_1,
-                                        player_TextWidth,
-                                        vector_playerStatus.y
-                                        ),
-                                    content,
-                                    LabelSize,
-                                    playerColor,
-                                    Constants.Colors.Black,
-                                    new Vector2(1f, 1f)
-                                );
-                                #endregion
-                                #region Slot 2 - Weapon Name (vector, size, drawing) - if not empty
-                                if (WeaponName != "")
-                                {
-                                    Vector2 vector_WeaponName = GUI.skin.GetStyle(WeaponName).CalcSize(new GUIContent(WeaponName));
-                                    float player_WeaponName = (devLabel == 1f) ? vector_WeaponName.x : (vector_WeaponName.x / devLabel);
-                                    Drawing.DrawShadow(
-                                        new Rect(
-                                            pHeadVector.x - player_WeaponName / 2f,
-                                            (float)Screen.height - FUNC.W2S(player.PlayerBones.Head.position).y - distancesAxisY_2,
-                                            player_WeaponName,
-                                            vector_WeaponName.y
-                                            ),
-                                        new GUIContent(WeaponName),
+                                        vector_playerStatus,
                                         LabelSize,
-                                        playerColor,
-                                        Constants.Colors.Black,
-                                        new Vector2(1f, 1f)
+                                        playerColor
                                     );
+                                    #endregion
+                                    #region Slot 2 - Weapon Name (vector, size, drawing) - if not empty
+                                    if (WeaponName != "")
+                                    {
+                                        Vector2 vector_WeaponName = GUI.skin.GetStyle(WeaponName).CalcSize(new GUIContent(WeaponName));
+                                        float player_WeaponName = (devLabel == 1f) ? vector_WeaponName.x : (vector_WeaponName.x / devLabel);
+                                        Drawing.Special.DrawText(
+                                            WeaponName,
+                                            pHeadVector.x - player_TextWidth / 2f,
+                                            (float)Screen.height - FUNC.W2S(player.PlayerBones.Head.position).y - distancesAxisY_2,
+                                            vector_WeaponName,
+                                            LabelSize,
+                                            playerColor
+                                        );
+                                    }
+                                    #endregion
                                 }
-                                #endregion
                             }
-                            #region snap lines
-                            if (Cons.Switches.SnapLines && player != Cons.Main._localPlayer)
-                            {
-                                Calculations.SnapLines(player, playerColor);
-                            }
-                            #endregion
                         }
                     }
                     catch (Exception e)
@@ -287,26 +276,19 @@ namespace UnhandledException
                                         LabelSize.normal.textColor = new Color(.7f, .7f, .7f, .8f);
                                         string distanceText = $"{(int)distance}m";
                                         Vector2 sizeOfText = GUI.skin.GetStyle(distanceText).CalcSize(new GUIContent(distanceText));
-                                        Drawing.P(
-                                            new Vector2(
-                                                itemPosition.x - boxSize[1],
-                                                (float)(Screen.height - itemPosition.y) - boxSize[1]
-                                                ),
-                                            Constants.Colors.ESP.bodies,
-                                            boxSize[0]
+                                        Drawing.Special.DrawPoint(
+                                            itemPosition.x - boxSize[1],
+                                            (float)(Screen.height - itemPosition.y) - boxSize[1], 
+                                            boxSize[0], 
+                                            Constants.Colors.ESP.bodies
                                         );
-                                        Drawing.DrawShadow(
-                                            new Rect(
-                                                itemPosition.x - sizeOfText.x / 2f,
-                                                (float)Screen.height - itemPosition.y - deltaDistance - 1,
-                                                sizeOfText.x,
-                                                sizeOfText.y
-                                                ),
-                                            new GUIContent(distanceText),
+                                        Drawing.Special.DrawText(
+                                            distanceText,
+                                            itemPosition.x - sizeOfText.x / 2f,
+                                            (float)Screen.height - itemPosition.y - deltaDistance - 1,
+                                            sizeOfText,
                                             LabelSize,
-                                            Constants.Colors.ESP.bodies,
-                                            Constants.Colors.Black,
-                                            new Vector2(1f, 1f)
+                                            Constants.Colors.ESP.bodies
                                         );
                                     }
                                 }
@@ -455,7 +437,7 @@ namespace UnhandledException
                     else if (Cons.LocalPlayer.isInYourGroup(player))
                     {
                         playerType = PlayerType.TeamMate;
-                        if (Cons.Switches.StreamerMode)
+                        if (Cons.Bools.StreamerMode)
                         {
                             return "team";
                         }
@@ -472,7 +454,7 @@ namespace UnhandledException
                     else
                     {
                         playerType = PlayerType.Player;
-                        if (Cons.Switches.StreamerMode)
+                        if (Cons.Bools.StreamerMode)
                         {
                             return player.Profile.Info.Side.ToString() + " [" + player.Profile.Info.Level.ToString() + "]";
                         }
@@ -527,7 +509,7 @@ namespace UnhandledException
                                 if (FUNC.isInScreenRestricted(FUNC.W2S(exfil.transform.position)))
                                 { // do not display out of bounds items
                                     float distance = FastMath.FD(Camera.main.transform.position, exfil.transform.position);
-                                    if (distance < Cons.Distances.Corpses)
+                                    if (distance < Cons.Distances.Exfils)
                                     {
                                         Vector3 itemPosition = FUNC.W2S(exfil.transform.position);
                                         float[] boxSize = new float[2] { 3f, 1.5f };
@@ -541,39 +523,22 @@ namespace UnhandledException
                                         string distanceText = $"({(int)distance}m){requirements}";
                                         Vector2 sizeOfText2 = GUI.skin.GetStyle(exfil_Status).CalcSize(new GUIContent(exfil_Status));
                                         Vector2 sizeOfText = GUI.skin.GetStyle(distanceText).CalcSize(new GUIContent(distanceText));
-                                        Drawing.P(
-                                            new Vector2(
-                                                itemPosition.x - boxSize[1],
-                                                (float)(Screen.height - itemPosition.y) - boxSize[1]
-                                                ),
-                                            Constants.Colors.Red,
-                                            boxSize[0]
-                                        );
-                                        Drawing.DrawShadow(
-                                            new Rect(
-                                                itemPosition.x - sizeOfText2.x / 2f,
-                                                (float)Screen.height - itemPosition.y - deltaDistance - FontSize - 1,
-                                                sizeOfText2.x,
-                                                sizeOfText2.y
-                                                ),
-                                            new GUIContent(exfil_Status),
+                                        Drawing.Special.DrawPoint(itemPosition.x - boxSize[1], (float)(Screen.height - itemPosition.y) - boxSize[1], boxSize[0], Constants.Colors.Red);
+                                        Drawing.Special.DrawText(
+                                            exfil_Status,
+                                            itemPosition.x - sizeOfText2.x / 2f,
+                                            (float)Screen.height - itemPosition.y - deltaDistance - FontSize - 1,
+                                            sizeOfText2,
                                             LabelSize,
-                                            Constants.Colors.Red,
-                                            Constants.Colors.Black,
-                                            new Vector2(1f, 1f)
+                                            Constants.Colors.Red
                                         );
-                                        Drawing.DrawShadow(
-                                            new Rect(
-                                                itemPosition.x - sizeOfText.x / 2f,
-                                                (float)Screen.height - itemPosition.y - deltaDistance - 1,
-                                                sizeOfText.x,
-                                                sizeOfText.y
-                                                ),
-                                            new GUIContent(distanceText),
+                                        Drawing.Special.DrawText(
+                                            distanceText,
+                                            itemPosition.x - sizeOfText.x / 2f,
+                                            (float)Screen.height - itemPosition.y - deltaDistance - 1,
+                                            sizeOfText,
                                             LabelSize,
-                                            Constants.Colors.Red,
-                                            Constants.Colors.Black,
-                                            new Vector2(1f, 1f)
+                                            Constants.Colors.Red
                                         );
                                     }
                                 }
@@ -680,46 +645,34 @@ namespace UnhandledException
                                         LabelSize.fontSize = FontSize;
                                         LabelSize.normal.textColor = Constants.Colors.ESP.items;
                                         string distanceText = $"{(int)distance}m";
-                                        string DebugText = "";
+                                        string nameText = "";
                                         try
                                         {
-                                            DebugText = item.Item.ShortName.Localized();
+                                            nameText = item.Item.ShortName.Localized();
                                         }
                                         catch (Exception exp)
                                         {
                                             ErrorHandler.Catch("LootTranslation", exp, item.Item.ShortName);
-                                            DebugText = "";
+                                            nameText = "";
                                         }
                                         Vector2 sizeOfText = GUI.skin.GetStyle(distanceText).CalcSize(new GUIContent(distanceText));
-                                        GUI.color = Constants.Colors.ESP.items;
-                                        Drawing.P(
-                                            new Vector2(
-                                                itemPosition.x - boxSize[1],
-                                                (float)(Screen.height - itemPosition.y) - boxSize[1]
-                                                ),
-                                            Constants.Colors.ESP.items,
-                                            boxSize[0]
-                                        );
-                                        GUI.Label(
-                                            new Rect(
-                                                itemPosition.x - sizeOfText.x / 2f,
-                                                (float)Screen.height - itemPosition.y - deltaDistance - 1,
-                                                sizeOfText.x,
-                                                sizeOfText.y
-                                            ),
+                                        Drawing.Special.DrawPoint(itemPosition.x - boxSize[1], (float)(Screen.height - itemPosition.y) - boxSize[1], boxSize[0], Constants.Colors.ESP.items);
+                                        Drawing.Special.DrawText(
                                             distanceText,
-                                            LabelSize
-                                        );
-                                        GUI.Label(
-                                            new Rect(
-                                                itemPosition.x - sizeOfText.x / 2f,
-                                                (float)Screen.height - itemPosition.y - deltaDistance - FontSize - 1,
-                                                sizeOfText.x,
-                                                sizeOfText.y
-                                            ),
-                                            DebugText,
-                                            LabelSize
-                                        );
+                                            itemPosition.x - sizeOfText.x / 2f,
+                                            (float)Screen.height - itemPosition.y - deltaDistance - 1,
+                                            sizeOfText,
+                                            LabelSize,
+                                            Constants.Colors.ESP.items
+                                            );
+                                        Drawing.Special.DrawText(
+                                            nameText,
+                                            itemPosition.x - sizeOfText.x / 2f,
+                                            (float)Screen.height - itemPosition.y - deltaDistance - FontSize - 1,
+                                            sizeOfText,
+                                            LabelSize,
+                                            Constants.Colors.ESP.items
+                                            );
                                     }
                                 }
                             }
@@ -760,27 +713,15 @@ namespace UnhandledException
                                         LabelSize.normal.textColor = new Color(.7f, .7f, .7f, .8f);
                                         string distanceText = $"<{(int)distance}m>";
                                         Vector2 sizeOfText = GUI.skin.GetStyle(distanceText).CalcSize(new GUIContent(distanceText));
-                                        Drawing.P(
-                                            new Vector2(
-                                                itemPosition.x - boxSize[1],
-                                                (float)(Screen.height - itemPosition.y) - boxSize[1]
-                                                ),
-                                            Constants.Colors.ESP.items,
-                                            boxSize[0]
-                                        );
-                                        Drawing.DrawShadow(
-                                            new Rect(
-                                                itemPosition.x - sizeOfText.x / 2f,
-                                                (float)Screen.height - itemPosition.y - deltaDistance - 1,
-                                                sizeOfText.x,
-                                                sizeOfText.y
-                                                ),
-                                            new GUIContent(distanceText),
+                                        Drawing.Special.DrawPoint(itemPosition.x - boxSize[1], (float)(Screen.height - itemPosition.y) - boxSize[1], boxSize[0], Constants.Colors.ESP.items);
+                                        Drawing.Special.DrawText(
+                                            distanceText,
+                                            itemPosition.x - sizeOfText.x / 2f,
+                                            (float)Screen.height - itemPosition.y - deltaDistance - 1,
+                                            sizeOfText,
                                             LabelSize,
-                                            Constants.Colors.ESP.items,
-                                            Constants.Colors.Black,
-                                            new Vector2(1f, 1f)
-                                        );
+                                            Constants.Colors.ESP.items
+                                            );
                                     }
                                 }
                             }
@@ -862,27 +803,19 @@ namespace UnhandledException
                                     LabelSize.normal.textColor = Constants.Colors.ESP.grenades;
                                     string distanceText = $"{(int)dTO}m";
                                     Vector2 sizeOfText = GUI.skin.GetStyle(distanceText).CalcSize(new GUIContent(distanceText));
-                                    GUI.color = Constants.Colors.ESP.grenades;
-                                    Drawing.P(
-                                        new Vector2(
-                                            pGrenadePosition.x - 1.5f,
-                                            (float)(Screen.height - pGrenadePosition.y) - 1.5f
-                                            ),
-                                        Constants.Colors.ESP.grenades,
-                                        3f
+                                    Drawing.Special.DrawPoint(
+                                        pGrenadePosition.x - 1.5f,
+                                        (float)(Screen.height - pGrenadePosition.y) - 1.5f,
+                                        3f,
+                                        Constants.Colors.ESP.grenades
                                     );
-                                    Drawing.DrawShadow(
-                                        new Rect(
-                                            pGrenadePosition.x - sizeOfText.x / 2f,
-                                            (float)Screen.height - pGrenadePosition.y - deltaDistance - 1,
-                                            sizeOfText.x,
-                                            sizeOfText.y
-                                            ),
-                                        new GUIContent(distanceText),
+                                    Drawing.Special.DrawText(
+                                        distanceText,
+                                        pGrenadePosition.x - sizeOfText.x / 2f,
+                                        (float)Screen.height - pGrenadePosition.y - deltaDistance - 1,
+                                        sizeOfText,
                                         LabelSize,
-                                        Constants.Colors.ESP.grenades,
-                                        Constants.Colors.Black,
-                                        new Vector2(1f, 1f)
+                                        Constants.Colors.ESP.grenades
                                     );
                                 }
                             }

@@ -237,7 +237,7 @@ namespace UnhandledException
             public static bool Ma0c1 = false;
             public static bool Niger = false;
         }
-        public class Switches
+        public class Bools
         {
             public static bool Draw_ESP = false;
             public static bool Draw_Corpses = false;
@@ -261,9 +261,11 @@ namespace UnhandledException
             public static bool IKnowWhatImDoing = false;
             public static bool ChangeSessionID = false;
             public static bool IamStrumer = false;
+            public static bool NoVisorScreen = false; 
+
             public static void SetToOff()
             {
-                Draw_ESP = false;
+                /*Draw_ESP = false;
                 Draw_Corpses = false;
                 Draw_Grenades = false;
                 Draw_Loot = false;
@@ -275,7 +277,7 @@ namespace UnhandledException
                 LOD_Controll = false;
                 AimingAtNikita = false;
                 Display_HUDGui = false;
-                Recoil_Reducer = false;
+                Recoil_Reducer = false;*/
             }
         }
         public class FullBright

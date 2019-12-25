@@ -7,6 +7,7 @@ using EFT.Interactive;
 using UnityEngine.SceneManagement;
 using System.Reflection;
 using System.IO;
+
 #pragma warning disable CS0168
 namespace UnhandledException
 {
@@ -69,7 +70,7 @@ namespace UnhandledException
          * GUI.skin = this.skin;
          */
 
-        float LWIAY_timer = 0f;
+        float SessID_timer = 0f;
         #region [MAIN] - Update
         private void Update()
         {
@@ -100,23 +101,30 @@ namespace UnhandledException
             // make sure scene is map scene and is loaded and ready
             if (Cons.Main.G_Scene.isInMatch() && Cons.Main.G_Scene.isActiveAndLoaded() && !MonoBehaviourSingleton<PreloaderUI>.Instance.IsBackgroundBlackActive)
             {
-                if (Cons.Switches.ChangeSessionID)
+                if (Cons.Bools.ChangeSessionID)
                 {
-                    if (LWIAY_timer < Time.time)
+                    if (SessID_timer < Time.time)
                     {
                         MonoBehaviourSingleton<PreloaderUI>.Instance.SetSessionId("NotForSale"); // use this for memes ;)
-                        LWIAY_timer = Time.time + 1f;
+                        SessID_timer = Time.time + 1f;
                     }
                 }
                 else
                 {
-                    if (Cons.Switches.StreamerMode)
+                    if (Cons.Bools.StreamerMode)
                     {
                         MonoBehaviourSingleton<PreloaderUI>.Instance.SetStreamMode(true); // this should disable this stupid text ;)
                     }
                     else
                     {
                         // MonoBehaviourSingleton<PreloaderUI>.Instance.SetStreamMode(false); // this will not work cause of braindead BSG coders
+                    }
+                }
+                if (Cons.Bools.NoVisorScreen) {
+                    if (Camera.main != null)
+                    {
+                        Camera.main.GetComponent<VisorEffect>().Intensity = 0f;
+                        Camera.main.GetComponent<VisorEffect>().enabled = true;
                     }
                 }
                 // delay start of script for 20 seconds on start of match cause match is starting way before deploy is displaying - it will cause less errors displaying
@@ -143,7 +151,7 @@ namespace UnhandledException
                     {
                         // LiquidAce and his idea of grabbing data directly from GameWorld cause its better and less retarded - Thanks Mate
                         #region Players
-                        if (Cons.Switches.Draw_ESP)
+                        if (Cons.Bools.Draw_ESP)
                         {
                             /* make sure to not call it all the time but only on ESP Enabled
                                 * it creates list of alive objects (which is propably only alive objects but i check it anyway here)
@@ -153,7 +161,7 @@ namespace UnhandledException
                         }
                         #endregion
                         #region Grenades
-                        if (Cons.Switches.Draw_Grenades)
+                        if (Cons.Bools.Draw_Grenades)
                         {
                             /* Grenade scanner - scans for grenades if this function is enabled
                                 * also added as much RAM free functions as possible
@@ -162,7 +170,7 @@ namespace UnhandledException
                         }
                         #endregion
                         #region Corpses
-                        if (Cons.Switches.Draw_Corpses)
+                        if (Cons.Bools.Draw_Corpses)
                         {
                             /* Corspes scanner - scans for corpses in the map and creates a list of them
                                 * also contains RAM free things to not cause out of memory violations 0xc0...05
@@ -174,7 +182,7 @@ namespace UnhandledException
                         }
                         #endregion
                         #region AllLoot
-                        if (Cons.Switches.Draw_Loot)
+                        if (Cons.Bools.Draw_Loot)
                         {
                             /* Map Loot Scanner - scans and creates a list of loot on map - RAM free as always
                                 * EFT.Interactive.ObservedLootItem - as online LootItem
@@ -182,13 +190,13 @@ namespace UnhandledException
                                 */
                             E5P.Items.Update.ItemsList();
                         }
-                        if (Cons.Switches.Draw_Containers)
+                        if (Cons.Bools.Draw_Containers)
                         {
                             E5P.Items.Update.ContainerList();
                         }
                         #endregion
                         #region Exfiltrations
-                        if (Cons.Switches.Draw_Exfil)
+                        if (Cons.Bools.Draw_Exfil)
                         {
                             /* Exfiltration - scans for Exfils in the map and creates a list of them
                                 * also contains RAM free things to not cause out of memory violations 0xc0...05
@@ -200,7 +208,7 @@ namespace UnhandledException
                         #region not used - loot pool map
                         /*
                         - Items Patterns located on maps - also displays invisible loot deleted from map and broken loot below maps
-                        if (Switches.Draw_Loot)
+                        if (Bools.Draw_Loot)
                         {
                             List<GClass711> tItems = new List<GClass711>();
                             foreach (GClass711 li in _GameWorld.AllLoot)
@@ -214,7 +222,7 @@ namespace UnhandledException
                         // recoil reducer (break recoil animations)
                         try
                         {
-                            if (Cons.Switches.Recoil_Reducer)
+                            if (Cons.Bools.Recoil_Reducer)
                                 Cons.LocalPlayer.Weapon.NoRecoil();
                         }
                         catch (Exception e)
@@ -257,11 +265,11 @@ namespace UnhandledException
         private void OnGUI()
         {
             FUNC_Additional_Drawing.DisplayMenu();
-            if (Cons.Switches.Display_HelpInfo)
+            if (Cons.Bools.Display_HelpInfo)
             {
                 FUNC_Additional_Drawing.HelpMenu();
             }
-            if (Cons.Switches.Display_HUDGui)
+            if (Cons.Bools.Display_HUDGui)
             {
                 FUNC_Additional_Drawing.DrawHUDMenu();
             }
@@ -270,44 +278,44 @@ namespace UnhandledException
             {
                 Drawing.P(new Vector2(1f, 1f), Color.red, 1f);
                 string enabled = "";
-                if (Cons.Switches.Draw_ESP)
+                if (Cons.Bools.Draw_ESP)
                 {
                     enabled = enabled + "P";
                     E5P.Players.Draw.Players();
                 }
-                if (Cons.Switches.Draw_Grenades)
+                if (Cons.Bools.Draw_Grenades)
                 {
                     enabled = enabled + "G";
                     E5P.Throwables.Draw.Grenades();
                 }
-                if (Cons.Switches.Draw_Loot)
+                if (Cons.Bools.Draw_Loot)
                 {
                     enabled = enabled + "L";
                     E5P.Items.Draw.Items();
                 }
-                if (Cons.Switches.Draw_Corpses)
+                if (Cons.Bools.Draw_Corpses)
                 {
                     enabled = enabled + "C";
                     E5P.Players.Draw.DeadBodies();
                 }
-                if (Cons.Switches.Draw_Exfil)
+                if (Cons.Bools.Draw_Exfil)
                 {
                     enabled = enabled + "E";
                     E5P.Exfils.Draw.Exfils();
                 }
-                if (Cons.Switches.Draw_Containers)
+                if (Cons.Bools.Draw_Containers)
                 {
                     enabled = enabled + "K";
                     E5P.Items.Draw.Containers();
                 }
 
-                if (Cons.Switches.AimingAtNikita) 
+                if (Cons.Bools.AimingAtNikita) 
                 {
                     enabled = enabled + "A";
                     A1M.Draw.Aimbot();
                     //Drawing.Circle(Cons.ScreenWidth, Cons.ScreenHeight, Cons.Aim.AAN_FOV);
                 }
-                if (Cons.Switches.Draw_ESP || Cons.Switches.Draw_Grenades || Cons.Switches.Draw_Loot || Cons.Switches.Draw_Corpses || Cons.Switches.AimingAtNikita)
+                if (Cons.Bools.Draw_ESP || Cons.Bools.Draw_Grenades || Cons.Bools.Draw_Loot || Cons.Bools.Draw_Corpses || Cons.Bools.AimingAtNikita)
                 {
                     Drawing.Text(
                         new Rect(
@@ -332,7 +340,7 @@ namespace UnhandledException
             }
             else
             {
-                Cons.Switches.SetToOff();
+                Cons.Bools.SetToOff();
                 Drawing.P(new Vector2(1f, 1f), Color.white, 1f);
             }
             #region Help Me... Nygga - DISABLED CAUSE SHIT

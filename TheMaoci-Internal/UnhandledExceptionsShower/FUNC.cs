@@ -104,52 +104,52 @@ namespace UnhandledException
                 #region Draw non sensitive data
                 if (Input.GetKeyUp(KeyCode.Keypad5))
                 {
-                    Cons.Switches.Draw_Crosshair = !Cons.Switches.Draw_Crosshair;
+                    Cons.Bools.Draw_Crosshair = !Cons.Bools.Draw_Crosshair;
                 }
                 if (Input.GetKeyUp(KeyCode.Keypad2))
                 {
-                    Cons.Switches.DisplayPlayerInfo = !Cons.Switches.DisplayPlayerInfo;
+                    Cons.Bools.DisplayPlayerInfo = !Cons.Bools.DisplayPlayerInfo;
                 }
                 if (Input.GetKeyUp(KeyCode.Home))
                 {
-                    Cons.Switches.Display_HelpInfo = !Cons.Switches.Display_HelpInfo;
+                    Cons.Bools.Display_HelpInfo = !Cons.Bools.Display_HelpInfo;
                 }
                 if (Input.GetKeyDown(KeyCode.Insert))
                 {
-                    Cons.Switches.Display_HUDGui = !Cons.Switches.Display_HUDGui;
+                    Cons.Bools.Display_HUDGui = !Cons.Bools.Display_HUDGui;
                 }
                 #endregion
 
                 #region Draw sensitive data - no errors allowed here
                 if (Input.GetKeyUp(KeyCode.Keypad0))
                 {
-                    Cons.Switches.Draw_ESP = !Cons.Switches.Draw_ESP;
+                    Cons.Bools.Draw_ESP = !Cons.Bools.Draw_ESP;
                 }
                 if (Input.GetKeyUp(KeyCode.Keypad1))
                 {
-                    Cons.Switches.Draw_Corpses = !Cons.Switches.Draw_Corpses;
+                    Cons.Bools.Draw_Corpses = !Cons.Bools.Draw_Corpses;
                 }
                 if (Input.GetKeyUp(KeyCode.Keypad7))
                 {
-                    Cons.Switches.Draw_Loot = !Cons.Switches.Draw_Loot;
+                    Cons.Bools.Draw_Loot = !Cons.Bools.Draw_Loot;
                 }
                 if (Input.GetKeyUp(KeyCode.Keypad4))
                 {
-                    Cons.Switches.Draw_Grenades = !Cons.Switches.Draw_Grenades;
+                    Cons.Bools.Draw_Grenades = !Cons.Bools.Draw_Grenades;
                 }
                 if (Input.GetKeyDown(KeyCode.Keypad3))
                 {
-                    Cons.Switches.Recoil_Reducer = !Cons.Switches.Recoil_Reducer;
+                    Cons.Bools.Recoil_Reducer = !Cons.Bools.Recoil_Reducer;
                 }
                 if (Input.GetKeyDown(KeyCode.Keypad9))
                 {
-                    Cons.Switches.Spawn_FullBright = !Cons.Switches.Spawn_FullBright;
+                    Cons.Bools.Spawn_FullBright = !Cons.Bools.Spawn_FullBright;
                 }
                 if (Input.GetKeyDown(KeyCode.Mouse3)) // You can change it or create a GUI for change it in game
                 {
-                    Cons.Switches.AimingAtNikita = !Cons.Switches.AimingAtNikita;
+                    Cons.Bools.AimingAtNikita = !Cons.Bools.AimingAtNikita;
                 }
-                if (Cons.Switches.IKnowWhatImDoing)
+                if (Cons.Bools.IKnowWhatImDoing)
                 {
                     if (Input.GetKeyDown(KeyCode.F10))
                     {
@@ -183,16 +183,17 @@ namespace UnhandledException
             {
                 if (Cons.Buttons.Ma0c1)
                 {
-                    Cons.Switches.Recoil_Reducer = true;
-                    Cons.Switches.Draw_ESP = true;
-                    Cons.Switches.Draw_Corpses = true;
-                    Cons.Switches.Draw_Grenades = true;
-                    Cons.Switches.Draw_Crosshair = true;
-                    Cons.Switches.Spawn_FullBright = true;
-                    Cons.Switches.AimingAtNikita = true;
-                    Cons.Switches.Aim_Smoothing = true;
-                    Cons.Switches.SnapLines = true;
-                    Cons.Switches.ShowBones = true;
+                    //Cons.Bools.Recoil_Reducer = true;
+                    Cons.Bools.Draw_ESP = true;
+                    Cons.Bools.Draw_Corpses = true;
+                    Cons.Bools.Draw_Grenades = true;
+                    Cons.Bools.Draw_Crosshair = true;
+                    Cons.Bools.Spawn_FullBright = true;
+                    Cons.Bools.AimingAtNikita = true;
+                    Cons.Bools.Aim_Smoothing = true;
+                    Cons.Bools.SnapLines = true;
+                    Cons.Bools.ShowBones = true;
+                    Cons.Bools.NoVisorScreen = true;
                     Cons.Buttons.Ma0c1 = false;
                 }
                 if (Cons.Buttons.Niger)
@@ -207,7 +208,7 @@ namespace UnhandledException
             {
                 if (Cons.Main._localPlayer != null)
                 {
-                    if (Cons.Switches.Spawn_FullBright)
+                    if (Cons.Bools.Spawn_FullBright)
                     {
                         Vector3 playerPos = Cons.Main._localPlayer.Transform.position;
                         playerPos.y += 1f;
@@ -229,7 +230,7 @@ namespace UnhandledException
             {
                 // old method of reducing recoil - still working btw ... not bannable tho
                 if (Cons.Main._localPlayer != null)
-                    if (Cons.Switches.Recoil_Reducer)
+                    if (Cons.Bools.Recoil_Reducer)
                     {
                         if (Cons.Main._localPlayer.ProceduralWeaponAnimation.Shootingg.Intensity != 0.5f)
                             Cons.Main._localPlayer.ProceduralWeaponAnimation.Shootingg.Intensity = 0.5f;
@@ -244,7 +245,7 @@ namespace UnhandledException
             /*public LODGroup group;
             private void SetLODToLow()
             {
-                if (Switches.LOD_Controll)
+                if (Bools.LOD_Controll)
                 {
                     group.ForceLOD(6);
                 }
