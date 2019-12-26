@@ -127,6 +127,7 @@ namespace UnhandledException
                         Camera.main.GetComponent<VisorEffect>().enabled = true;
                     }
                 }
+                
                 // delay start of script for 20 seconds on start of match cause match is starting way before deploy is displaying - it will cause less errors displaying
                 // lower time from 20f if its holdup too long
                 if (timestamp == 0f)
@@ -150,6 +151,12 @@ namespace UnhandledException
                     else
                     {
                         // LiquidAce and his idea of grabbing data directly from GameWorld cause its better and less retarded - Thanks Mate
+                        #region Doors
+                        if (Cons.Bools.Draw_Doors)
+                        {
+                            Doors.Update.Doors();
+                        }
+                        #endregion
                         #region Players
                         if (Cons.Bools.Draw_ESP)
                         {
@@ -308,8 +315,13 @@ namespace UnhandledException
                     enabled = enabled + "K";
                     E5P.Items.Draw.Containers();
                 }
+                if (Cons.Bools.Draw_Doors)
+                {
+                    enabled = enabled + "D";
+                    Doors.Draw.Doors();
+                }
 
-                if (Cons.Bools.AimingAtNikita) 
+                if (Cons.Bools.AimingAtNikita)
                 {
                     enabled = enabled + "A";
                     A1M.Draw.Aimbot();

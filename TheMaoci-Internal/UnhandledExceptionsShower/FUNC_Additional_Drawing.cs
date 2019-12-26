@@ -183,7 +183,14 @@ namespace UnhandledException
                 {
                     /*if (!Cons.Main._localPlayer.ProceduralWeaponAnimation.IsAiming)
                     {*/
-                        Drawing.Crosshair();
+                    Drawing.Crosshair();
+                    //}
+                }
+                if (Cons.Bools.Draw_Crosshair2d)
+                {
+                    /*if (!Cons.Main._localPlayer.ProceduralWeaponAnimation.IsAiming)
+                    {*/
+                    Drawing.Crosshair2d();
                     //}
                 }
             }
@@ -218,19 +225,21 @@ namespace UnhandledException
                 Drawing.CheckBox(ref Cons.Bools.Draw_Exfil,          "Exfils", column_1++);
                 Drawing.CheckBox(ref Cons.Bools.Recoil_Reducer,      "Recoil", column_1++);
                 Drawing.CheckBox(ref Cons.Bools.AimingAtNikita,      "Aim", column_1++);
-                Drawing.CheckBox(ref Cons.Bools.Draw_Crosshair,      "Crosshair", column_1++); 
+                Drawing.CheckBox(ref Cons.Bools.Draw_Crosshair,      "Crosshair", column_1++);
+                Drawing.CheckBox(ref Cons.Bools.Draw_Crosshair2d,    "Crosshair", column_1++);
                 Drawing.CheckBox(ref Cons.Bools.Spawn_FullBright,    "Full.Bright", column_1++);
                 Drawing.CheckBox(ref Cons.Bools.StreamerMode,        "Streamer.Mode", column_1++);
-                Drawing.CheckBox(ref Cons.Bools.ChangeSessionID,     "RenameSessionID", column_1++);
+                Drawing.CheckBox(ref Cons.Bools.ChangeSessionID,     "Rename.Sess.ID", column_1++);
                 Drawing.CheckBox(ref Cons.Bools.SnapLines,           "Snap.Lines", column_1++);
                 Drawing.CheckBox(ref Cons.Bools.ShowBones,           "Draw.Bones", column_1++);
                 Drawing.CheckBox(ref Cons.Bools.DisplayPlayerInfo,   "Player.Data", column_1++);
                 Drawing.CheckBox(ref Cons.Bools.Draw_Containers,     "Containers", column_1++);
                 Drawing.CheckBox(ref Cons.Bools.Draw_Loot,           "Map.Loot", column_1++);
-                Drawing.CheckBox(ref Cons.Bools.NoVisorScreen,       "No.Visor.Effect", column_1++);
-                
                 if (!Cons.Bools.Draw_Loot)
                     Drawing.TextField(ref Cons.LootSearcher, column_1++);
+                Drawing.CheckBox(ref Cons.Bools.NoVisorScreen, "No.Visor.Effect", column_1++);
+                Drawing.CheckBox(ref Cons.Bools.Draw_Doors, "Doors", column_1++);
+
                 //Drawing.CheckBox(ref Cons.Bools.ChangeSessionID, "RenameSession", column_1++);
 
                 Drawing.Label("FOV:" + Cons.Aim.AAN_FOV.ToString(), column_2++, 1);
@@ -249,6 +258,10 @@ namespace UnhandledException
                 Drawing.HorizontalSlider(ref Cons.Distances.Grenade, 100f, 1000f, column_2++, 1);
                 Drawing.Label("Corpse.Dist:" + Cons.Distances.Corpses.ToString(), column_2++, 1);
                 Drawing.HorizontalSlider(ref Cons.Distances.Corpses, 100f, 1000f, column_2++, 1);
+                if (Cons.Bools.IKnowWhatImDoing) {
+                    Drawing.Label("TeleDist:" + Cons.Distances.Teleport.ToString(), column_2++, 1);
+                    Drawing.HorizontalSlider(ref Cons.Distances.Teleport, 1f, 15f, column_2++, 1);
+                }
 
 
                 //i know what im doing

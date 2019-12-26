@@ -73,6 +73,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Cons.cs" />
+    <Compile Include="Door.cs" />
     <Compile Include="E5P.cs" />
     <Compile Include="ErrorHandler.cs" />
     <Compile Include="FUNC.cs" />

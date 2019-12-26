@@ -17,6 +17,7 @@ namespace UnhandledException
         }
         public class Distances
         {
+            public static float Teleport = 1f;
             public static float Aim = 200f;
             public static float Players = 1000f;
             public static float Loot = 1000f;
@@ -200,6 +201,7 @@ namespace UnhandledException
                 }
             }
             public static List<Player> _players;
+            public static List<WorldInteractiveObject> _doors;
             public static List<Throwable> _grenades;
             public static List<LootItem> _corpses;
             public static List<LootItem> _lootItems;
@@ -208,6 +210,7 @@ namespace UnhandledException
 
             public static Player _localPlayer;
             public static List<Player> tPlayer;
+            public static List<LootItem> tDoor;
             public static List<Throwable> tGrenades;
             public static List<LootItem> tCorpses;
             public static List<LootItem> tItems;
@@ -240,12 +243,14 @@ namespace UnhandledException
         public class Bools
         {
             public static bool Draw_ESP = false;
+            public static bool Draw_Doors = false; 
             public static bool Draw_Corpses = false;
             public static bool Draw_Grenades = false;
             public static bool Draw_Loot = false;
             public static bool Draw_Exfil = false;
             public static bool Draw_Containers = false;
             public static bool Draw_Crosshair = false;
+            public static bool Draw_Crosshair2d = false;
             public static bool Display_HelpInfo = false;
             public static bool Switch_Colors = false;
             public static bool DisplayPlayerInfo = false;
@@ -261,7 +266,7 @@ namespace UnhandledException
             public static bool IKnowWhatImDoing = false;
             public static bool ChangeSessionID = false;
             public static bool IamStrumer = false;
-            public static bool NoVisorScreen = false; 
+            public static bool NoVisorScreen = false;
 
             public static void SetToOff()
             {

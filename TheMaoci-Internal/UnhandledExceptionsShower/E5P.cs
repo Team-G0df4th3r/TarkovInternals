@@ -20,6 +20,7 @@ namespace UnhandledException
                         Cons.AliveCount.Reset();
                         Cons.Main.tPlayer = new List<Player>();
                         var enum_Players = Cons.Main._GameWorld.RegisteredPlayers.GetEnumerator();
+                        int groupNum = 0;
                         while (enum_Players.MoveNext())
                         {
                             var p = enum_Players.Current;
@@ -39,7 +40,17 @@ namespace UnhandledException
                                     float distance = FastMath.FD(Camera.main.transform.position, p.Transform.position);
                                     Calculations.CalculateAlive(distance);
                                     // add to list if its not below 1m and not above max distance also it player is in screen (not counting width of screen - cause we are using snaplines as an radar
-
+                                    if (!Cons.LocalPlayer.isInYourGroup(p) && p.GroupId != "0" && p.GroupId != "" && p.GroupId != null && p.GroupId != string.Empty)
+                                    {
+                                        try
+                                        {
+                                            Types.GroupTable.Add(p.GroupId, groupNum++);
+                                        }
+                                        catch (Exception)
+                                        {
+                                            groupNum--;
+                                        }
+                                    }
                                     if (distance > 1f && distance <= Cons.Distances.Players) // && FUNC.isInScreenYZ(FUNC.W2S(p.Transform.position))
                                     {
                                         Cons.Main.tPlayer.Add(p);
@@ -184,6 +195,17 @@ namespace UnhandledException
                                     string playerStatus = $"{isVisible}[{(int)dTO}m] {Status}";
                                     string WeaponName = "";
                                     #endregion
+                                    #region [Group-Num]
+                                    int gInt;
+                                    try
+                                    {
+                                        if (Types.GroupTable.TryGetValue(player.GroupId, out gInt))
+                                        {
+                                            playerDisplayName += "{" + gInt + "}";
+                                        }
+                                    }
+                                    catch (Exception) { }
+                                    #endregion
                                     #region [TRY-DecodeWeaponName]
                                     try
                                     {
@@ -285,7 +307,7 @@ namespace UnhandledException
                                         Drawing.Special.DrawText(
                                             distanceText,
                                             itemPosition.x - sizeOfText.x / 2f,
-                                            (float)Screen.height - itemPosition.y - deltaDistance - 1,
+                                            (float)(Screen.height - itemPosition.y) - deltaDistance - 1,
                                             sizeOfText,
                                             LabelSize,
                                             Constants.Colors.ESP.bodies

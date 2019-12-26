@@ -14,7 +14,7 @@ namespace UnhandledException
             }
             public static void DrawText(string text, float axis_x, float axis_y, Vector2 size, GUIStyle styleOfText, Color front_color) {
                 Drawing.DrawShadow(
-                    new Rect(axis_x,axis_x,size.x,size.y),
+                    new Rect(axis_x, axis_y, size.x,size.y),
                     new GUIContent(text),
                     styleOfText,
                     front_color,
@@ -25,10 +25,17 @@ namespace UnhandledException
         }
         public static Texture2D lineTex;
         #region Crosshair
-        public static void Crosshair() {
+        public static void Crosshair()
+        {
             Vector3 AimAtPoint = FUNC.W2S(Cons.AimPoint);
             P(new Vector2(AimAtPoint.x - 2f, Screen.height - AimAtPoint.y - 1f), new Color(0f, 0f, 0f), 4f);
-            P(new Vector2(AimAtPoint.x - 1f, Screen.height - AimAtPoint.y - 1f), new Color(1f, 1f, 1f), 2f);
+            P(new Vector2(AimAtPoint.x - 1f, Screen.height - AimAtPoint.y - 1f), new Color(0.30f, 0.88f, 0.2196f), 2f);
+        }
+        public static void Crosshair2d()
+        {
+            Vector3 AimAtPoint = FUNC.W2S(Cons.AimPoint);
+            P(new Vector2(Screen.width / 2f - 2f, Screen.height / 2f - 1f), new Color(0f, 0f, 0f), 4f);
+            P(new Vector2(Screen.width / 2f - 1f, Screen.height / 2f - 1f), new Color(0.30f, 0.88f, 0.2196f), 2f);
         }
         #endregion
         #region DrawPixel
@@ -143,7 +150,7 @@ namespace UnhandledException
         {
             variable = GUI.Toggle(
                 new Rect(
-                    column * (Constants.Locations.initialInputSizes.x + Constants.Locations.boxSize.box_200),
+                    Constants.Locations.initialInputSizes.x + column * (Constants.Locations.initialInputSizes.x + Constants.Locations.boxSize.box_200),
                     Constants.Locations.initialInputSizes.y + (Constants.Locations.initialInputSizes.y * row),
                     Constants.Locations.boxSize.box_200,
                     Constants.Locations.boxSize.box_20
@@ -156,7 +163,7 @@ namespace UnhandledException
         {
             variable = GUI.Button(
                 new Rect(
-                    column * (Constants.Locations.initialInputSizes.x + Constants.Locations.boxSize.box_200) +25f,
+                    Constants.Locations.initialInputSizes.x + column * (Constants.Locations.initialInputSizes.x + Constants.Locations.boxSize.box_200) +25f,
                     Constants.Locations.initialInputSizes.y + (Constants.Locations.initialInputSizes.y * row),
                     Constants.Locations.boxSize.box_50,
                     Constants.Locations.boxSize.box_20
@@ -172,7 +179,7 @@ namespace UnhandledException
                 width = Constants.Locations.boxSize.box_200;
             GUI.Label(
                 new Rect(
-                    column * (Constants.Locations.initialInputSizes.x + Constants.Locations.boxSize.box_200),
+                    Constants.Locations.initialInputSizes.x + column * (Constants.Locations.initialInputSizes.x + Constants.Locations.boxSize.box_200),
                     Constants.Locations.initialInputSizes.y + (Constants.Locations.initialInputSizes.y * row),
                     width,
                     height
@@ -184,7 +191,7 @@ namespace UnhandledException
         {
             variable = (int)GUI.HorizontalSlider(
                 new Rect(
-                    column * (Constants.Locations.initialInputSizes.x + Constants.Locations.boxSize.box_200),
+                    Constants.Locations.initialInputSizes.x + column * (Constants.Locations.initialInputSizes.x + Constants.Locations.boxSize.box_200),
                     Constants.Locations.initialInputSizes.y + (Constants.Locations.initialInputSizes.y * row),
                     Constants.Locations.boxSize.box_200,
                     Constants.Locations.boxSize.box_20
@@ -198,7 +205,7 @@ namespace UnhandledException
         {
             variable = GUI.TextField(
                 new Rect(
-                    column * (Constants.Locations.initialInputSizes.x + Constants.Locations.boxSize.box_200), // this should give 0 and only input if not column was specified
+                    Constants.Locations.initialInputSizes.x + column * (Constants.Locations.initialInputSizes.x + Constants.Locations.boxSize.box_200), // this should give 0 and only input if not column was specified
                     Constants.Locations.initialInputSizes.y + (Constants.Locations.initialInputSizes.y * row),
                     Constants.Locations.boxSize.box_200,
                     Constants.Locations.boxSize.box_20

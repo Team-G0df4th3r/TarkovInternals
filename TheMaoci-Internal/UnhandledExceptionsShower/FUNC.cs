@@ -158,7 +158,7 @@ namespace UnhandledException
                             // we can add an prevention to too fast teleporting adding like once per second etc.
                             //if (Time.time >= _secTime) {
                             //_secTime = Time.time + 1f;
-                            Cons.Main._localPlayer.Transform.position = Cons.Main._localPlayer.Transform.position + Camera.main.transform.forward * 1f;
+                            Cons.Main._localPlayer.Transform.position = Cons.Main._localPlayer.Transform.position + Camera.main.transform.forward * Cons.Distances.Teleport;
                             //}
                         }
                     }
