@@ -190,22 +190,24 @@ namespace UnhandledException
                                         isVisible = "+";
                                     }
                                     #endregion
-                                    #region [INIT-Texts]
-                                    string nameNickname = $"{playerDisplayName}";
-                                    string playerStatus = $"{isVisible}[{(int)dTO}m] {Status}";
-                                    string WeaponName = "";
-                                    #endregion
                                     #region [Group-Num]
                                     int gInt;
+                                    string groupID = "";
                                     try
                                     {
                                         if (Types.GroupTable.TryGetValue(player.GroupId, out gInt))
                                         {
-                                            playerDisplayName += "{" + gInt + "}";
+                                            groupID = "{" + gInt + "}";
                                         }
                                     }
                                     catch (Exception) { }
                                     #endregion
+                                    #region [INIT-Texts]
+                                    string nameNickname = $"{playerDisplayName}{groupID}";
+                                    string playerStatus = $"{isVisible}[{(int)dTO}m] {Status}";
+                                    string WeaponName = "";
+                                    #endregion
+
                                     #region [TRY-DecodeWeaponName]
                                     try
                                     {

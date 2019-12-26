@@ -152,10 +152,10 @@ namespace UnhandledException
                     {
                         // LiquidAce and his idea of grabbing data directly from GameWorld cause its better and less retarded - Thanks Mate
                         #region Doors
-                        if (Cons.Bools.Draw_Doors)
+                        /*if (Cons.Bools.Draw_Doors)
                         {
                             Doors.Update.Doors();
-                        }
+                        }*/
                         #endregion
                         #region Players
                         if (Cons.Bools.Draw_ESP)
@@ -315,11 +315,11 @@ namespace UnhandledException
                     enabled = enabled + "K";
                     E5P.Items.Draw.Containers();
                 }
-                if (Cons.Bools.Draw_Doors)
+                /*if (Cons.Bools.Draw_Doors)
                 {
                     enabled = enabled + "D";
                     Doors.Draw.Doors();
-                }
+                }*/
 
                 if (Cons.Bools.AimingAtNikita)
                 {

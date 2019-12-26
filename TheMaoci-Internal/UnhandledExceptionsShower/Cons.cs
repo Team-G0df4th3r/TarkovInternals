@@ -201,7 +201,7 @@ namespace UnhandledException
                 }
             }
             public static List<Player> _players;
-            public static List<WorldInteractiveObject> _doors;
+            //public static List<WorldInteractiveObject> _doors;
             public static List<Throwable> _grenades;
             public static List<LootItem> _corpses;
             public static List<LootItem> _lootItems;
@@ -210,7 +210,7 @@ namespace UnhandledException
 
             public static Player _localPlayer;
             public static List<Player> tPlayer;
-            public static List<LootItem> tDoor;
+            //public static List<LootItem> tDoor;
             public static List<Throwable> tGrenades;
             public static List<LootItem> tCorpses;
             public static List<LootItem> tItems;

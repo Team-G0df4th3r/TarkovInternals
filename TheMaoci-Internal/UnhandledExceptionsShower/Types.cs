@@ -12,7 +12,7 @@ namespace UnhandledException
         public static Type ObservedLootItem = new ObservedLootItem().GetType();
         public static Type LootItem = new LootItem().GetType();
         public static Type Player = new Player().GetType();
-        public static Type Door = new WorldInteractiveObject().GetType();
+        //public static Type Door = new WorldInteractiveObject().GetType();
         public static Dictionary<string, int> GroupTable = new Dictionary<string, int>();
         // public static Type Throwable = new Throwable().GetType(); // no interface for this
     }

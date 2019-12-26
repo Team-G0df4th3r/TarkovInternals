@@ -226,7 +226,7 @@ namespace UnhandledException
                 Drawing.CheckBox(ref Cons.Bools.Recoil_Reducer,      "Recoil", column_1++);
                 Drawing.CheckBox(ref Cons.Bools.AimingAtNikita,      "Aim", column_1++);
                 Drawing.CheckBox(ref Cons.Bools.Draw_Crosshair,      "Crosshair", column_1++);
-                Drawing.CheckBox(ref Cons.Bools.Draw_Crosshair2d,    "Crosshair", column_1++);
+                Drawing.CheckBox(ref Cons.Bools.Draw_Crosshair2d,    "Crosshair2d", column_1++);
                 Drawing.CheckBox(ref Cons.Bools.Spawn_FullBright,    "Full.Bright", column_1++);
                 Drawing.CheckBox(ref Cons.Bools.StreamerMode,        "Streamer.Mode", column_1++);
                 Drawing.CheckBox(ref Cons.Bools.ChangeSessionID,     "Rename.Sess.ID", column_1++);
