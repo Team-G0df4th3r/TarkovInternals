@@ -35,7 +35,7 @@ namespace UnhandledException
         public static Vector3 BarrelRaycast() {
             if (Cons.Main._localPlayer.Fireport == null)
                 return Vector3.zero;
-            Physics.Linecast(Cons.Main._localPlayer.Fireport.position, Cons.Main._localPlayer.Fireport.position - Cons.Main._localPlayer.Fireport.up * 1000f, out raycastHit, mask);
+            Physics.Linecast(Cons.Main._localPlayer.Fireport.position, Cons.Main._localPlayer.Fireport.position - Cons.Main._localPlayer.Fireport.up * Math.Infinity, out raycastHit, mask);
             return raycastHit.point;
         }
         #region IsVisible - Properly done with mask
